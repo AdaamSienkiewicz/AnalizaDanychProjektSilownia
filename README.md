@@ -1,0 +1,1 @@
+# AnalizaDanychProjektSi-ownia
