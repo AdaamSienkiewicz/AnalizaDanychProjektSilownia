@@ -35,7 +35,7 @@ gg_miss_upset(silownia, nsets= 3)
 
 library(VIM)
 
-# Imputacja metodą k-Nearest Neighbors (kNN) - poprawka
+# Imputacja metodą k-Nearest Neighbors (kNN) - poprawa
 dane_imputowane <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
 print(dane_imputowane)
 str(dane_imputowane)
