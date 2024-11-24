@@ -77,10 +77,39 @@ vis_miss(dane_imputowane)
 vis_dat(dane_imputowane)
 gg_miss_var(dane_imputowane)
 
-# Imputacja z pakietem MICE
+# IMPUTACJA Z PAKIETEM MICE
 library(mice)
+colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
+colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
+colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session_Duration_hours"
+colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
+colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
+
+is.factor(silownia$Workout_Type)
+silownia$Workout_Type <- factor(silownia$Workout_Type, levels = c("Yoga", "Cardio", "HIIT", "Strength"))
+
+metody <- make.method(silownia)
+metody["Age"] <- "pmm"
+metody["Workout_Type"] <- "polyreg"
+metody["BMI"] <- "pmm"
 
 pred_mat <- quickpred(silownia, mincor = 0.25)
+pred_mat
+silownia_imp <- mice(silownia, m = 5, method = metody, predictorMatrix = pred_mat)
+
+lm_imp <- with(silownia_imp, lm(BMI ~ Weight_kg + Gender))
+lm_pooled <- pool(lm_imp)
+summary(lm_pooled, conf.int = TRUE, conf.level = 0.95)
+
+# Porównanie danych rzeczywistych z zimputowanymi
+stripplot(silownia_imp, BMI ~ Weight_kg  | .imp, pch = 20, cex = 2)
+
+silownia_mice <- complete(silownia_imp, action = 1)
+head(silownia_mice)
+
+summary(silownia)
+summary(silownia_mice)
+
 
 #Imputacja z pakietem RPART
 install.packages("rpart")
