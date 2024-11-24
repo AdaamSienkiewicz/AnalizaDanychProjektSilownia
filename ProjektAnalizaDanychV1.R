@@ -66,3 +66,8 @@ ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = Age)) +
   theme_minimal()
 
 #Workout_Type i Age - braki w obu kolumnach są kompletnie niezależne od siebie
+
+
+
+
+
