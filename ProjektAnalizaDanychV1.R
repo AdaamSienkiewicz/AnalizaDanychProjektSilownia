@@ -77,6 +77,10 @@ vis_miss(dane_imputowane)
 vis_dat(dane_imputowane)
 gg_miss_var(dane_imputowane)
 
+# Imputacja z pakietem MICE
+library(mice)
+
+pred_mat <- quickpred(silownia, mincor = 0.25)
 
 
 
