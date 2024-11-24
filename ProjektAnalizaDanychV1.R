@@ -82,5 +82,38 @@ library(mice)
 
 pred_mat <- quickpred(silownia, mincor = 0.25)
 
+#Imputacja z pakietem RPART
+install.packages("rpart")
+library(rpart)
 
+colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
+colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
+colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session_Duration_hours"
+colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
+colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
 
+drzewo_decyzyjne1 <- rpart(BMI ~ Age + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+                             Session_Duration_hours + Calories_Burned + 
+                             Fat_Percentage + Water_Intake_liters + 
+                             Workout_Frequency_daysweek + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
+silownia$BMI[is.na(silownia$BMI)] <- predict(drzewo_decyzyjne1, newdata = silownia[is.na(silownia$BMI), ])
+
+drzewo_decyzyjne2 <- rpart(Age ~ BMI + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+                             Session_Duration_hours + Calories_Burned + 
+                             Fat_Percentage + Water_Intake_liters + 
+                             Workout_Frequency_daysweek + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
+silownia$Age[is.na(silownia$Age)] <- predict(drzewo_decyzyjne2, newdata = silownia[is.na(silownia$Age), ])
+
+silownia$Workout_Type <- as.factor(silownia$Workout_Type)
+silownia$Gender <- as.factor(silownia$Gender)
+
+#Jak z Workout_Type?
+
+drzewo_decyzyjne3 <- rpart(Workout_Type ~ Gender, data = silownia, method = "class", na.action = na.exclude)
+
+silownia$Workout_Type[is.na(silownia$Workout_Type)] <- predict(drzewo_decyzyjne3, newdata = silownia[is.na(silownia$Workout_Type), ])
+print(silownia)
+
+#Imputacja hot-deck
+dane_imputowanehotdeck <- hotdeck(silownia)
+print(dane_imputowanehotdeck)
