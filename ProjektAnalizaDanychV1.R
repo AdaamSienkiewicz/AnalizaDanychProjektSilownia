@@ -67,6 +67,15 @@ ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = Age)) +
 
 #Workout_Type i Age - braki w obu kolumnach są kompletnie niezależne od siebie
 
+# Imputacja metodą k-Nearest Neighbors (kNN) - poprawka
+library(VIM)
+dane_imputowane <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
+print(dane_imputowane)
+str(dane_imputowane)
+
+vis_miss(dane_imputowane)
+vis_dat(dane_imputowane)
+gg_miss_var(dane_imputowane)
 
 
 
