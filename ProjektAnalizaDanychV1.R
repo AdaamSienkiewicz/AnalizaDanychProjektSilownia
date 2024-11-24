@@ -33,6 +33,17 @@ kolumny_z_NA  <- kolumny_z_NA  %>%
 miss_case_table(silownia)
 gg_miss_upset(silownia, nsets= 3)
 
+library(VIM)
+
+# Imputacja metodą k-Nearest Neighbors (kNN)
+dane_imputowane <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
+print(dane_imputowane)
+View(silownia)
+str(dane_imputowane)
+vis_miss(dane_imputowane)
+vis_dat(dane_imputowane)
+gg_miss_var(dane_imputowane)
+
 # 631 wierszy ma 0 NA
 # 287 wierszy ma 1 NA (115 wierszy w Workout_Type; 106 w BMI; 66 w Age)
 # 52 wiersze ma 2 NA (21 wierszy mialo NA w Workout_Type i BMI; 20 wierszy w Age i BMI;
