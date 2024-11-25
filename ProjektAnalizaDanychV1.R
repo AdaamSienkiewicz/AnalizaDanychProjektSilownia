@@ -75,10 +75,11 @@ colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Inta
 colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
 
 # Zastąpienie braków NA w kolumnie BMI za pomocą wzoru na BMI
-silownia$BMI <- ifelse(
-  is.na(silownia$BMI),  
-  silownia$Weight_kg / (silownia$Height_m^2),  
-  silownia$BMI )
+silownia_z_BMI <- silownia
+silownia_z_BMI$BMI <- ifelse(
+  is.na(silownia_z_BMI$BMI),  
+  silownia_z_BMI$Weight_kg / (silownia_z_BMI$Height_m^2),  
+  silownia_z_BMI$BMI )
 
 # Imputacja metodą k-Nearest Neighbors (kNN) - poprawka
 library(VIM)
