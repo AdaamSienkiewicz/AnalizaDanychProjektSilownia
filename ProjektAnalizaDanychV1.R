@@ -67,6 +67,19 @@ ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = Age)) +
 
 #Workout_Type i Age - braki w obu kolumnach są kompletnie niezależne od siebie
 
+#Zmiana nazw kolumn
+colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
+colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
+colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session_Duration_hours"
+colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
+colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
+
+# Zastąpienie braków NA w kolumnie BMI za pomocą wzoru na BMI
+silownia$BMI <- ifelse(
+  is.na(silownia$BMI),  
+  silownia$Weight_kg / (silownia$Height_m^2),  
+  silownia$BMI )
+
 # Imputacja metodą k-Nearest Neighbors (kNN) - poprawka
 library(VIM)
 dane_imputowane <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
@@ -79,11 +92,6 @@ gg_miss_var(dane_imputowane)
 
 # IMPUTACJA Z PAKIETEM MICE
 library(mice)
-colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
-colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
-colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session_Duration_hours"
-colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
-colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
 
 is.factor(silownia$Workout_Type)
 silownia$Workout_Type <- factor(silownia$Workout_Type, levels = c("Yoga", "Cardio", "HIIT", "Strength"))
