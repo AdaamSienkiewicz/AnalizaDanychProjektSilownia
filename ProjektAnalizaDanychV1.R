@@ -237,5 +237,45 @@ odstajace_BMI <- sum(na.omit(abs(z_score_BMI)) > 3)
 odstajace_BMI
 # Dla zmiennej BMI jest 10 obserwacji, które różnią się o co najmniej 3 odchylenia od średniej, tj. są obserwacjami odstającymi.
 
+#walidacja danych
+library(dplyr)
+library(ggplot2)
+install.packages("rmdformats")
+library(rmdformats)
+install.packages("validate")
+library(validate)
+install.packages("validatetools")
+library(validatetools)
+install.packages("dcmodify")
+library(dcmodify)
+install.packages("errorlocate")
+library(errorlocate)
+install.packages("deductive")
+library(deductive)
+library(VIM)
+library(simputation)
+library(lumberjack)
+library(ISLR) 
+library(dlookr)
 
+library(xts)
+library(quantmod)
+library(ROCR)
+library(DMwR)
+library(Information)
+library(scorecard)
 
+#walidacja Weight (kg)
+
+min_value <- min(silownia$`Weight (kg)`, na.rm = TRUE)
+max_value <- max(silownia$`Weight (kg)`, na.rm = TRUE)
+
+rules <- validator(
+  `Weight (kg)` > 0,            
+  `Weight (kg)` >= 40,           
+  `Weight (kg)` <= 140           
+)
+
+cf <- confront(silownia, rules, key="Weight (kg)")
+summary(cf)
+barplot(cf, main="silownia")
