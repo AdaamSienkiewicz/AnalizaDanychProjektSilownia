@@ -155,3 +155,87 @@ print(silownia)
 #Imputacja hot-deck
 dane_imputowanehotdeck <- hotdeck(silownia)
 print(dane_imputowanehotdeck)
+
+
+## Odstające obserwacje
+# Z-score
+z_score_Age <- (na.omit(silownia$Age) - mean(na.omit(silownia$Age))) / sd(na.omit(silownia$Age))
+z_score_Age
+odstajace_Age <- sum(na.omit(abs(z_score_Age)) > 3)
+odstajace_Age
+# Dla zmiennej Age nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Weight <- (na.omit(silownia$Weight_kg) - mean(na.omit(silownia$Weight_kg))) / sd(na.omit(silownia$Weight_kg))
+z_score_Weight
+odstajace_Weight <- sum(na.omit(abs(z_score_Weight)) > 3)
+odstajace_Weight
+# Dla zmiennej Weight nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Height <- (na.omit(silownia$Height_m) - mean(na.omit(silownia$Height_m))) / sd(na.omit(silownia$Height_m))
+z_score_Height
+odstajace_Height <- sum(na.omit(abs(z_score_Height)) > 3)
+odstajace_Height
+# Dla zmiennej Height nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Max_BPM <- (na.omit(silownia$Max_BPM) - mean(na.omit(silownia$Max_BPM))) / sd(na.omit(silownia$Max_BPM))
+z_score_Max_BPM
+odstajace_Max_BPM <- sum(na.omit(abs(z_score_Max_BPM)) > 3)
+odstajace_Max_BPM
+# Dla zmiennej Max_BPM nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Avg_BPM <- (na.omit(silownia$Avg_BPM) - mean(na.omit(silownia$Avg_BPM))) / sd(na.omit(silownia$Avg_BPM))
+z_score_Avg_BPM
+odstajace_Avg_BPM <- sum(na.omit(abs(z_score_Avg_BPM)) > 3)
+odstajace_Avg_BPM
+# Dla zmiennej Avg_BPM nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Resting_BPM <- (na.omit(silownia$Resting_BPM) - mean(na.omit(silownia$Resting_BPM))) / sd(na.omit(silownia$Resting_BPM))
+z_score_Resting_BPM
+odstajace_Resting_BPM <- sum(na.omit(abs(z_score_Resting_BPM)) > 3)
+odstajace_Resting_BPM
+# Dla zmiennej Resting_BPM nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_SessDur <- (na.omit(silownia$Session_Duration_hours) - mean(na.omit(silownia$Session_Duration_hours))) / sd(na.omit(silownia$Session_Duration_hours))
+z_score_SessDur
+odstajace_SessDur <- sum(na.omit(abs(z_score_SessDur)) > 3)
+odstajace_SessDur
+# Dla zmiennej Session_Duration_hours nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Calories_Burned <- (na.omit(silownia$Calories_Burned) - mean(na.omit(silownia$Calories_Burned))) / sd(na.omit(silownia$Calories_Burned))
+z_score_Calories_Burned
+odstajace_Calories_Burned <- sum(na.omit(abs(z_score_Calories_Burned)) > 3)
+odstajace_Calories_Burned
+# Dla zmiennej Calories_Burned są 3 obserwacje, które różnią się o co najmniej 3 odchylenia od średniej, tj. są one obserwacjami odstającymi.
+
+z_score_FatPer <- (na.omit(silownia$Fat_Percentage) - mean(na.omit(silownia$Fat_Percentage))) / sd(na.omit(silownia$Fat_Percentage))
+z_score_FatPer
+odstajace_FatPer <- sum(na.omit(abs(z_score_FatPer)) > 3)
+odstajace_FatPer
+# Dla zmiennej Fat_Percentage nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Water <- (na.omit(silownia$Water_Intake_liters) - mean(na.omit(silownia$Water_Intake_liters))) / sd(na.omit(silownia$Water_Intake_liters))
+z_score_Water
+odstajace_Water <- sum(na.omit(abs(z_score_Water)) > 3)
+odstajace_Water
+# Dla zmiennej Water_Intake_liters nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_WorkoutFreq <- (na.omit(silownia$Workout_Frequency_daysweek) - mean(na.omit(silownia$Workout_Frequency_daysweek))) / sd(na.omit(silownia$Workout_Frequency_daysweek))
+z_score_WorkoutFreq
+odstajace_WorkoutFreq <- sum(na.omit(abs(z_score_WorkoutFreq)) > 3)
+odstajace_WorkoutFreq
+# Dla zmiennej Workout_Frequency_daysweek nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_Experience <- (na.omit(silownia$Experience_Level) - mean(na.omit(silownia$Experience_Level))) / sd(na.omit(silownia$Experience_Level))
+z_score_Experience
+odstajace_Experience <- sum(na.omit(abs(z_score_Experience)) > 3)
+odstajace_Experience
+# Dla zmiennej Experience_level nie ma obserwacji, które różnią się o 3 odchylenia od średniej, tj. nie ma obserwacji odstających.
+
+z_score_BMI <- (na.omit(silownia$BMI) - mean(na.omit(silownia$BMI))) / sd(na.omit(silownia$BMI))
+z_score_BMI
+odstajace_BMI <- sum(na.omit(abs(z_score_BMI)) > 3)
+odstajace_BMI
+# Dla zmiennej BMI jest 10 obserwacji, które różnią się o co najmniej 3 odchylenia od średniej, tj. są obserwacjami odstającymi.
+
+
+
