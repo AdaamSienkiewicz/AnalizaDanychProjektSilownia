@@ -130,26 +130,40 @@ colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session
 colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
 colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
 
-drzewo_decyzyjne1 <- rpart(BMI ~ Age + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+silownia  <- silownia  %>%
+  mutate(Workout_Type = case_when(
+    Workout_Type == "Yoga" ~ 1,
+    Workout_Type == "Cardio" ~ 2,
+    Workout_Type == "HIIT" ~ 3,
+    Workout_Type == "Strength" ~ 4,
+    TRUE ~ as.numeric(Workout_Type) 
+  ))
+
+silownia <- silownia %>%
+  mutate(Gender = case_when(
+    Gender == "Male" ~ 1,
+    Gender == "Female" ~ 2,
+    TRUE ~ as.numeric(Gender) 
+  ))
+
+drzewo_decyzyjne1 <- rpart(Workout_Type ~ Age + BMI + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+                             Session_Duration_hours + Calories_Burned + 
+                             Fat_Percentage + Water_Intake_liters + 
+                             Workout_Frequency_daysweek + Gender + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
+
+silownia$Workout_Type[is.na(silownia$Workout_Type)] <- predict(drzewo_decyzyjne1, newdata = silownia[is.na(silownia$Workout_Type), ])
+drzewo_decyzyjne2 <- rpart(BMI ~ Age + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
                              Session_Duration_hours + Calories_Burned + 
                              Fat_Percentage + Water_Intake_liters + 
                              Workout_Frequency_daysweek + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
-silownia$BMI[is.na(silownia$BMI)] <- predict(drzewo_decyzyjne1, newdata = silownia[is.na(silownia$BMI), ])
+silownia$BMI[is.na(silownia$BMI)] <- predict(drzewo_decyzyjne2, newdata = silownia[is.na(silownia$BMI), ])
 
-drzewo_decyzyjne2 <- rpart(Age ~ BMI + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+drzewo_decyzyjne3 <- rpart(Age ~ BMI + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
                              Session_Duration_hours + Calories_Burned + 
                              Fat_Percentage + Water_Intake_liters + 
                              Workout_Frequency_daysweek + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
-silownia$Age[is.na(silownia$Age)] <- predict(drzewo_decyzyjne2, newdata = silownia[is.na(silownia$Age), ])
+silownia$Age[is.na(silownia$Age)] <- predict(drzewo_decyzyjne3, newdata = silownia[is.na(silownia$Age), ])
 
-silownia$Workout_Type <- as.factor(silownia$Workout_Type)
-silownia$Gender <- as.factor(silownia$Gender)
-
-#Jak z Workout_Type?
-
-drzewo_decyzyjne3 <- rpart(Workout_Type ~ Gender, data = silownia, method = "class", na.action = na.exclude)
-
-silownia$Workout_Type[is.na(silownia$Workout_Type)] <- predict(drzewo_decyzyjne3, newdata = silownia[is.na(silownia$Workout_Type), ])
 print(silownia)
 
 #Imputacja hot-deck
@@ -240,17 +254,11 @@ odstajace_BMI
 #walidacja danych
 library(dplyr)
 library(ggplot2)
-install.packages("rmdformats")
 library(rmdformats)
-install.packages("validate")
 library(validate)
-install.packages("validatetools")
 library(validatetools)
-install.packages("dcmodify")
 library(dcmodify)
-install.packages("errorlocate")
 library(errorlocate)
-install.packages("deductive")
 library(deductive)
 library(VIM)
 library(simputation)
