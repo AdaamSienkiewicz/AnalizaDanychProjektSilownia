@@ -252,6 +252,25 @@ odstajace_BMI
 # Dla zmiennej BMI jest 10 obserwacji, które różnią się o co najmniej 3 odchylenia od średniej, tj. są obserwacjami odstającymi.
 
 #walidacja danych
+packages <- c(
+  "dplyr", "ggplot2", "rmdformats", "validate", "validatetools", 
+  "dcmodify", "errorlocate", "deductive", "VIM", "simputation", 
+  "lumberjack", "ISLR", "dlookr", "xts", "quantmod", "ROCR", 
+  "DMwR", "Information", "scorecard"
+)
+
+install_if_missing <- function(packages) {
+  for (pkg in packages) {
+    if (!require(pkg, character.only = TRUE)) { 
+      install.packages(pkg)                    
+      library(pkg, character.only = TRUE)      
+    } else {
+      library(pkg, character.only = TRUE)      
+    }
+  }
+}
+install_if_missing(packages)
+
 library(dplyr)
 library(ggplot2)
 library(rmdformats)
