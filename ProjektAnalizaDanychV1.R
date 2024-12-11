@@ -8,160 +8,12 @@ silownia <- read_csv("silownia_new.csv")
 
 View(silownia)
 
-
-vis_miss(silownia)
-vis_dat(silownia)
-gg_miss_var(silownia)
-
-#Braki danych występują w kolumnie Workout_Type, Age oraz BMI
-#Kolumna Age oraz BMI posiadają wartości liczbowe, a kolumna Workout_Type to ciąg znaków (wyraz)
-#W Age braki stanowią 10%, w Workout_Type 15%, a w BMI 15 %
-
-kolumny_z_NA <- silownia %>% 
-                  select(Age, Workout_Type, BMI)
-
-miss_case_table(silownia)
-gg_miss_upset(silownia, nsets= 3)
-
-# 631 wierszy ma 0 NA
-# 287 wierszy ma 1 NA (115 wierszy w Workout_Type; 106 w BMI; 66 w Age)
-# 52 wiersze ma 2 NA (21 wierszy mialo NA w Workout_Type i BMI; 20 wierszy w Age i BMI;
-# 11 w Age i Workout_type)
-# 3 wiersze maja 3 NA
-
-ggplot(data = silownia, aes(x = Age, y = BMI)) + 
-  geom_point() +
-  geom_miss_point() +
-  scale_color_manual(values = c("darkorange","cyan4")) +
-  theme_minimal()
-
-#Age i BMI - braki w kolumnie BMI były kompletnie niezalzne od kolumny Age; 
-# braki w kolumnie Age raczej nie były zależne od kolumny BMI, jedynie troche wiecej
-# brakow wystepowalo w nizszych wartsociach BMI
-
-ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = BMI)) + 
-  geom_point() +
-  geom_miss_point() +
-  scale_color_manual(values = c("darkorange","cyan4")) +
-  theme_minimal()
-
-#Workout_Type i BMI - braki w kolumnie BMI były kompletnie niezalzne od kolumny Workout_Type; 
-# braki w kolumnie Workout_Type raczej nie były zależne od kolumny BMI, jedynie troche wiecej
-# brakow wystepowalo w nizszych wartsociach BMI
-
-ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = Age)) + 
-  geom_point() +
-  geom_miss_point() +
-  scale_color_manual(values = c("darkorange","cyan4")) +
-  theme_minimal()
-
-#Workout_Type i Age - braki w obu kolumnach są kompletnie niezależne od siebie
-
 #Zmiana nazw kolumn
 colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
 colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
 colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session_Duration_hours"
 colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
 colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
-
-# Zastąpienie braków NA w kolumnie BMI za pomocą wzoru na BMI
-silownia_z_BMI <- silownia
-silownia_z_BMI$BMI <- ifelse(
-  is.na(silownia_z_BMI$BMI),  
-  silownia_z_BMI$Weight_kg / (silownia_z_BMI$Height_m^2),  
-  silownia_z_BMI$BMI )
-
-# Imputacja metodą k-Nearest Neighbors (kNN) - poprawka
-library(VIM)
-dane_imputowane <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
-print(dane_imputowane)
-str(dane_imputowane)
-
-vis_miss(dane_imputowane)
-vis_dat(dane_imputowane)
-gg_miss_var(dane_imputowane)
-
-# IMPUTACJA Z PAKIETEM MICE
-library(mice)
-
-is.factor(silownia$Workout_Type)
-silownia$Workout_Type <- factor(silownia$Workout_Type, levels = c("Yoga", "Cardio", "HIIT", "Strength"))
-
-metody <- make.method(silownia)
-metody["Age"] <- "pmm"
-metody["Workout_Type"] <- "polyreg"
-metody["BMI"] <- "pmm"
-
-pred_mat <- quickpred(silownia, mincor = 0.25)
-pred_mat
-silownia_imp <- mice(silownia, m = 5, method = metody, predictorMatrix = pred_mat)
-
-lm_imp <- with(silownia_imp, lm(BMI ~ Weight_kg + Gender))
-lm_pooled <- pool(lm_imp)
-summary(lm_pooled, conf.int = TRUE, conf.level = 0.95)
-
-# Porównanie danych rzeczywistych z zimputowanymi
-stripplot(silownia_imp, BMI ~ Weight_kg  | .imp, pch = 20, cex = 2)
-
-silownia_mice <- complete(silownia_imp, action = 1)
-head(silownia_mice)
-
-summary(silownia)
-summary(silownia_mice)
-
-
-#Imputacja z pakietem RPART
-install.packages("rpart")
-library(rpart)
-
-colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
-colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
-colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session_Duration_hours"
-colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
-colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
-
-silownia_rpart  <- silownia  %>%
-  mutate(Workout_Type = case_when(
-    Workout_Type == "Yoga" ~ 1,
-    Workout_Type == "Cardio" ~ 2,
-    Workout_Type == "HIIT" ~ 3,
-    Workout_Type == "Strength" ~ 4,
-    TRUE ~ as.numeric(Workout_Type) 
-  ))
-
-silownia_rpart <- silownia_rpart %>%
-  mutate(Gender = case_when(
-    Gender == "Male" ~ 1,
-    Gender == "Female" ~ 2,
-    TRUE ~ as.numeric(Gender) 
-  ))
-
-
-drzewo_decyzyjne1 <- rpart(Workout_Type ~ Age + BMI + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
-                             Session_Duration_hours + Calories_Burned + 
-                             Fat_Percentage + Water_Intake_liters + 
-                             Workout_Frequency_daysweek + Gender + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
-
-silownia_rpart$Workout_Type[is.na(silownia_rpart$Workout_Type)] <- predict(drzewo_decyzyjne1, newdata = silownia_rpart[is.na(silownia_rpart$Workout_Type), ])
-drzewo_decyzyjne2 <- rpart(BMI ~ Age + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
-                             Session_Duration_hours + Calories_Burned + 
-                             Fat_Percentage + Water_Intake_liters + 
-                             Workout_Frequency_daysweek + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
-silownia_rpart$BMI[is.na(silownia_rpart$BMI)] <- predict(drzewo_decyzyjne2, newdata = silownia_rpart[is.na(silownia_rpart$BMI), ])
-
-drzewo_decyzyjne3 <- rpart(Age ~ BMI + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
-                             Session_Duration_hours + Calories_Burned + 
-                             Fat_Percentage + Water_Intake_liters + 
-                             Workout_Frequency_daysweek + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
-silownia_rpart$Age[is.na(silownia_rpart$Age)] <- predict(drzewo_decyzyjne3, newdata = silownia_rpart[is.na(silownia_rpart$Age), ])
-
-print(silownia_rpart)
-
-
-
-#Imputacja hot-deck
-dane_imputowanehotdeck <- hotdeck(silownia)
-print(dane_imputowanehotdeck)
 
 
 ## Odstające obserwacje
@@ -245,6 +97,153 @@ odstajace_BMI
 # Dla zmiennej BMI jest 10 obserwacji, które różnią się o co najmniej 3 odchylenia od średniej, tj. są obserwacjami odstającymi.
 
 #Dla zmiennej BMI jest 10 obserwacji odstających oraz dla zmiennej Calories_burned są 3 obserwacje odstające
+
+#ANALIZA BRAKÓW DANYCH
+vis_miss(silownia)
+vis_dat(silownia)
+gg_miss_var(silownia)
+
+#Braki danych występują w kolumnie Workout_Type, Age oraz BMI
+#Kolumna Age oraz BMI posiadają wartości liczbowe, a kolumna Workout_Type to ciąg znaków (wyraz)
+#W Age braki stanowią 10%, w Workout_Type 15%, a w BMI 15 %
+
+kolumny_z_NA <- silownia %>% 
+                  select(Age, Workout_Type, BMI)
+
+miss_case_table(silownia)
+gg_miss_upset(silownia, nsets= 3)
+
+# 631 wierszy ma 0 NA
+# 287 wierszy ma 1 NA (115 wierszy w Workout_Type; 106 w BMI; 66 w Age)
+# 52 wiersze ma 2 NA (21 wierszy mialo NA w Workout_Type i BMI; 20 wierszy w Age i BMI;
+# 11 w Age i Workout_type)
+# 3 wiersze maja 3 NA
+
+ggplot(data = silownia, aes(x = Age, y = BMI)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("darkorange","cyan4")) +
+  theme_minimal()
+
+#Age i BMI - braki w kolumnie BMI były kompletnie niezalzne od kolumny Age; 
+# braki w kolumnie Age raczej nie były zależne od kolumny BMI, jedynie troche wiecej
+# brakow wystepowalo w nizszych wartsociach BMI
+
+ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = BMI)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("darkorange","cyan4")) +
+  theme_minimal()
+
+#Workout_Type i BMI - braki w kolumnie BMI były kompletnie niezalzne od kolumny Workout_Type; 
+# braki w kolumnie Workout_Type raczej nie były zależne od kolumny BMI, jedynie troche wiecej
+# brakow wystepowalo w nizszych wartsociach BMI
+
+ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = Age)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("darkorange","cyan4")) +
+  theme_minimal()
+
+#Workout_Type i Age - braki w obu kolumnach są kompletnie niezależne od siebie
+
+# Zastąpienie braków NA w kolumnie BMI za pomocą wzoru na BMI - i te braki zastapimy wlasnie tym wzorem
+
+silownia$BMI <- ifelse(
+  is.na(silownia$BMI),  
+  silownia$Weight_kg / (silownia$Height_m^2),  
+  silownia$BMI )
+
+# Imputacja metodą k-Nearest Neighbors (kNN) - poprawka
+library(VIM)
+dane_imputowane <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
+print(dane_imputowane)
+str(dane_imputowane)
+
+vis_miss(dane_imputowane)
+vis_dat(dane_imputowane)
+gg_miss_var(dane_imputowane)
+
+# IMPUTACJA Z PAKIETEM MICE
+library(mice)
+
+if (!is.factor(silownia$Workout_Type)) {
+  silownia$Workout_Type <- factor(silownia$Workout_Type, levels = c("Yoga", "Cardio", "HIIT", "Strength"))
+}
+
+# Tworzenie wektora metod imputacji
+metody <- make.method(silownia)
+
+# Ustawienie metod imputacji tylko dla Age i Workout_Type
+metody["Age"] <- "pmm"
+metody["Workout_Type"] <- "polyreg"
+metody["BMI"] <- "" 
+
+# Tworzenie macierzy predyktorów
+pred_mat <- make.predictorMatrix(silownia)
+pred_mat["BMI", ] <- 0 # Wyłącz imputację dla BMI
+pred_mat[, "BMI"] <- 1 # BMI jako predyktor dla innych kolumn
+
+# Przeprowadzenie imputacji
+silownia_imp <- mice(silownia, m = 5, method = metody, predictorMatrix = pred_mat, seed = 123)
+
+
+lm_imp <- with(silownia_imp, lm(BMI ~ Weight_kg + Gender))
+lm_pooled <- pool(lm_imp)
+
+summary(lm_pooled, conf.int = TRUE, conf.level = 0.95)
+
+
+stripplot(silownia_imp, BMI ~ Weight_kg | .imp, pch = 20, cex = 2)
+
+
+silownia_mice <- complete(silownia_imp, action = 1)
+
+#Imputacja z pakietem RPART
+
+library(rpart)
+
+silownia_rpart  <- silownia  %>%
+  mutate(Workout_Type = case_when(
+    Workout_Type == "Yoga" ~ 1,
+    Workout_Type == "Cardio" ~ 2,
+    Workout_Type == "HIIT" ~ 3,
+    Workout_Type == "Strength" ~ 4,
+    TRUE ~ as.numeric(Workout_Type) 
+  ))
+
+silownia_rpart <- silownia_rpart %>%
+  mutate(Gender = case_when(
+    Gender == "Male" ~ 1,
+    Gender == "Female" ~ 2,
+    TRUE ~ as.numeric(Gender) 
+  ))
+
+
+drzewo_decyzyjne1 <- rpart(Workout_Type ~ Age + BMI + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+                             Session_Duration_hours + Calories_Burned + 
+                             Fat_Percentage + Water_Intake_liters + 
+                             Workout_Frequency_daysweek + Gender + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
+
+silownia_rpart$Workout_Type[is.na(silownia_rpart$Workout_Type)] <- predict(drzewo_decyzyjne1, newdata = silownia_rpart[is.na(silownia_rpart$Workout_Type), ])
+
+
+drzewo_decyzyjne2 <- rpart(Age ~ BMI + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+                             Session_Duration_hours + Calories_Burned + 
+                             Fat_Percentage + Water_Intake_liters + 
+                             Workout_Frequency_daysweek + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
+silownia_rpart$Age[is.na(silownia_rpart$Age)] <- predict(drzewo_decyzyjne2, newdata = silownia_rpart[is.na(silownia_rpart$Age), ])
+
+print(silownia_rpart)
+
+
+
+#Imputacja hot-deck
+dane_imputowanehotdeck <- hotdeck(silownia)
+print(dane_imputowanehotdeck)
+
+
+#WYBRALISMY METODE ...
 
 #walidacja danych
 packages <- c(
