@@ -20,16 +20,6 @@ gg_miss_var(silownia)
 kolumny_z_NA <- silownia %>% 
                   select(Age, Workout_Type, BMI)
 
-#Jakby ktos potrzebowal kodu do zmiany character na numeric
-kolumny_z_NA  <- kolumny_z_NA  %>%
-  mutate(Workout_Type = case_when(
-    Workout_Type == "Yoga" ~ 1,
-    Workout_Type == "Cardio" ~ 2,
-    Workout_Type == "HIIT" ~ 3,
-    Workout_Type == "Strength" ~ 4,
-    TRUE ~ as.numeric(Workout_Type) # Pozostawienie NA
-  ))
-
 miss_case_table(silownia)
 gg_miss_upset(silownia, nsets= 3)
 
@@ -130,7 +120,7 @@ colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session
 colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
 colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
 
-silownia  <- silownia  %>%
+silownia_rpart  <- silownia  %>%
   mutate(Workout_Type = case_when(
     Workout_Type == "Yoga" ~ 1,
     Workout_Type == "Cardio" ~ 2,
@@ -139,32 +129,35 @@ silownia  <- silownia  %>%
     TRUE ~ as.numeric(Workout_Type) 
   ))
 
-silownia <- silownia %>%
+silownia_rpart <- silownia_rpart %>%
   mutate(Gender = case_when(
     Gender == "Male" ~ 1,
     Gender == "Female" ~ 2,
     TRUE ~ as.numeric(Gender) 
   ))
 
+
 drzewo_decyzyjne1 <- rpart(Workout_Type ~ Age + BMI + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
                              Session_Duration_hours + Calories_Burned + 
                              Fat_Percentage + Water_Intake_liters + 
-                             Workout_Frequency_daysweek + Gender + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
+                             Workout_Frequency_daysweek + Gender + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
 
-silownia$Workout_Type[is.na(silownia$Workout_Type)] <- predict(drzewo_decyzyjne1, newdata = silownia[is.na(silownia$Workout_Type), ])
+silownia_rpart$Workout_Type[is.na(silownia_rpart$Workout_Type)] <- predict(drzewo_decyzyjne1, newdata = silownia_rpart[is.na(silownia_rpart$Workout_Type), ])
 drzewo_decyzyjne2 <- rpart(BMI ~ Age + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
                              Session_Duration_hours + Calories_Burned + 
                              Fat_Percentage + Water_Intake_liters + 
-                             Workout_Frequency_daysweek + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
-silownia$BMI[is.na(silownia$BMI)] <- predict(drzewo_decyzyjne2, newdata = silownia[is.na(silownia$BMI), ])
+                             Workout_Frequency_daysweek + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
+silownia_rpart$BMI[is.na(silownia_rpart$BMI)] <- predict(drzewo_decyzyjne2, newdata = silownia_rpart[is.na(silownia_rpart$BMI), ])
 
 drzewo_decyzyjne3 <- rpart(Age ~ BMI + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
                              Session_Duration_hours + Calories_Burned + 
                              Fat_Percentage + Water_Intake_liters + 
-                             Workout_Frequency_daysweek + Experience_Level, data = silownia, method = "anova", na.action = na.exclude)
-silownia$Age[is.na(silownia$Age)] <- predict(drzewo_decyzyjne3, newdata = silownia[is.na(silownia$Age), ])
+                             Workout_Frequency_daysweek + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
+silownia_rpart$Age[is.na(silownia_rpart$Age)] <- predict(drzewo_decyzyjne3, newdata = silownia_rpart[is.na(silownia_rpart$Age), ])
 
-print(silownia)
+print(silownia_rpart)
+
+
 
 #Imputacja hot-deck
 dane_imputowanehotdeck <- hotdeck(silownia)
@@ -250,6 +243,8 @@ z_score_BMI
 odstajace_BMI <- sum(na.omit(abs(z_score_BMI)) > 3)
 odstajace_BMI
 # Dla zmiennej BMI jest 10 obserwacji, które różnią się o co najmniej 3 odchylenia od średniej, tj. są obserwacjami odstającymi.
+
+#Dla zmiennej BMI jest 10 obserwacji odstających oraz dla zmiennej Calories_burned są 3 obserwacje odstające
 
 #walidacja danych
 packages <- c(
