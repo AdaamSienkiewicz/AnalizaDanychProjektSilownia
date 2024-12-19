@@ -156,13 +156,13 @@ silownia$BMI <- ifelse(
 
 # Imputacja metodą k-Nearest Neighbors (kNN) - poprawka
 library(VIM)
-dane_imputowane <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
-print(dane_imputowane)
-str(dane_imputowane)
+silownia_kNN <- kNN(silownia, k = 3) # Imputacja z użyciem 3 najbliższych sąsiadów
+print(silownia_kNN)
+str(silownia_kNN)
 
-vis_miss(dane_imputowane)
-vis_dat(dane_imputowane)
-gg_miss_var(dane_imputowane)
+vis_miss(silownia_kNN)
+vis_dat(silownia_kNN)
+gg_miss_var(silownia_kNN)
 
 # IMPUTACJA Z PAKIETEM MICE
 library(mice)
@@ -239,12 +239,12 @@ print(silownia_rpart)
 
 
 #Imputacja hot-deck
-dane_imputowanehotdeck <- hotdeck(silownia)
-print(dane_imputowanehotdeck)
+silownia_hotdeck <- hotdeck(silownia)
+print(silownia_hotdeck)
 
 
-#WYBRALISMY METODE ...
-
+#WYBRALISMY METODE HOTDECK do dalszej analizy
+silownia_brudne_dane <- silownia_hotdeck
 #walidacja danych
 packages <- c(
   "dplyr", "ggplot2", "rmdformats", "validate", "validatetools", 
@@ -286,37 +286,7 @@ library(DMwR)
 library(Information)
 library(scorecard)
 
-#walidacja Weight_kg
-
-min_value <- min(silownia$`Weight_kg`, na.rm = TRUE)
-max_value <- max(silownia$`Weight_kg`, na.rm = TRUE)
-
-rules_Weight_kg <- validator(
-  `Weight_kg` > 0,            
-  `Weight_kg` >= 40,           
-  `Weight_kg` <= 140,
-  is.numeric(`Weight_kg`) == TRUE
-)
-
-cf <- confront(silownia, rules_Weight_kg, key="Weight_kg")
-summary(cf)
-barplot(cf, main="silownia")
-
-#Height_m
-
-min_value <- min(silownia$`Height_m`, na.rm = TRUE)
-max_value <- max(silownia$`Height_m`, na.rm = TRUE)
-
-rules_Height_m <- validator(
-  `Height_m` > 0,            
-  `Height_m` >= 1.30,           
-  `Height_m` <= 2.15,
-  is.numeric(`Height_m`) == TRUE
-)
-
-cf <- confront(silownia, rules_Height_m, key="Height_m")
-summary(cf)
-barplot(cf, main="silownia")
+#walidacja 
 
 #Age
 
@@ -327,99 +297,163 @@ rules_Age <- validator(
   is.numeric(`Age`) == TRUE
 )
 
-cf <- confront(silownia, rules_Age, key="Age")
-summary(cf)
-barplot(cf, main="silownia")
+cf1 <- confront(silownia_brudne_dane, rules_Age, key="Age")
+summary(cf1)
+barplot(cf1, main="silownia")
 
-#Max_BPM - na podstawie wzoru Max BPM = 220 − Age
+#Gender
+rules_Gender <- validator(Gender %in% c("Female", "Male"))
 
-rules_Max_BPM <- validator(
-  `Max_BPM` > 0, 
-  if (Age >= 18 & Age <= 29) `Max_BPM` >= 100 & `Max_BPM` <= 200,
-  if (Age >= 30 & Age <= 39) `Max_BPM` >= 95 & `Max_BPM` <= 190,
-  if (Age >= 40 & Age <= 49) `Max_BPM` >= 90 & `Max_BPM` <= 180,
-  if (Age >= 50 & Age <= 59) `Max_BPM` >= 85 & `Max_BPM` <= 170,
-  if (Age >= 60) `Max_BPM` >= 80 & `Max_BPM` <= 160
+
+cf2 <- confront(silownia_brudne_dane, rules_Gender, key="Gender")
+summary(cf2)
+barplot(cf2, main="silownia")
+
+
+#Weight
+
+rules_Weight_kg <- validator(
+  `Weight_kg` > 0,            
+  `Weight_kg` >= 40,           
+  `Weight_kg` <= 140,
+  is.numeric(`Weight_kg`) == TRUE
 )
 
-cf <- confront(silownia, rules_Max_BPM, key="Max_BPM")
-summary(cf)
-barplot(cf, main="silownia")
+cf3 <- confront(silownia_brudne_dane, rules_Weight_kg, key="Weight_kg")
+summary(cf3)
+barplot(cf3, main="silownia")
 
-#Zamiana błędnych pól na NA w Max_BPM
+#Height_m
 
-silownia <- replace_errors(silownia, rules_Max_BPM)
-sum(is.na(silownia))
+rules_Height_m <- validator(
+  `Height_m` > 0,            
+  `Height_m` >= 1.30,           
+  `Height_m` <= 2.15,
+  is.numeric(`Height_m`) == TRUE
+)
 
-#I tu trzeba znów przeprowadzić imputację 
+cf4 <- confront(silownia_brudne_dane, rules_Height_m, key="Height_m")
+summary(cf4)
+barplot(cf4, main="silownia")
+
+#Max_BPM
+
+rules_Max_BPM <- validator(
+ `Max_BPM` >=110,
+ `Max_BPM` <=210,
+ is.numeric(`Max_BPM`) == TRUE
+)
+
+cf5 <- confront(silownia_brudne_dane, rules_Max_BPM, key="Max_BPM")
+summary(cf5)
+barplot(cf5, main="silownia")
+
 
 #Avg_BPM
 
 rules_Avg_BPM <- validator(
-  `Avg_BPM` > 0,
-  if (Age >= 18 & Age <= 29) `Avg_BPM` >= 60 & `Avg_BPM` <= 120,
-  if (Age >= 30 & Age <= 39) `Avg_BPM` >= 60 & `Avg_BPM` <= 115,
-  if (Age >= 40 & Age <= 49) `Avg_BPM` >= 60 & `Avg_BPM` <= 110,
-  if (Age >= 50 & Age <= 59) `Avg_BPM` >= 55 & `Avg_BPM` <= 105,
-  if (Age >= 60) `Avg_BPM` >= 50 & `Avg_BPM` <= 100
+  `Avg_BPM` >=80,
+  `Avg_BPM` <=180,
+  is.numeric(`Avg_BPM`) == TRUE
 )
 
-cf <- confront(silownia, rules_Avg_BPM, key="Avg_BPM")
-summary(cf)
-barplot(cf, main="silownia")
-
-#Zamiana błędnych pól na NA w Max_BPM
-
-silownia <- replace_errors(silownia, rules_Avg_BPM)
-sum(is.na(silownia))
-
-#I tu ponownie trzeba znów przeprowadzić imputację 
+cf6 <- confront(silownia_brudne_dane, rules_Avg_BPM, key="Avg_BPM")
+summary(cf6)
+barplot(cf6, main="silownia")
 
 #Resting_BPM
 
 rules_Resting_BPM <- validator(
-  `Resting_BPM` > 0,
-  if (Age >= 18 & Age <= 29) `Resting_BPM` >= 50 & `Resting_BPM` <= 85,
-  if (Age >= 30 & Age <= 39) `Resting_BPM` >= 55 & `Resting_BPM` <= 85,
-  if (Age >= 40 & Age <= 49) `Resting_BPM` >= 55 & `Resting_BPM` <= 90,
-  if (Age >= 50 & Age <= 59) `Resting_BPM` >= 60 & `Resting_BPM` <= 90,
-  if (Age >= 60) `Resting_BPM` >= 60 & `Resting_BPM` <= 95
+  `Resting_BPM` >= 45,
+  `Resting_BPM` <=130,
+  is.numeric(`Resting_BPM`) == TRUE
 )
 
-cf <- confront(silownia, rules_Resting_BPM, key="Resting_BPM")
-summary(cf)
-barplot(cf, main="silownia")
+cf7 <- confront(silownia_brudne_dane, rules_Resting_BPM, key="Resting_BPM")
+summary(cf7)
+barplot(cf7, main="silownia")
 
-#Zamiana błędnych pól na NA w Resting_BPM
+#Session_Duration_hours
 
-silownia <- replace_errors(silownia, rules_Resting_BPM)
-sum(is.na(silownia))
+rules_Session_Duration_hours <- validator(
+  `Session_Duration_hours` > 0, 
+  `Session_Duration_hours` <= 2,
+  is.numeric(`Session_Duration_hours`) == TRUE
+)
 
-#Imputacja 
+cf8 <- confront(silownia_brudne_dane, rules_Session_Duration_hours, key="Session_Duration_hours")
+summary(cf8)
+barplot(cf8, main="silownia")
+
+#Calories_burned
+
+rules_Calories_Burned <- validator(
+  `Calories_Burned` > 0, 
+  `Calories_Burned` <= 2000,
+  is.numeric(`Calories_Burned`) == TRUE
+)
+
+cf9 <- confront(silownia_brudne_dane, rules_Calories_Burned, key="Calories_Burned")
+summary(cf9)
+barplot(cf9, main="silownia")
+
+#Workout_Type
+
+rules_Workout_Type <- validator(Workout_Type %in% c("Yoga", "Cardio", "HIIT","Strength"))
+
+
+cf10 <- confront(silownia_brudne_dane, rules_Workout_Type, key="Workout_Type")
+summary(cf10)
+barplot(cf10, main="silownia")
+
 
 #Fat_Percentage
 
 rules_Fat_Percentage <- validator(
   `Fat_Percentage` > 0, 
   `Fat_Percentage` <= 50,
-  if (Gender == "Male" & Age >= 18 & Age <= 39) `Fat_Percentage` >= 8 & `Fat_Percentage` <= 20,
-  if (Gender == "Male" & Age >= 40 & Age <= 59) `Fat_Percentage` >= 11 & `Fat_Percentage` <= 22,
-  if (Gender == "Male" & Age >= 60) `Fat_Percentage` >= 13 & `Fat_Percentage` <= 25,
-  if (Gender == "Female" & Age >= 18 & Age <= 39) `Fat_Percentage` >= 21 & `Fat_Percentage` <= 33,
-  if (Gender == "Female" & Age >= 40 & Age <= 59) `Fat_Percentage` >= 23 & `Fat_Percentage` <= 35,
-  if (Gender == "Female" & Age >= 60) `Fat_Percentage` >= 24 & `Fat_Percentage` <= 36
+  is.numeric(`Fat_Percentage`) == TRUE
 )
 
-cf <- confront(silownia, rules_Fat_Percentage, key="Fat_Percentage")
-summary(cf)
-barplot(cf, main="silownia")
+cf11 <- confront(silownia_brudne_dane, rules_Fat_Percentage, key="Fat_Percentage")
+summary(cf11)
+barplot(cf11, main="silownia")
 
-#Zamiana błędnych pól na NA w Fat_Percentage
+#Water_Intake_litres
 
-silownia <- replace_errors(silownia, rules_Fat_Percentage)
-sum(is.na(silownia))
+rules_Water_Intake_liters <- validator(
+  `Water_Intake_liters` > 0, 
+  `Water_Intake_liters` <= 4,
+  is.numeric(`Water_Intake_liters`) == TRUE
+)
 
-#Imputacja 
+cf12 <- confront(silownia_brudne_dane, rules_Water_Intake_liters, key="Water_Intake_liters")
+summary(cf12)
+barplot(cf12, main="silownia")
+
+#Workout_Frequency_daysweek
+
+rules_Workout_Frequency_daysweek <- validator(
+  Workout_Frequency_daysweek >= 0,
+  Workout_Frequency_daysweek <= 7,
+  Workout_Frequency_daysweek %% 1 == 0
+)
+
+cf13 <- confront(silownia_brudne_dane, rules_Workout_Frequency_daysweek, key="Workout_Frequency_daysweek")
+summary(cf13)
+barplot(cf13, main="silownia")
+
+#Experience_level
+
+rules_Experience_Level <- validator(
+  Experience_Level >= 0,
+  Experience_Level <= 3,
+  Experience_Level %% 1 == 0
+)
+
+cf14 <- confront(silownia_brudne_dane, rules_Experience_Level, key="Experience_Level")
+summary(cf14)
+barplot(cf14, main="silownia")
 
 #BMI
 
@@ -430,17 +464,9 @@ rules_BMI <- validator(
   abs(`BMI` - (`Weight_kg` / (`Height_m`^2))) < 0.1 # Spójność z masą i wzrostem(ze względu na wzór)
 )
 
-cf <- confront(silownia, rules_BMI, key="BMI")
-summary(cf)
-barplot(cf, main="silownia")
+cf15 <- confront(silownia_brudne_dane, rules_BMI, key="BMI")
+summary(cf15)
+barplot(cf15, main="silownia")
 
-#Workout_Frequency_daysweek
-
-rules_Workout_Frequency_daysweek <- validator(
-  workout_days_week >= 0,
-  workout_days_week <= 7  
-)
-
-cf <- confront(silownia, rules_Workout_Frequency_daysweek, key="Workout_Frequency_daysweek")
-summary(cf)
-barplot(cf, main="silownia")
+#DANE SĄ CZYSTE I GOTOWE DO ANALIZY
+Silownia_wykresy <- silownia_brudne_dane
