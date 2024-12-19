@@ -16,8 +16,8 @@ colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Inta
 colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
 
 
-## Odstające obserwacje
-# Z-score
+#WYKAZANIE OBSERWACJI ODSTAJĄCYCH
+# metoda Z-score
 z_score_Age <- (na.omit(silownia$Age) - mean(na.omit(silownia$Age))) / sd(na.omit(silownia$Age))
 z_score_Age
 odstajace_Age <- sum(na.omit(abs(z_score_Age)) > 3)
@@ -96,7 +96,67 @@ odstajace_BMI <- sum(na.omit(abs(z_score_BMI)) > 3)
 odstajace_BMI
 # Dla zmiennej BMI jest 10 obserwacji, które różnią się o co najmniej 3 odchylenia od średniej, tj. są obserwacjami odstającymi.
 
+# Za pomocą metody z-score wykazano, że dla zmiennych BMI oraz Calories_burned są obserwacje, 
+#które różnią się o co najmniej 3 odchylenia od średnich
 #Dla zmiennej BMI jest 10 obserwacji odstających oraz dla zmiennej Calories_burned są 3 obserwacje odstające
+
+# za pomocą wykresu ramkowego
+#Age
+boxplot(silownia$Age)
+# Zmienna Age nie ma obserwacji odstających, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego 
+#poniżej pierwszego kwartyla oraz powyżej trzeciego kwartyla
+
+#Weight
+boxplot(silownia$Weight_kg)
+# Zmienna Weight ma odstające obserwacje (górne outliery), czyli obserwacje, które znajdują się o więcej
+#niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla
+
+#Height
+boxplot(silownia$Height_m)
+# Zmienna Height nie ma obserwacji odstających
+
+#Max BPM
+boxplot(silownia$Max_BPM)
+# Zmienna Max_BPM nie ma obserwacji odstających
+
+#Avg BPM
+boxplot(silownia$Avg_BPM) 
+# Zmienna Avg_BPM nie ma obserwacji odstających
+
+#Resting BPM
+boxplot(silownia$Resting_BPM)
+# Zmienna Resting BPM nie ma obserwacji odstających
+
+#Session duration
+boxplot(silownia$Session_Duration_hours)
+# Zmienna Session duration nie ma obserwacji odstających
+
+#Calories burned
+boxplot(silownia$Calories_Burned)
+# Zmienna Calories burned ma górne outliery, czyli obserwacje, które znajdują się o więcej
+#niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla
+
+#Fat percentage
+boxplot(silownia$Fat_Percentage)
+# Zmienna Fat percentage nie ma obserwacji odstających 
+
+#Water intake
+boxplot(silownia$Water_Intake_liters)
+# Zmienna Water intake nie ma obserwacji odstających 
+
+#Workout frequency
+boxplot(silownia$Workout_Frequency_daysweek)
+# Zmienna Workout frequency nie ma obserwacji odstających 
+
+#BMI
+boxplot(silownia$BMI)
+# W przypadku zmiennej BMI występują górne outliery, czyli obserwacje, które znajdują się o więcej
+#niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla
+
+# Za pomocą wykresu ramkowego wykazano, że w przypadku zmiennych Weight, Calories_burned oraz BMI występują 
+#górne outliery,czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla.
+# Żadna zmienna natomiast nie ma ekstremalnych obserwacji odstających
+
 
 #ANALIZA BRAKÓW DANYCH
 vis_miss(silownia)
