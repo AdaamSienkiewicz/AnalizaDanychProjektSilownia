@@ -313,6 +313,9 @@ packages <- c(
   "DMwR", "Information", "scorecard"
 )
 
+install.packages("Information")
+install.packages("scorecard")
+
 install_if_missing <- function(packages) {
   for (pkg in packages) {
     if (!require(pkg, character.only = TRUE)) { 
@@ -530,3 +533,166 @@ barplot(cf15, main="silownia")
 
 #DANE SĄ CZYSTE I GOTOWE DO ANALIZY
 Silownia_wykresy <- silownia_brudne_dane
+
+install.packages("tidyverse")
+library(ggplot2)
+library(tidyverse)
+
+#Rozkład kobiet i mężczyzn
+
+ggplot(Silownia_wykresy, aes(x = Gender, fill = Gender)) + 
+  geom_bar(stat = "count", width = 0.6, color = "black", size = 0.5) +  
+  scale_fill_manual(values = c("Male" = "#3498db", "Female" = "#e74c3c")) +  
+  labs(
+    title = "Rozkład płci w zbiorze danych", 
+    x = "Płeć", 
+    y = "Liczba osób"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title.position = "panel"
+    )
+
+#Zależność BMI od wieku
+
+ggplot(Silownia_wykresy, aes(x = Age, y = BMI)) +
+  geom_point(color = "darkgreen", size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
+  xlab("Wiek") +
+  ylab("BMI") +
+  ggtitle("Zależność BMI od wieku") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+#Czas trwania sesji a spalone kalorie 
+
+ggplot(Silownia_wykresy, aes(x = Session_Duration_hours, y = Calories_Burned)) +
+  geom_point(color = "blue", size = 3, alpha = 0.7) +
+  geom_smooth(method = "loess", color = "orange", se = TRUE) +
+  xlab("Czas trwania sesji (godziny)") +
+  ylab("Spalone kalorie") +
+  ggtitle("Czas trwania sesji a spalone kalorie") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+#Średnie tętno a rodzaj treningu - w tym przypadku zrobiłem wykres pudełkowy
+
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Avg_BPM, fill = Workout_Type)) +
+  geom_boxplot(alpha = 0.7) +
+  xlab("Rodzaj treningu") +
+  ylab("Średnie tętno (BPM)") +
+  ggtitle("Średnie tętno a rodzaj treningu") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+#Spalone kalorie a waga
+
+ggplot(Silownia_wykresy, aes(x = Weight_kg, y = Calories_Burned)) +
+  geom_point(color = "purple", size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
+  xlab("Waga (kg)") +
+  ylab("Spalone kalorie") +
+  ggtitle("Spalone kalorie a waga") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+#Zależność tętna spoczynkowego od wieku 
+#Wstawiłem linię trendu wygładzoną, co pozwoliło uchwycić nieliniowe zależności między zmiennymi.
+#Cień to przedział ufności, który wskazuje niepewność estymacji linii trendu. Szeroki cień oznacza większą niepewność w przewidywaniu.
+
+ggplot(Silownia_wykresy, aes(x = Age, y = Resting_BPM)) +
+  geom_point(color = "orange", size = 3, alpha = 0.6) +
+  geom_smooth(method = "loess", color = "blue", se = TRUE) +
+  xlab("Wiek") +
+  ylab("Tętno spoczynkowe (BPM)") +
+  ggtitle("Zależność tętna spoczynkowego od wieku") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+#Procent tkanki tłuszczowej ciała a częśtotliwość treningów
+
+ggplot(Silownia_wykresy, aes(x = Fat_Percentage, y = Workout_Frequency_daysweek)) +
+  geom_point(color = "pink", size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "darkorange", se = FALSE) +
+  xlab("Procent tkanki tłuszczowej ciała (%)") +
+  ylab("Częstotliwość treningów (dni/tydzień)") +
+  ggtitle("Zależność między procentem tłuszczu a częstotliwością treningów") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+#Spalone kaolorie a czas trwania sesji
+
+ggplot(Silownia_wykresy, aes(x = Calories_Burned, y = Session_Duration_hours)) +
+  geom_point(color = "steelblue", size = 4, alpha = 0.7) +
+  geom_smooth(method = "lm", color = "firebrick", se = FALSE) +
+  xlab("Spalone kalorie") +
+  ylab("Czas trwania sesji (godziny)") +
+  ggtitle("Zależność między spalonymi kaloriami a czasem trwania sesji") +
+  theme_minimal(base_size = 16) +
+  theme(
+    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 16)
+  )
+
+#Wykres interaktywny - Zależność BMI od wieku, legenda to rodzaj treningu
+
+install.packages("plotly")
+library(plotly)
+
+p1 <- ggplot(Silownia_wykresy, aes(x = Age, y = BMI, color = Workout_Type)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  xlab("Wiek") +
+  ylab("BMI") +
+  scale_color_discrete(name = "Rodzaj treningu") +
+  ggtitle("Zależność BMI od wieku") +
+  theme_light()
+
+plotly::ggplotly(p1)
+
+#Histogramy dla trzech rodzajów BPM - przykładowo zrobiłem dla tej zmiennej
+
+ggplot(Silownia_wykresy, aes(x = Max_BPM)) +
+  geom_histogram(binwidth = 10) +
+  ggtitle("Histogram dla Max_BPM") +
+  xlab("Max_BPM") +
+  ylab("Liczba obserwacji")
+
+ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
+  geom_histogram(binwidth = 10) +
+  ggtitle("Histogram dla Avg_BPM") +
+  xlab("Avg_BPM") +
+  ylab("Liczba obserwacji")
+
+ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
+  geom_histogram(binwidth = 10) +
+  ggtitle("Histogram dla Resting_BPM") +
+  xlab("Resting_BPM") +
+  ylab("Liczba obserwacji")
