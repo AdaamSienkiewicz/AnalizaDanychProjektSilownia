@@ -696,3 +696,34 @@ ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
   ggtitle("Histogram dla Resting_BPM") +
   xlab("Resting_BPM") +
   ylab("Liczba obserwacji")
+
+
+# Czas trwania sesji w zależności od typu treningu
+
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Session_Duration_hours, fill = Workout_Type)) +
+  geom_violin() +
+  labs(title = "Czas trwania sesji w zależności od typu treningu", x = "Typ treningu", y = "Czas trwania (godziny)")
+
+
+# Średnie spalone kalorie według płci i poziomu doświadczenia
+
+ggplot(Silownia_wykresy, aes(x = factor(Experience_Level), y = Calories_Burned, fill = Gender)) +
+  stat_summary(fun = "mean", geom = "bar", position = "dodge") +
+  labs(title = "Średnie spalone kalorie według płci i poziomu doświadczenia", x = "Poziom doświadczenia", y = "Średnie spalone kalorie")
+
+
+# Średnia liczba spalonych kalorii dla różnych typów treningu
+
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Calories_Burned, fill = Workout_Type)) +
+  stat_summary(fun = "mean", geom = "bar") +
+  labs(title = "Średnia liczba spalonych kalorii dla różnych typów treningu", x = "Typ treningu", y = "Średnie spalone kalorie")
+
+
+# Częstotliwość treningów a czas trwania sesji
+
+ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Session_Duration_hours, color = Experience_Level)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Częstotliwość treningów a czas trwania sesji", x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)")
+
+
