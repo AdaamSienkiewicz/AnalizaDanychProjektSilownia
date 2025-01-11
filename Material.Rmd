@@ -21,7 +21,7 @@ output:
 To jest przykładowy dokument w R Markdown, który wykorzystuje nowoczesny i atrakcyjny szablon. Możesz dostosować go do swoich potrzeb, zmieniając tytuł, autora, temat, czcionki i inne ustawienia.
 
 ## Przykład kodu
-
+dsasda
 
 ```{r setup, include=FALSE}
 ## Global options
