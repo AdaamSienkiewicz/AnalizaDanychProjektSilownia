@@ -7,67 +7,145 @@ author: |
 output:
   rmdformats::material:
     highlight: kate
-    theme: "darkly"  # Można zmienić na inny temat, np. "cerulean" czy "darkly"
-    font: "Roboto"  # Zmieniamy czcionkę na nowoczesną
-    code_font: "Courier New"  # Czcionka dla kodu
-    highlight_style: "solarized-light"  # Styl podświetlania kodu
-    fig_caption: true  # Dodajemy podpisy do wykresów
-    theme_color: "#add8e6"  # Kolor motywu
-    highlight_color: "#FF5722"  # Kolor podświetlania kodu
-    css: "styles.css"  # Możliwość dodania własnych stylów CSS
+    theme: "darkly" 
+    font: "Roboto"  
+    code_font: "Courier New"  
+    highlight_style: "solarized-light"  
+    fig_caption: true  
+    theme_color: "#add8e6"  
+    highlight_color: "#FF5722"  
+    css: "material.css"  # Możliwość dodania własnych stylów CSS
 ---
 
-# Wstęp
+# **Wprowadzenie**
 
-# Dane
+## **Dane**
 
-## Zmienne wchodzące w skład zbioru danych
+### **Zmienne wchodzące w skład zbioru danych**
 
-• Wiek: Wiek użytkownika siłowni.
+• ***Wiek*** - wiek użytkownika siłowni.
 
-• Płeć: Płeć użytkownika siłowni (mężczyzna lub kobieta).
+• ***Płeć*** - płeć użytkownika siłowni.
 
-• Waga (kg): Waga członka w kilogramach.
+• ***Waga*** - waga użytkownika siłowni w kilogramach.
 
-• Wzrost (m): Wzrost użytkownika w metrach.
+• ***Wzrost*** - wzrost użytkownika siłowni w metrach
 
-• Max_BPM: Maksymalne tętno (uderzenia na minutę) podczas sesji treningowych.
+• ***Max_BPM*** - maksymalne tętno podczas sesji treningowych.
 
-• Avg_BPM: Średnie tętno podczas sesji treningowych.
+• ***Avg_BPM*** - średnie tętno podczas sesji treningowych.
 
-• Resting_BPM: Tętno w spoczynku przed treningiem.
+• ***Resting_BPM*** - tętno w spoczynku przed treningiem.
 
-• Session_Duration (hours): Czas trwania każdej sesji treningowej w godzinach.
+• ***Session_Duration*** - czas trwania każdej sesji treningowej w godzinach.
 
-• Calories_Burned: Całkowita liczba kalorii spalonych podczas każdej sesji.
+• ***Calories_Burned*** - całkowita liczba kalorii spalonych podczas każdej sesji.
 
-• Workout_Type: Rodzaj wykonanego treningu (np. kardio, siłowy, joga, HIIT).
+• ***Workout_Type*** - rodzaj wykonanego treningu (np. kardio, siłowy, joga, HIIT).
 
-• Fat_Percentage: Procent tkanki tłuszczowej użytkownika.
+• ***Fat_Percentage*** -procent tkanki tłuszczowej.
 
-• Water_Intake (liters): Dzienne spożycie wody podczas treningu.
+• ***Water_Intake*** - dzienne spożycie wody podczas treningu w litrach.
 
-• Workout_Frequency (days/week): Liczba sesji treningowych w tygodniu.
+• ***Workout_Frequency*** - liczba sesji treningowych w tygodniu.
 
-• Experience_Level: Poziom doświadczenia, od początkującego (1) do eksperta (3).
+• ***Experience_Level*** - poziom doświadczenia, od początkującego (1) do eksperta (3).
 
-• BMI: wskaźnik masy ciała, obliczany na podstawie wzrostu i wagi.
+• ***BMI*** - wskaźnik masy ciała, obliczany na podstawie wzrostu i wagi.
 
-## Zmienne
+### **Struktura danych**
+
+<!-- Wczytanie danych-->
 
 ```{r include=FALSE}
 # Ustawienie lustra CRAN
 options(repos = c(CRAN = "https://cran.rstudio.com"))
-
-# Instalacja pakietu (upewnij się, że pakiet jest dostępny na CRAN)
+#Wczytanie danych
 install.packages("readr")
-
-# Ładowanie biblioteki
-library(readr)
-
+library("readr")
 silownia <- read_csv("silownia_new.csv")
 ```
 
+*1.Liczba kolumn oraz wierszy*
+
 ```{r echo=FALSE}
-head(silownia)
+cat("Liczba wierszy:", nrow(silownia), "\n")
+cat("Liczba kolumn:", ncol(silownia), "\n")
 ```
+
+Zbiór danych siłownia posiada 973 wiersze oraz 15 kolumn.
+
+*2.Statystki opisowe poszczególnych kolumn*
+
+```{r echo=FALSE}
+summary(silownia)
+```
+
+## **Wstępne przygotowanie danych**
+
+#### *1. Pobranie i zainstalowanie niezbędnych pakietów*
+
+```{r include=FALSE}
+#Zainstalowanie wszystkich biblotek oraz ich wczytanie
+# Lista pakietów (poprawiona składnia)
+packages <- c(
+  "dplyr", "readr", "naniar", "ggplot2", "rmdformats", "validate", "validatetools", 
+  "dcmodify", "errorlocate", "deductive", "VIM", "simputation", "visdat", 
+  "lumberjack", "ISLR", "dlookr", "xts", "quantmod", "ROCR", "mice", 
+  "Information", "scorecard", "tidyverse", "plotly", "rpart"
+)
+
+# Funkcja instalująca i ładująca pakiety
+install_if_missing <- function(packages) {
+  for (pkg in packages) {
+    if (!require(pkg, character.only = TRUE)) { 
+      install.packages(pkg)                    # Instalacja pakietu, jeśli go brakuje
+    }
+    library(pkg, character.only = TRUE)        # Ładowanie pakietu
+  }
+}
+
+# Wywołanie funkcji
+install_if_missing(packages)
+```
+
+```{r include=FALSE}
+silownia <- read_csv("silownia_new.csv")
+```
+
+#### *2.Zmiana nazw kolumn*
+
+Weight (kg) -\> Weight_kg
+
+Height (m) -\> Height_m
+
+Session_Duration (hours) -\> Session_Duration_hours
+
+Water_Intake (liters) -\> Water_Intake_liters
+
+Workout_Frequency (days/week) -\> Workout_Frequency_daysweek
+
+```{r include=FALSE}
+colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
+colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
+colnames(silownia)[colnames(silownia) == "Session_Duration (hours)"] <- "Session_Duration_hours"
+colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Intake_liters"
+colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
+```
+
+# **Data Wrangling**
+
+#### 1. Obserwacje odstające
+
+#### 2. Analiza braków danych
+
+#### 3. Imputacja braków danych
+
+
+# Wizualizacja danych
+
+# Analiza opisowa
+
+# Wnioskowanie
+
+# Podsumowanie

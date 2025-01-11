@@ -855,7 +855,7 @@ font-weight: bold;
     
     
     
-        <link rel="stylesheet" href="styles.css" type="text/css" />
+        <link rel="stylesheet" href="material.css" type="text/css" />
     
     <!-- tabsets -->
     <script>
@@ -963,8 +963,14 @@ Adam Sienkiewicz
 <nav class="col-xs-3 menu">
 <div id="toc">
 <ul>
-<li><a href="#wstęp" id="toc-wstęp">Wstęp</a></li>
-<li><a href="#dane" id="toc-dane">Dane</a></li>
+<li><a href="#wprowadzenie" id="toc-wprowadzenie"><strong>Wprowadzenie</strong></a></li>
+<li><a href="#data-wrangling" id="toc-data-wrangling"><strong>Data
+Wrangling</strong></a></li>
+<li><a href="#wizualizacja-danych" id="toc-wizualizacja-danych">Wizualizacja danych</a></li>
+<li><a href="#analiza-opisowa" id="toc-analiza-opisowa">Analiza
+opisowa</a></li>
+<li><a href="#wnioskowanie" id="toc-wnioskowanie">Wnioskowanie</a></li>
+<li><a href="#podsumowanie" id="toc-podsumowanie">Podsumowanie</a></li>
 </ul>
 </div>
 </nav>
@@ -976,51 +982,121 @@ Adam Sienkiewicz
 <div class="row">
 
 <div class="col-xs-10">
-<div id="wstęp" class="section level1">
-<h1>Wstęp</h1>
-</div>
-<div id="dane" class="section level1">
-<h1>Dane</h1>
-<div id="zmienne-wchodzące-w-skład-zbioru-danych" class="section level2">
-<h2>Zmienne wchodzące w skład zbioru danych</h2>
-<p>• Wiek: Wiek użytkownika siłowni.</p>
-<p>• Płeć: Płeć użytkownika siłowni (mężczyzna lub kobieta).</p>
-<p>• Waga (kg): Waga członka w kilogramach.</p>
-<p>• Wzrost (m): Wzrost użytkownika w metrach.</p>
-<p>• Max_BPM: Maksymalne tętno (uderzenia na minutę) podczas sesji
+<div id="wprowadzenie" class="section level1">
+<h1><strong>Wprowadzenie</strong></h1>
+<div id="dane" class="section level2">
+<h2><strong>Dane</strong></h2>
+<div id="zmienne-wchodzące-w-skład-zbioru-danych" class="section level3">
+<h3><strong>Zmienne wchodzące w skład zbioru danych</strong></h3>
+<p>• <strong><em>Wiek</em></strong> - wiek użytkownika siłowni.</p>
+<p>• <strong><em>Płeć</em></strong> - płeć użytkownika siłowni.</p>
+<p>• <strong><em>Waga</em></strong> - waga użytkownika siłowni w
+kilogramach.</p>
+<p>• <strong><em>Wzrost</em></strong> - wzrost użytkownika siłowni w
+metrach</p>
+<p>• <strong><em>Max_BPM</em></strong> - maksymalne tętno podczas sesji
 treningowych.</p>
-<p>• Avg_BPM: Średnie tętno podczas sesji treningowych.</p>
-<p>• Resting_BPM: Tętno w spoczynku przed treningiem.</p>
-<p>• Session_Duration (hours): Czas trwania każdej sesji treningowej w
-godzinach.</p>
-<p>• Calories_Burned: Całkowita liczba kalorii spalonych podczas każdej
-sesji.</p>
-<p>• Workout_Type: Rodzaj wykonanego treningu (np. kardio, siłowy, joga,
-HIIT).</p>
-<p>• Fat_Percentage: Procent tkanki tłuszczowej użytkownika.</p>
-<p>• Water_Intake (liters): Dzienne spożycie wody podczas treningu.</p>
-<p>• Workout_Frequency (days/week): Liczba sesji treningowych w
-tygodniu.</p>
-<p>• Experience_Level: Poziom doświadczenia, od początkującego (1) do
-eksperta (3).</p>
-<p>• BMI: wskaźnik masy ciała, obliczany na podstawie wzrostu i
-wagi.</p>
+<p>• <strong><em>Avg_BPM</em></strong> - średnie tętno podczas sesji
+treningowych.</p>
+<p>• <strong><em>Resting_BPM</em></strong> - tętno w spoczynku przed
+treningiem.</p>
+<p>• <strong><em>Session_Duration</em></strong> - czas trwania każdej
+sesji treningowej w godzinach.</p>
+<p>• <strong><em>Calories_Burned</em></strong> - całkowita liczba
+kalorii spalonych podczas każdej sesji.</p>
+<p>• <strong><em>Workout_Type</em></strong> - rodzaj wykonanego treningu
+(np. kardio, siłowy, joga, HIIT).</p>
+<p>• <strong><em>Fat_Percentage</em></strong> -procent tkanki
+tłuszczowej.</p>
+<p>• <strong><em>Water_Intake</em></strong> - dzienne spożycie wody
+podczas treningu w litrach.</p>
+<p>• <strong><em>Workout_Frequency</em></strong> - liczba sesji
+treningowych w tygodniu.</p>
+<p>• <strong><em>Experience_Level</em></strong> - poziom doświadczenia,
+od początkującego (1) do eksperta (3).</p>
+<p>• <strong><em>BMI</em></strong> - wskaźnik masy ciała, obliczany na
+podstawie wzrostu i wagi.</p>
 </div>
-<div id="zmienne" class="section level2">
-<h2>Zmienne</h2>
-<pre><code>## # A tibble: 6 × 15
-##     Age Gender `Weight (kg)` `Height (m)` Max_BPM Avg_BPM Resting_BPM
-##   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;        &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;
-## 1    NA Male            88.3         1.71     180     157          60
-## 2    46 Female          74.9         1.53     179     151          66
-## 3    32 Female          68.1         1.66     167     122          54
-## 4    25 Male            53.2         1.7      190     164          56
-## 5    38 Male            46.1         1.79     188     158          68
-## 6    56 Female          58           1.68     168     156          74
-## # ℹ 8 more variables: `Session_Duration (hours)` &lt;dbl&gt;, Calories_Burned &lt;dbl&gt;,
-## #   Workout_Type &lt;chr&gt;, Fat_Percentage &lt;dbl&gt;, `Water_Intake (liters)` &lt;dbl&gt;,
-## #   `Workout_Frequency (days/week)` &lt;dbl&gt;, Experience_Level &lt;dbl&gt;, BMI &lt;dbl&gt;</code></pre>
+<div id="struktura-danych" class="section level3">
+<h3><strong>Struktura danych</strong></h3>
+<!-- Wczytanie danych-->
+<p><em>1.Liczba kolumn oraz wierszy</em></p>
+<pre><code>## Liczba wierszy: 973</code></pre>
+<pre><code>## Liczba kolumn: 15</code></pre>
+<p>Zbiór danych siłownia posiada 973 wiersze oraz 15 kolumn.</p>
+<p><em>2.Statystki opisowe poszczególnych kolumn</em></p>
+<pre><code>##       Age           Gender           Weight (kg)       Height (m)   
+##  Min.   :18.00   Length:973         Min.   : 40.00   Min.   :1.500  
+##  1st Qu.:28.00   Class :character   1st Qu.: 58.10   1st Qu.:1.620  
+##  Median :39.00   Mode  :character   Median : 70.00   Median :1.710  
+##  Mean   :38.63                      Mean   : 73.85   Mean   :1.723  
+##  3rd Qu.:50.00                      3rd Qu.: 86.00   3rd Qu.:1.800  
+##  Max.   :59.00                      Max.   :129.90   Max.   :2.000  
+##  NA&#39;s   :100                                                        
+##     Max_BPM         Avg_BPM       Resting_BPM    Session_Duration (hours)
+##  Min.   :160.0   Min.   :120.0   Min.   :50.00   Min.   :0.500           
+##  1st Qu.:170.0   1st Qu.:131.0   1st Qu.:56.00   1st Qu.:1.040           
+##  Median :180.0   Median :143.0   Median :62.00   Median :1.260           
+##  Mean   :179.9   Mean   :143.8   Mean   :62.22   Mean   :1.256           
+##  3rd Qu.:190.0   3rd Qu.:156.0   3rd Qu.:68.00   3rd Qu.:1.460           
+##  Max.   :199.0   Max.   :169.0   Max.   :74.00   Max.   :2.000           
+##                                                                          
+##  Calories_Burned  Workout_Type       Fat_Percentage  Water_Intake (liters)
+##  Min.   : 303.0   Length:973         Min.   :10.00   Min.   :1.500        
+##  1st Qu.: 720.0   Class :character   1st Qu.:21.30   1st Qu.:2.200        
+##  Median : 893.0   Mode  :character   Median :26.20   Median :2.600        
+##  Mean   : 905.4                      Mean   :24.98   Mean   :2.627        
+##  3rd Qu.:1076.0                      3rd Qu.:29.30   3rd Qu.:3.100        
+##  Max.   :1783.0                      Max.   :35.00   Max.   :3.700        
+##                                                                           
+##  Workout_Frequency (days/week) Experience_Level      BMI       
+##  Min.   :2.000                 Min.   :1.00     Min.   :12.32  
+##  1st Qu.:3.000                 1st Qu.:1.00     1st Qu.:20.11  
+##  Median :3.000                 Median :2.00     Median :23.94  
+##  Mean   :3.322                 Mean   :1.81     Mean   :24.82  
+##  3rd Qu.:4.000                 3rd Qu.:2.00     3rd Qu.:28.45  
+##  Max.   :5.000                 Max.   :3.00     Max.   :47.72  
+##                                                 NA&#39;s   :150</code></pre>
 </div>
+</div>
+<div id="wstępne-przygotowanie-danych" class="section level2">
+<h2><strong>Wstępne przygotowanie danych</strong></h2>
+<div id="pobranie-i-zainstalowanie-niezbędnych-pakietów" class="section level4">
+<h4><em>1. Pobranie i zainstalowanie niezbędnych pakietów</em></h4>
+</div>
+<div id="zmiana-nazw-kolumn" class="section level4">
+<h4><em>2.Zmiana nazw kolumn</em></h4>
+<p>Weight (kg) -&gt; Weight_kg</p>
+<p>Height (m) -&gt; Height_m</p>
+<p>Session_Duration (hours) -&gt; Session_Duration_hours</p>
+<p>Water_Intake (liters) -&gt; Water_Intake_liters</p>
+<p>Workout_Frequency (days/week) -&gt; Workout_Frequency_daysweek</p>
+</div>
+</div>
+</div>
+<div id="data-wrangling" class="section level1">
+<h1><strong>Data Wrangling</strong></h1>
+<div id="obserwacje-odstające" class="section level4">
+<h4>1. Obserwacje odstające</h4>
+</div>
+<div id="analiza-braków-danych" class="section level4">
+<h4>2. Analiza braków danych</h4>
+</div>
+<div id="imputacja-braków-danych" class="section level4">
+<h4>2. Imputacja braków danych</h4>
+</div>
+</div>
+<div id="wizualizacja-danych" class="section level1">
+<h1>Wizualizacja danych</h1>
+</div>
+<div id="analiza-opisowa" class="section level1">
+<h1>Analiza opisowa</h1>
+</div>
+<div id="wnioskowanie" class="section level1">
+<h1>Wnioskowanie</h1>
+</div>
+<div id="podsumowanie" class="section level1">
+<h1>Podsumowanie</h1>
 </div>
 </div>
 
