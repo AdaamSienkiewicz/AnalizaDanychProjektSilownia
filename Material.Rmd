@@ -1,0 +1,28 @@
+---
+title: "Test"
+author: "Twoje Imię"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::material:
+    highlight: kate
+    theme: "darkly"  # Można zmienić na inny temat, np. "cerulean" czy "darkly"
+    font: "Roboto"  # Zmieniamy czcionkę na nowoczesną
+    code_font: "Courier New"  # Czcionka dla kodu
+    highlight_style: "solarized-light"  # Styl podświetlania kodu
+    number_sections: true  # Numerujemy sekcje
+    fig_caption: true  # Dodajemy podpisy do wykresów
+    theme_color: "#add8e6"  # Kolor motywu
+    highlight_color: "#FF5722"  # Kolor podświetlania kodu
+    css: "styles.css"  # Możliwość dodania własnych stylów CSS
+---
+
+# Witaj w moim dokumencie!
+
+To jest przykładowy dokument w R Markdown, który wykorzystuje nowoczesny i atrakcyjny szablon. Możesz dostosować go do swoich potrzeb, zmieniając tytuł, autora, temat, czcionki i inne ustawienia.
+
+## Przykład kodu
+
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(cache = TRUE)
