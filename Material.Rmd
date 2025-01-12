@@ -1,25 +1,23 @@
 ---
-title: "<span style='font-size: 40px;'>Analiza Danych</span>"
+title: "<span style='font-size: 40px;'>Projekt z Analizy Danych - Siłownia </span>"
 author: |
   <p>Aleksandra Ochocińska</p>
   <p>Mateusz Wasiewski</p>
   <p>Adam Sienkiewicz</p>
 output:
-  rmdformats::material:
+  rmdformats::downcute:
     highlight: kate
-    theme: "darkly" 
+    theme: "yeti" 
     font: "Roboto"  
     code_font: "Courier New"  
-    highlight_style: "solarized-light"  
+    highlight_style: "zenburn"  
     fig_caption: true  
-    theme_color: "#add8e6"  
-    highlight_color: "#FF5722"  
+    theme_color: "##ADD8E6"  
+    highlight_color: "##ADD8E6"  
     css: "material.css"  # Możliwość dodania własnych stylów CSS
 ---
 
 # **Wprowadzenie**
-
-## **Dane**
 
 ### **Zmienne wchodzące w skład zbioru danych**
 
@@ -113,7 +111,7 @@ install_if_missing(packages)
 silownia <- read_csv("silownia_new.csv")
 ```
 
-#### *2.Zmiana nazw kolumn*
+#### *2. Zmiana nazw kolumn*
 
 Weight (kg) -\> Weight_kg
 
@@ -135,17 +133,155 @@ colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Wo
 
 # **Data Wrangling**
 
-#### 1. Obserwacje odstające
+## **1. Obserwacje odstające**
 
-#### 2. Analiza braków danych
+## **2. Analiza braków danych**
 
-#### 3. Imputacja braków danych
+Analiza braków danych jest kluczowym etapem przygotowania zbioru danych do dalszej analizy. W ramach tego procesu określimy liczbę braków w zbiorze, przeanalizujemy ich rozmieszczenie oraz sprawdzimy, czy występują korelacje między brakami w różnych zmiennych. Wyniki tej analizy posłużą jako podstawa do podjęcia decyzji o dalszym postępowaniu z brakującymi danymi.
 
+### **Wstępna analiza braków danych**
 
-# Wizualizacja danych
+#### **Sprawdzenie gdzie występują braki danych i procentowo ile ich jest.**
 
-# Analiza opisowa
+```{r echo=FALSE}
+vis_miss(silownia)
+```
 
-# Wnioskowanie
+W całej bazie danych brakuje 2,7% danych.
 
-# Podsumowanie
+Braki danych występują w kolumnie Workout_Type, Age oraz BMI.
+
+#### **Ile braków jest w poszczególnych kolumnach**
+
+```{r echo=FALSE}
+gg_miss_var(silownia)
+
+```
+
+```{r include=FALSE}
+colSums(is.na(silownia))
+```
+
+Kolumna Age ma 100 braków.
+
+Kolumna Workout_Type ma 150 braków.
+
+Kolumna BMI ma 150 braków.
+
+```{r include=FALSE}
+vis_dat(silownia)
+```
+
+#### **Występowanie braków w wierszach**
+
+```{r include=FALSE}
+kolumny_z_NA <- silownia %>% 
+                  select(Age, Workout_Type, BMI)
+gg_miss_upset(silownia, nsets= 3)
+```
+
+```{r include=FALSE}
+miss_case_table(silownia)
+```
+
+| Liczba NA w wierszu | Liczba wierszy | Procent wszystkich wierszy |
+|---------------------|----------------|----------------------------|
+| 0                   | 631            | 64,85%                     |
+| 1                   | 287            | 29,50%                     |
+| 2                   | 52             | 5,34%                      |
+| 3                   | 3              | 0,31%                      |
+
+631 wierszy ma 0 NA
+
+287 wierszy ma 1 NA
+
+-   115 w Workout_Type
+
+-   106 w BMI
+
+-   66 w Age
+
+52 wiersze ma 2 NA
+
+-   21 wierszy w Workout_Type i BMI
+
+-   20 wierszy w Age i BMI
+
+-   11 w Age i Workout_Type
+
+3 wiersze mają 3 NA
+
+#### **Sprawdzanie korelacji między brakami danych**
+
+**1. Age i BMI**
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(data = silownia, aes(x = Age, y = BMI)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("darkorange","cyan4")) +
+  theme_minimal()
+```
+
+Braki w kolumnie BMI są całkowicie niezależne od wartości w kolumnie Age.
+
+Z kolei braki w kolumnie Age są raczej niezależne od wartości BMI, choć zauważono nieco większą liczbę braków w przypadku niższych wartości BMI.
+
+**2. Workout_Type i BMI**
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = BMI)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("darkorange","cyan4")) +
+  theme_minimal()
+```
+
+Braki w kolumnie BMI są całkowicie niezależne od wartości w kolumnie Workout_Type.
+
+Z kolei braki w kolumnie Workout_Type są raczej niezależne od wartości BMI, choć zauważono nieco większą liczbę braków w przypadku niższych wartości BMI.
+
+**3. Workout_Type i Age**
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = Age)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("darkorange","cyan4")) +
+  theme_minimal()
+```
+
+Braki w obu kolumnach są całkowicie niezależne od siebie.
+
+## **3. Imputacja braków danych**
+
+W procesie analizy dancyh napotkaliśmy na brakujące wartości (NA) w kolumnach **Age**, **BMI** oraz **Workout_Type**. Aby zapewnić spójność i pełność danych, postanowiliśmy przeprowadzić imputację braków, czyli zastąpienie brakujących wartości odpowiednimi danymi.
+
+#### **Kolumna BMI**
+
+Braki w kolumnie postanowaliśmy zastąpić za pomocą wzoru na BMI
+
+$$
+BMI = \frac{waga}{wzrost^2}
+$$
+
+```{r echo=TRUE}
+silownia$BMI <- ifelse(
+  is.na(silownia$BMI),  
+  silownia$Weight_kg / (silownia$Height_m^2),  
+  silownia$BMI )
+```
+
+<br>
+
+#### **Kolumna Workout_Type i Age**
+
+## **4. Walidacja danych**
+
+# **Wizualizacja danych**
+
+# **Analiza opisowa**
+
+# **Wnioskowanie**
+
+# **Podsumowanie**
