@@ -7,7 +7,8 @@ library(dplyr)
 silownia <- read_csv("silownia_new.csv")
 
 View(silownia)
-
+install.packages("prettydoc")
+library(prettydoc)
 #Zmiana nazw kolumn
 colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
 colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
@@ -162,6 +163,7 @@ boxplot(silownia$BMI)
 vis_miss(silownia)
 vis_dat(silownia)
 gg_miss_var(silownia)
+colSums(is.na(silownia))
 
 #Braki danych występują w kolumnie Workout_Type, Age oraz BMI
 #Kolumna Age oraz BMI posiadają wartości liczbowe, a kolumna Workout_Type to ciąg znaków (wyraz)
