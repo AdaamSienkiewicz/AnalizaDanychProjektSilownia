@@ -143,7 +143,7 @@ Analiza braków danych jest kluczowym etapem przygotowania zbioru danych do dals
 
 ### **Wstępna analiza braków danych**
 
-#### **Sprawdzenie gdzie występują braki danych i procentowo ile ich jest.**
+#### **Sprawdzenie gdzie występują braki danych i procentowo ile ich jest**
 
 ```{r echo=FALSE}
 vis_miss(silownia)
@@ -257,7 +257,7 @@ Braki w obu kolumnach są całkowicie niezależne od siebie.
 
 ## **3. Imputacja braków danych**
 
-W procesie analizy dancyh napotkaliśmy na brakujące wartości (NA) w kolumnach **Age**, **BMI** oraz **Workout_Type**. Aby zapewnić spójność i pełność danych, postanowiliśmy przeprowadzić imputację braków, czyli zastąpienie brakujących wartości odpowiednimi danymi.
+W procesie analizy braków danych napotkaliśmy na brakujące wartości (NA) w kolumnach **Age**, **BMI** oraz **Workout_Type**. Aby zapewnić spójność i pełność danych, postanowiliśmy przeprowadzić imputację braków, czyli zastąpienie brakujących wartości odpowiednimi danymi.
 
 #### **Kolumna BMI**
 
@@ -278,7 +278,325 @@ silownia$BMI <- ifelse(
 
 #### **Kolumna Workout_Type i Age**
 
+W przypadku kolumnt Workout_Type i Age zdecydowaliśmy przeprowadzić imputację na kilka sposób, a następnie wybrać najlepszą możliwość.
+
+**1. Imputacja metodą k-Nearest Neighbors (kNN)**
+
+```{r}
+silownia_kNN <- kNN(silownia, k = 3)
+
+```
+
+**2. Imputacja z pakietem Mice**
+
+```         
+{r message=FALSE, warning=FALSE}
+if (!is.factor(silownia$Workout_Type)) {
+  silownia$Workout_Type <- factor(silownia$Workout_Type, levels = c("Yoga", "Cardio", "HIIT", "Strength"))
+}
+
+metody <- make.method(silownia)
+
+metody["Age"] <- "pmm"
+metody["Workout_Type"] <- "polyreg"
+metody["BMI"] <- "" 
+
+pred_mat <- make.predictorMatrix(silownia)
+pred_mat["BMI", ] <- 0 # Wyłącz imputację dla BMI
+pred_mat[, "BMI"] <- 1 # BMI jako predyktor dla innych kolumn
+
+silownia_imp <- mice(silownia, m = 5, method = metody, predictorMatrix = pred_mat, seed = 123)
+
+lm_imp <- with(silownia_imp, lm(BMI ~ Weight_kg + Gender))
+lm_pooled <- pool(lm_imp)
+
+summary(lm_pooled, conf.int = TRUE, conf.level = 0.95)
+
+stripplot(silownia_imp, BMI ~ Weight_kg | .imp, pch = 20, cex = 2)
+
+silownia_mice <- complete(silownia_imp, action = 1)
+```
+
+**3. Imputacja hot-deck**
+
+```{r}
+silownia_hotdeck <- hotdeck(silownia)
+```
+
+**4. Imputacja RPART**
+
+```{r warning=FALSE}
+silownia_rpart  <- silownia  %>%
+  mutate(Workout_Type = case_when(
+    Workout_Type == "Yoga" ~ 1,
+    Workout_Type == "Cardio" ~ 2,
+    Workout_Type == "HIIT" ~ 3,
+    Workout_Type == "Strength" ~ 4,
+    TRUE ~ as.numeric(Workout_Type) 
+  ))
+
+silownia_rpart <- silownia_rpart %>%
+  mutate(Gender = case_when(
+    Gender == "Male" ~ 1,
+    Gender == "Female" ~ 2,
+    TRUE ~ as.numeric(Gender) 
+  ))
+
+
+drzewo_decyzyjne1 <- rpart(Workout_Type ~ Age + BMI + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+                             Session_Duration_hours + Calories_Burned + 
+                             Fat_Percentage + Water_Intake_liters + 
+                             Workout_Frequency_daysweek + Gender + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
+
+silownia_rpart$Workout_Type[is.na(silownia_rpart$Workout_Type)] <- predict(drzewo_decyzyjne1, newdata = silownia_rpart[is.na(silownia_rpart$Workout_Type), ])
+
+
+drzewo_decyzyjne2 <- rpart(Age ~ BMI + Workout_Type + Gender + Max_BPM + Weight_kg + Height_m + Avg_BPM + Resting_BPM + 
+                             Session_Duration_hours + Calories_Burned + 
+                             Fat_Percentage + Water_Intake_liters + 
+                             Workout_Frequency_daysweek + Experience_Level, data = silownia_rpart, method = "anova", na.action = na.exclude)
+silownia_rpart$Age[is.na(silownia_rpart$Age)] <- predict(drzewo_decyzyjne2, newdata = silownia_rpart[is.na(silownia_rpart$Age), ])
+```
+
+#### **Wybór metody**
+
+```{r include=FALSE}
+silownia_brudne_dane <- silownia_hotdeck
+```
+
+Zdecydowaliśmy się zastąpić braki danych występujące w kolumnach Age i Workout_Type za pomocą **metody hot-deck.**
+
 ## **4. Walidacja danych**
+
+Kolejnym krokiem w procesie przygotownia danych do analizy jest jest oczyszczenie naszego zbioru z "brudnych danych".
+
+#### **Age**
+
+Wartości w kolumnie Age muszą być większe od 0, mniejsze od 110 oraz są liczbą.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Age <- validator(
+  `Age` >= 0,            
+  `Age` <= 110,           
+  `Age` == floor(Age),
+  is.numeric(`Age`) == TRUE
+)
+
+cf1 <- confront(silownia_brudne_dane, rules_Age, key="Age")
+
+barplot(cf1, main="")
+
+```
+
+#### **Gender**
+
+Kolumna gender przyjmuje wartość Female albo Male.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Gender <- validator(Gender %in% c("Female", "Male"))
+
+cf2 <- confront(silownia_brudne_dane, rules_Gender, key="Gender")
+barplot(cf2, main="")
+```
+
+**Weight**
+
+Wartości muszą być liczbami większymi od 40 i mniejszymi od 140.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Weight_kg <- validator(
+  `Weight_kg` >= 40,           
+  `Weight_kg` <= 140,
+  is.numeric(`Weight_kg`) == TRUE
+)
+
+cf3 <- confront(silownia_brudne_dane, rules_Weight_kg, key="Weight_kg")
+barplot(cf3, main="")
+```
+
+**Height**
+
+Wartości w kolumnie Height muszą być większe od 1,3, mniejsze od 2,15 oraz są liczbą.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Height_m <- validator(
+  `Height_m` >= 1.30,           
+  `Height_m` <= 2.15,
+  is.numeric(`Height_m`) == TRUE
+)
+cf4 <- confront(silownia_brudne_dane, rules_Height_m, key="Height_m")
+barplot(cf4, main="")
+
+```
+
+**MaxBPM**
+
+Kolumna MaxBPM musi posiadać wartości, które znajdują się w przedziele zamkniętym od 110 do 210 oraz są liczbą.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Max_BPM <- validator(
+ `Max_BPM` >=110,
+ `Max_BPM` <=210,
+ is.numeric(`Max_BPM`) == TRUE
+)
+
+cf5 <- confront(silownia_brudne_dane, rules_Max_BPM, key="Max_BPM")
+
+barplot(cf5, main="")
+
+```
+
+**AvgBPM**
+
+Kolumna AvgBPM musi posiadać wartości które znajdują sie w przedziele zamkniętym od 80 do 180 oraz są liczbą.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Avg_BPM <- validator(
+  `Avg_BPM` >=80,
+  `Avg_BPM` <=180,
+  is.numeric(`Avg_BPM`) == TRUE
+)
+
+cf6 <- confront(silownia_brudne_dane, rules_Avg_BPM, key="Avg_BPM")
+barplot(cf6, main="")
+```
+
+**RestingBPM**
+
+Kolumna RestingBPM musi posiadać wartości które są większe od 45, a mniejsze od 130 oraz są liczbą.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Resting_BPM <- validator(
+  `Resting_BPM` >= 45,
+  `Resting_BPM` <=130,
+  is.numeric(`Resting_BPM`) == TRUE
+)
+
+cf7 <- confront(silownia_brudne_dane, rules_Resting_BPM, key="Resting_BPM")
+barplot(cf7, main="")
+```
+
+**Session Durations**
+
+Wartości w kolumnie Session Durations muszą być liczbami dodatnimi mniejszymi od 2.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Session_Duration_hours <- validator(
+  `Session_Duration_hours` > 0, 
+  `Session_Duration_hours` <= 2,
+  is.numeric(`Session_Duration_hours`) == TRUE
+)
+
+cf8 <- confront(silownia_brudne_dane, rules_Session_Duration_hours, key="Session_Duration_hours")
+barplot(cf8, main="")
+
+```
+
+**Calories Burned**
+
+Wartości muszą byc liczbami dodatnimi, mniejszymi od 2000.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Calories_Burned <- validator(
+  `Calories_Burned` > 0, 
+  `Calories_Burned` <= 2000,
+  is.numeric(`Calories_Burned`) == TRUE
+)
+
+cf9 <- confront(silownia_brudne_dane, rules_Calories_Burned, key="Calories_Burned")
+barplot(cf9, main="")
+
+```
+
+**Workout Type**
+
+Kolumna Workout_Type zawiera tylko takie wartości jak: Yoga, Cardio, HIIT oraz Strength.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Workout_Type <- validator(Workout_Type %in% c("Yoga", "Cardio", "HIIT","Strength"))
+
+
+cf10 <- confront(silownia_brudne_dane, rules_Workout_Type, key="Workout_Type")
+barplot(cf10, main="")
+
+```
+
+**Fat Percentage**
+
+Wartości w kolumnie Fat Percentage muszą być liczbami dodatnimi, mniejszeymi od 50.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Fat_Percentage <- validator(
+  `Fat_Percentage` > 0, 
+  `Fat_Percentage` <= 50,
+  is.numeric(`Fat_Percentage`) == TRUE
+)
+
+cf11 <- confront(silownia_brudne_dane, rules_Fat_Percentage, key="Fat_Percentage")
+barplot(cf11, main="")
+```
+
+**Water Intakes**
+
+Wartości muszą byc dodatnie, mniejsze od 4 oraz są liczbą.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Water_Intake_liters <- validator(
+  `Water_Intake_liters` > 0, 
+  `Water_Intake_liters` <= 4,
+  is.numeric(`Water_Intake_liters`) == TRUE
+)
+
+cf12 <- confront(silownia_brudne_dane, rules_Water_Intake_liters, key="Water_Intake_liters")
+barplot(cf12, main="")
+```
+
+**Workout Frequency**
+
+Kolumna Workout Frequency zawiera tylko takie wartości jak: 0, 1, 2, 3, 4, 5, 6, 7.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Workout_Frequency_daysweek <- validator(
+  Workout_Frequency_daysweek >= 0,
+  Workout_Frequency_daysweek <= 7,
+  Workout_Frequency_daysweek %% 1 == 0
+)
+
+cf13 <- confront(silownia_brudne_dane, rules_Workout_Frequency_daysweek, key="Workout_Frequency_daysweek")
+barplot(cf13, main="")
+
+```
+
+**Experience Level**
+
+Kolumna Experience Level zawiera tylko takie wartości jak: 0, 1, 2, 3.
+
+```{r echo=FALSE, warning=FALSE}
+rules_Experience_Level <- validator(
+  Experience_Level >= 0,
+  Experience_Level <= 3,
+  Experience_Level %% 1 == 0
+)
+
+cf14 <- confront(silownia_brudne_dane, rules_Experience_Level, key="Experience_Level")
+barplot(cf14, main="")
+```
+
+**BMI**
+
+```{r echo=FALSE, warning=FALSE}
+rules_BMI <- validator(
+  `BMI` > 0,                      
+  `BMI` >= 10,
+  `BMI` <= 60, #Zakres BMI
+  abs(`BMI` - (`Weight_kg` / (`Height_m`^2))) < 0.1 # Spójność z masą i wzrostem(ze względu na wzór)
+)
+
+cf15 <- confront(silownia_brudne_dane, rules_BMI, key="BMI")
+barplot(cf15, main="")
+```
+
+W naszym zbiorze danych nie wystąpiły żadne błędy, więc jest on **gotowy do przeprowadzenie wizualizacji oraz dalszej analizy**.
 
 # **Wizualizacja danych**
 
