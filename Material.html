@@ -1490,7 +1490,13 @@ margin-left: 0 !important;
             <ul>
             <li><a href="#wprowadzenie" id="toc-wprowadzenie"><strong>Wprowadzenie</strong></a>
             <ul>
-            <li><a href="#wstępne-przygotowanie-danych" id="toc-wstępne-przygotowanie-danych"><strong>Wstępne
+            <li><a href="#wstęp" id="toc-wstęp"><strong>1.
+            Wstęp</strong></a></li>
+            <li><a href="#zmienne-w-zbiorze-danych" id="toc-zmienne-w-zbiorze-danych"><strong>2. Zmienne w
+            zbiorze danych</strong></a></li>
+            <li><a href="#struktura-danych" id="toc-struktura-danych"><strong>3. Struktura
+            danych</strong></a></li>
+            <li><a href="#wstępne-przygotowanie-danych" id="toc-wstępne-przygotowanie-danych"><strong>4. Wstępne
             przygotowanie danych</strong></a></li>
             </ul></li>
             <li><a href="#data-wrangling" id="toc-data-wrangling"><strong>Data Wrangling</strong></a>
@@ -1542,8 +1548,11 @@ Adam Sienkiewicz
 <div class="page-content has-page-title">
 <div id="wprowadzenie" class="section level1">
 <h1><strong>Wprowadzenie</strong></h1>
-<div id="zmienne-wchodzące-w-skład-zbioru-danych" class="section level3">
-<h3><strong>Zmienne wchodzące w skład zbioru danych</strong></h3>
+<div id="wstęp" class="section level2">
+<h2><strong>1. Wstęp</strong></h2>
+</div>
+<div id="zmienne-w-zbiorze-danych" class="section level2">
+<h2><strong>2. Zmienne w zbiorze danych</strong></h2>
 <p>• <strong><em>Wiek</em></strong> - wiek użytkownika siłowni.</p>
 <p>• <strong><em>Płeć</em></strong> - płeć użytkownika siłowni.</p>
 <p>• <strong><em>Waga</em></strong> - waga użytkownika siłowni w
@@ -1573,14 +1582,14 @@ od początkującego (1) do eksperta (3).</p>
 <p>• <strong><em>BMI</em></strong> - wskaźnik masy ciała, obliczany na
 podstawie wzrostu i wagi.</p>
 </div>
-<div id="struktura-danych" class="section level3">
-<h3><strong>Struktura danych</strong></h3>
+<div id="struktura-danych" class="section level2">
+<h2><strong>3. Struktura danych</strong></h2>
 <!-- Wczytanie danych-->
-<p><em>1.Liczba kolumn oraz wierszy</em></p>
+<p><strong>1. Liczba kolumn oraz wierszy</strong></p>
 <pre><code>## Liczba wierszy: 973</code></pre>
 <pre><code>## Liczba kolumn: 15</code></pre>
 <p>Zbiór danych siłownia posiada 973 wiersze oraz 15 kolumn.</p>
-<p><em>2.Statystki opisowe poszczególnych kolumn</em></p>
+<p><strong>2. Statystki opisowe poszczególnych kolumn</strong></p>
 <pre><code>##       Age           Gender           Weight (kg)       Height (m)   
 ##  Min.   :18.00   Length:973         Min.   : 40.00   Min.   :1.500  
 ##  1st Qu.:28.00   Class :character   1st Qu.: 58.10   1st Qu.:1.620  
@@ -1615,18 +1624,15 @@ podstawie wzrostu i wagi.</p>
 ##                                                 NA&#39;s   :150</code></pre>
 </div>
 <div id="wstępne-przygotowanie-danych" class="section level2">
-<h2><strong>Wstępne przygotowanie danych</strong></h2>
-<div id="pobranie-i-zainstalowanie-niezbędnych-pakietów" class="section level4">
-<h4><em>1. Pobranie i zainstalowanie niezbędnych pakietów</em></h4>
-</div>
-<div id="zmiana-nazw-kolumn" class="section level4">
-<h4><em>2. Zmiana nazw kolumn</em></h4>
+<h2><strong>4. Wstępne przygotowanie danych</strong></h2>
+<p><strong>1. Pobranie i zainstalowanie niezbędnych
+pakietów</strong></p>
+<p><strong>2. Zmiana nazw kolumn</strong></p>
 <p>Weight (kg) -&gt; Weight_kg</p>
 <p>Height (m) -&gt; Height_m</p>
 <p>Session_Duration (hours) -&gt; Session_Duration_hours</p>
 <p>Water_Intake (liters) -&gt; Water_Intake_liters</p>
 <p>Workout_Frequency (days/week) -&gt; Workout_Frequency_daysweek</p>
-</div>
 </div>
 </div>
 <div id="data-wrangling" class="section level1">

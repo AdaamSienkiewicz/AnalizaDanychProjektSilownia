@@ -19,7 +19,9 @@ output:
 
 # **Wprowadzenie**
 
-### **Zmienne wchodzące w skład zbioru danych**
+## **1. Wstęp**
+
+## **2. Zmienne w zbiorze danych**
 
 • ***Wiek*** - wiek użytkownika siłowni.
 
@@ -51,7 +53,7 @@ output:
 
 • ***BMI*** - wskaźnik masy ciała, obliczany na podstawie wzrostu i wagi.
 
-### **Struktura danych**
+## **3. Struktura danych**
 
 <!-- Wczytanie danych-->
 
@@ -64,7 +66,7 @@ library("readr")
 silownia <- read_csv("silownia_new.csv")
 ```
 
-*1.Liczba kolumn oraz wierszy*
+**1. Liczba kolumn oraz wierszy**
 
 ```{r echo=FALSE}
 cat("Liczba wierszy:", nrow(silownia), "\n")
@@ -73,15 +75,15 @@ cat("Liczba kolumn:", ncol(silownia), "\n")
 
 Zbiór danych siłownia posiada 973 wiersze oraz 15 kolumn.
 
-*2.Statystki opisowe poszczególnych kolumn*
+**2. Statystki opisowe poszczególnych kolumn**
 
 ```{r echo=FALSE}
 summary(silownia)
 ```
 
-## **Wstępne przygotowanie danych**
+## **4. Wstępne przygotowanie danych**
 
-#### *1. Pobranie i zainstalowanie niezbędnych pakietów*
+**1. Pobranie i zainstalowanie niezbędnych pakietów**
 
 ```{r include=FALSE}
 #Zainstalowanie wszystkich biblotek oraz ich wczytanie
@@ -111,7 +113,7 @@ install_if_missing(packages)
 silownia <- read_csv("silownia_new.csv")
 ```
 
-#### *2. Zmiana nazw kolumn*
+**2. Zmiana nazw kolumn**
 
 Weight (kg) -\> Weight_kg
 
