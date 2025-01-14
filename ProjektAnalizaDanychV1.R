@@ -542,6 +542,7 @@ library(ggplot2)
 library(tidyverse)
 
 #Rozkład kobiet i mężczyzn
+# Wykres pokazuje równomierny rozkład płci w analizowanym zbiorze danych. Widoczna jest zbliżona liczba kobiet i mężczyzn, z niewielką przewagą mężczyzn, około 500 osób w każdej grupie.
 
 ggplot(Silownia_wykresy, aes(x = Gender, fill = Gender)) + 
   geom_bar(stat = "count", width = 0.6, color = "black", size = 0.5) +  
@@ -557,6 +558,59 @@ ggplot(Silownia_wykresy, aes(x = Gender, fill = Gender)) +
     axis.text.x = element_text(angle = 0, hjust = 0.5),
     plot.title.position = "panel"
     )
+
+#Rozkład wieku w zależności od płci
+ggplot(Silownia_wykresy, aes(Age, color = Gender, fill = Gender)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Rozkład wieku w zależności od płci", x = "Wiek", y = "") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title.position = "panel"
+  )
+library(psych)
+library(stats)
+opis_Age <- list( "Wiek" = 
+                    list(
+                      "Min"= ~ min(Age),
+                      "Max"= ~ max(Age),
+                      "Kwartyl dolny"= ~ quantile(Age,0.25),
+                      "Mediana"= ~ round(median(Age),2),
+                      "Kwartyl górny"= ~ quantile(Age,0.75),
+                      "Średnia"= ~ round(mean(Age),2),
+                      "Odch. std."= ~ round(sd(Age),2),
+                      "IQR"= ~ round(IQR(Age),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Age)/2,2),
+                      "Odch. std. w %"=~round((sd(Age)/mean(Age)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Age)/median(Age)),2),
+                      "Skośność"=~round(skew(Age),2),
+                      "Kurtoza"=~round(kurtosi(Age),2)
+                    ))
+library(qwraps2)
+tabela_Age <- summary_table(Silownia_wykresy, summaries = opis_Age, by = c("Gender"), markup = "plain")
+tabela_Age <- gsub("~~", "", tabela_Age)
+tabela_Age <- as.data.frame(tabela_Age)
+tabela_Age <- tabela_Age[-1, ]  
+print(tabela_Age)
+
+library(kableExtra)
+tabela_Age %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'Wiek' w zależności od płci",
+    col.names = c("Statystyka", "Kobiety", "Mężczyźni"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Płeć" = 2))
+# Wyniki pokazują, że wiek kobiet i mężczyzn w próbie jest zbliżony. Średni wiek dla obu płci wynosi około 38 lat. Z kolei mediana dla kobiet to 40 lat, a dla mężczyzn 39 lat. Wiek minimalny to 18, a maksymalny 59 lat dla obu płci. Rozproszenie danych (odchylenie standardowe) jest podobne: 12,22 dla kobiet i 12,32 dla mężczyzn. Rozstęp międzykwartylowy (IQR) wynosi 21, co wskazuje na stabilność w centralnej części rozkładu. Rozkład wieku jest lekko ujemnie skośny, co oznacza niewielką przewagę starszych uczestników w próbie.
+
 
 #Zależność BMI od wieku
 
