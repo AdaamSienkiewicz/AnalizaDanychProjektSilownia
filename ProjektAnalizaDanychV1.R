@@ -541,6 +541,8 @@ install.packages("tidyverse")
 library(ggplot2)
 library(tidyverse)
 
+#Podczas wizualizacji skupiliśmy się na podkreśleniu najciekawszych zależności pomiędzy danymi
+
 #Rozkład kobiet i mężczyzn
 # Wykres pokazuje równomierny rozkład płci w analizowanym zbiorze danych. Widoczna jest zbliżona liczba kobiet i mężczyzn, z niewielką przewagą mężczyzn, około 500 osób w każdej grupie.
 
@@ -560,6 +562,8 @@ ggplot(Silownia_wykresy, aes(x = Gender, fill = Gender)) +
     )
 
 #Rozkład wieku w zależności od płci
+#Wykres przedstawia rozkład wieku w zależności od podanej płci. Zauważyć można większy udział mężczyzn w grupie wiekowej 25-39 lat. Z kolei w grupie 40-55 lat przeważyła płeć żeńska.
+
 ggplot(Silownia_wykresy, aes(Age, color = Gender, fill = Gender)) +
   geom_density(alpha = 0.5) +
   labs(title = "Rozkład wieku w zależności od płci", x = "Wiek", y = "") +
@@ -569,6 +573,8 @@ ggplot(Silownia_wykresy, aes(Age, color = Gender, fill = Gender)) +
     axis.text.x = element_text(angle = 0, hjust = 0.5),
     plot.title.position = "panel"
   )
+
+install.packages("psych")
 library(psych)
 library(stats)
 opis_Age <- list( "Wiek" = 
@@ -587,6 +593,7 @@ opis_Age <- list( "Wiek" =
                       "Skośność"=~round(skew(Age),2),
                       "Kurtoza"=~round(kurtosi(Age),2)
                     ))
+install.packages("qwraps2")
 library(qwraps2)
 tabela_Age <- summary_table(Silownia_wykresy, summaries = opis_Age, by = c("Gender"), markup = "plain")
 tabela_Age <- gsub("~~", "", tabela_Age)
@@ -609,10 +616,10 @@ tabela_Age %>%
     position = "center"
   ) %>%
   add_header_above(c(" " = 1, "Płeć" = 2))
-# Wyniki pokazują, że wiek kobiet i mężczyzn w próbie jest zbliżony. Średni wiek dla obu płci wynosi około 38 lat. Z kolei mediana dla kobiet to 40 lat, a dla mężczyzn 39 lat. Wiek minimalny to 18, a maksymalny 59 lat dla obu płci. Rozproszenie danych (odchylenie standardowe) jest podobne: 12,22 dla kobiet i 12,32 dla mężczyzn. Rozstęp międzykwartylowy (IQR) wynosi 21, co wskazuje na stabilność w centralnej części rozkładu. Rozkład wieku jest lekko ujemnie skośny, co oznacza niewielką przewagę starszych uczestników w próbie.
-
+# Wyniki pokazują, że wiek kobiet i mężczyzn w próbie jest zbliżony, co też potwierdza analizę dokonaną na podstawie wykresu rozkładu wieku w zależności od płci. Średni wiek dla obu płci wynosi około 38 lat. Z kolei mediana dla kobiet to 40 lat, a dla mężczyzn 39 lat. Wiek minimalny to 18, a maksymalny 59 lat dla obu płci. Rozproszenie danych (odchylenie standardowe) jest podobne: 12,22 dla kobiet i 12,32 dla mężczyzn. Rozstęp międzykwartylowy (IQR) wynosi 21, co wskazuje na stabilność w centralnej części rozkładu. Rozkład wieku jest lekko ujemnie skośny, co oznacza niewielką przewagę starszych uczestników w próbie.
 
 #Zależność BMI od wieku
+#Wykres pokazuje, jakie wartości wskaźnika BMI osiągano dla danego wieku. Dodano także linię trendu, która została oszacowana na poziomie BMI = 25.
 
 ggplot(Silownia_wykresy, aes(x = Age, y = BMI)) +
   geom_point(color = "darkgreen", size = 3, alpha = 0.6) +
@@ -627,7 +634,57 @@ ggplot(Silownia_wykresy, aes(x = Age, y = BMI)) +
     axis.title = element_text(size = 14)
   )
 
+opis_BMI <- list( "BMI" = 
+                    list(
+                      "Min"= ~ min(BMI),
+                      "Max"= ~ max(BMI),
+                      "Kwartyl dolny"= ~ quantile(BMI,0.25),
+                      "Mediana"= ~ round(median(BMI),2),
+                      "Kwartyl górny"= ~ quantile(BMI,0.75),
+                      "Średnia"= ~ round(mean(BMI),2),
+                      "Odch. std."= ~ round(sd(BMI),2),
+                      "IQR"= ~ round(IQR(BMI),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(BMI)/2,2),
+                      "Odch. std. w %"=~round((sd(Age)/mean(BMI)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Age)/median(BMI)),2),
+                      "Skośność"=~round(skew(BMI),2),
+                      "Kurtoza"=~round(kurtosi(BMI),2)
+                    ))
+
+library(qwraps2)
+
+Silownia_wykresy$Age_Category <- cut(Silownia_wykresy$Age,
+                                     breaks = c(18, 29, 39, 49, 59),
+                                     labels = c("18-29", "29-39", "39-49", "49-59"),
+                                     right = FALSE)
+
+tabela_BMI <- summary_table(Silownia_wykresy, summaries = opis_BMI, by = c("Age_Category"), markup = "plain")
+tabela_BMI <- gsub("~~", "", tabela_BMI)
+tabela_BMI <- as.data.frame(tabela_BMI)
+tabela_BMI <- tabela_BMI[-1, ] 
+print(tabela_BMI)
+
+library(kableExtra)
+
+tabela_BMI %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'BMI' w zależności od wieku",
+    col.names = c("Statystyka", "18-29", "29-39", "39-49", "49-59"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Wiek" = 4))
+
+# Na podstawie powyższych wyników można stwierdzić, że najwyższą średnią wartość BMI osiągnięto dla grupy wiekowej 18-29 lat, dla której największa jest też mediana BMI równa 24,96. Minimalna wartość BMI to 12,32 dla osób w wieku 39-49 lat, a maksymalna wynosi niespełna 50 dla tej samej grupy wiekowej. W grupie wiekowej 49-59 nastąpiło największe rozproszenie danych. Wyniosło ono 7,1. Rozstęp międzykwartylowy (IQR) osiąga wartości od 7,08 do 9,08, co wskazuje na stabilność w centralnej części rozkładu. Rozkład BMI jest lekko dodatnio skośny. Wartości Bmi większe od średniej są nieco bardziej rozproszone. Wartości kurtozy wskazują na to, że dane są bardziej rozproszone, a wyniki nie wykazują silnej koncentracji wokół średniej ani wielu skrajnych wartości.
+
 #Czas trwania sesji a spalone kalorie 
+#Wykres ten przedstawia zależność między czasem trwania treningu i spalonymi kaloriami. Im dłuższy trening, tym więcej spalonych kalorii
 
 ggplot(Silownia_wykresy, aes(x = Session_Duration_hours, y = Calories_Burned)) +
   geom_point(color = "blue", size = 3, alpha = 0.7) +
@@ -641,6 +698,52 @@ ggplot(Silownia_wykresy, aes(x = Session_Duration_hours, y = Calories_Burned)) +
     axis.text = element_text(size = 12),
     axis.title = element_text(size = 14)
   )
+
+opis_Calories_Burned <- list( "Spalone kalorie" = 
+                    list(
+                      "Min"= ~ min(Calories_Burned),
+                      "Max"= ~ max(Calories_Burned),
+                      "Kwartyl dolny"= ~ quantile(Calories_Burned,0.25),
+                      "Mediana"= ~ round(median(Calories_Burned),2),
+                      "Kwartyl górny"= ~ quantile(Calories_Burned,0.75),
+                      "Średnia"= ~ round(mean(Calories_Burned),2),
+                      "Odch. std."= ~ round(sd(Calories_Burned),2),
+                      "IQR"= ~ round(IQR(Calories_Burned),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Calories_Burned)/2,2),
+                      "Odch. std. w %"=~round((sd(Calories_Burned)/mean(Calories_Burned)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Calories_Burned)/median(Calories_Burned)),2),
+                      "Skośność"=~round(skew(Calories_Burned),2),
+                      "Kurtoza"=~round(kurtosi(Calories_Burned),2)
+                    ))
+
+library(qwraps2)
+
+Silownia_wykresy$Duration_Category <- cut(Silownia_wykresy$Session_Duration_hours, 
+                                          breaks = c(0, 1, 1.5, 2), 
+                                          labels = c("0,5-1h", "1-1,5h", "1,5-2h"), 
+                                          right = FALSE)
+
+tabela_Calories_Burned <- summary_table(Silownia_wykresy, summaries = opis_Calories_Burned, by = c("Duration_Category"), markup = "plain")
+tabela_Calories_Burned <- gsub("~~", "", tabela_Calories_Burned)
+tabela_Calories_Burned <- as.data.frame(tabela_Calories_Burned)
+tabela_Calories_Burned <- tabela_Calories_Burned[-1, ]  
+print(tabela_Calories_Burned)
+
+library(kableExtra)
+tabela_Calories_Burned %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'Spalone kalorie' w zależności od czasu trwania sesji",
+    col.names = c("Statystyka", "0,5-1h", "1-1,5h", "1,5-2h"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Spalone kalorie" = 3))
 
 #Średnie tętno a rodzaj treningu - w tym przypadku zrobiłem wykres pudełkowy
 
