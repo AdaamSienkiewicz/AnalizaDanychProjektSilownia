@@ -3,12 +3,13 @@ library(readr)
 library(naniar)
 library(visdat)
 library(dplyr)
+library(skimr)
 
 silownia <- read_csv("silownia_new.csv")
 
 View(silownia)
-install.packages("prettydoc")
-library(prettydoc)
+skim(silownia)
+
 #Zmiana nazw kolumn
 colnames(silownia)[colnames(silownia) == "Weight (kg)"] <- "Weight_kg"
 colnames(silownia)[colnames(silownia) == "Height (m)"] <- "Height_m"
@@ -312,7 +313,7 @@ packages <- c(
   "dplyr", "ggplot2", "rmdformats", "validate", "validatetools", 
   "dcmodify", "errorlocate", "deductive", "VIM", "simputation", 
   "lumberjack", "ISLR", "dlookr", "xts", "quantmod", "ROCR", 
-  "DMwR", "Information", "scorecard"
+   "Information", "scorecard"
 )
 
 install.packages("Information")
@@ -347,7 +348,7 @@ library(dlookr)
 library(xts)
 library(quantmod)
 library(ROCR)
-library(DMwR)
+
 library(Information)
 library(scorecard)
 
