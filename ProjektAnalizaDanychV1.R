@@ -680,8 +680,68 @@ tabela_BMI %>%
     position = "center"
   ) %>%
   add_header_above(c(" " = 1, "Wiek" = 4))
-
 # Na podstawie powyższych wyników można stwierdzić, że najwyższą średnią wartość BMI osiągnięto dla grupy wiekowej 18-29 lat, dla której największa jest też mediana BMI równa 24,96. Minimalna wartość BMI to 12,32 dla osób w wieku 39-49 lat, a maksymalna wynosi niespełna 50 dla tej samej grupy wiekowej. W grupie wiekowej 49-59 nastąpiło największe rozproszenie danych. Wyniosło ono 7,1. Rozstęp międzykwartylowy (IQR) osiąga wartości od 7,08 do 9,08, co wskazuje na stabilność w centralnej części rozkładu. Rozkład BMI jest lekko dodatnio skośny. Wartości Bmi większe od średniej są nieco bardziej rozproszone. Wartości kurtozy wskazują na to, że dane są bardziej rozproszone, a wyniki nie wykazują silnej koncentracji wokół średniej ani wielu skrajnych wartości.
+
+# Rozkład wagi w zależności od płci
+# Wykres przedstawia rozkład wagi w zależności od płci.
+# Rozkład wagi u kobiet jest bardziej skoncentrowany w przedziale 50–70 kg, co wskazuje na mniejszą zmienność i większą jednolitość w populacji kobiet.
+# Rozkład wagi u mężczyzn jest szerszy, co oznacza większą zmienność. Wagi mężczyzn najczęściej mieszczą się w przedziale 70–90 kg, ale rozkład ma dłuższy ogon w kierunku wyższych wartości, sięgając ponad 120 kg.
+# Ogólnie, mężczyźni wykazują większe zróżnicowanie wag w porównaniu do kobiet, z tendencją do wyższych wartości wagi. Rozkłady są symetryczne, z wyraźnymi różnicami między średnimi i zakresami wag dla obu płci.
+ggplot(Silownia_wykresy, aes(Weight_kg, color = Gender, fill = Gender)) +
+  geom_density(alpha = 0.7) +
+  xlab("Waga (kg)") +
+  ylab("") +
+  ggtitle("Rozkład wagi w zależności od płci") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = c("Male" = "darkblue", "Female" = "pink")) +  # Zmiana kolorów linii
+  scale_fill_manual(values = c("Male" = "lightblue", "Female" = "lightpink"))  # Zmiana kolorów wypełnienia
+
+opis_Weight <- list( "Waga" = 
+                    list(
+                      "Min"= ~ min(Weight_kg),
+                      "Max"= ~ max(Weight_kg),
+                      "Kwartyl dolny"= ~ quantile(Weight_kg,0.25),
+                      "Mediana"= ~ round(median(Weight_kg),2),
+                      "Kwartyl górny"= ~ quantile(Weight_kg,0.75),
+                      "Średnia"= ~ round(mean(Weight_kg),2),
+                      "Odch. std."= ~ round(sd(Weight_kg),2),
+                      "IQR"= ~ round(IQR(Weight_kg),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Weight_kg)/2,2),
+                      "Odch. std. w %"=~round((sd(Weight_kg)/mean(Weight_kg)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Weight_kg)/median(Weight_kg)),2),
+                      "Skośność"=~round(skew(Weight_kg),2),
+                      "Kurtoza"=~round(kurtosi(Weight_kg),2)
+                    ))
+
+tabela_Weight <- summary_table(Silownia_wykresy, summaries = opis_Weight, by = c("Gender"), markup = "plain")
+tabela_Weight <- gsub("~~", "", tabela_Weight)
+tabela_Weight <- as.data.frame(tabela_Weight)
+tabela_Weight <- tabela_Weight[-1, ]  
+print(tabela_Weight)
+
+tabela_Weight %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'Waga' w zależności od płci",
+    col.names = c("Statystyka", "Kobiety", "Mężczyźni"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Płeć" = 2))
+# Wyniki przedstawiają statystyki opisowe dotyczące wagi w zależności od płci.
+# Waga kobiet waha się od 40 do 79,9 kg. Mediana wynosi 61,35 kg, a średnia 60,94 kg, co wskazuje na zbliżone wartości centralne. Rozstęp międzykwartylowy (IQR) wynosi 15,13, a odchylenie standardowe 10,24, co wskazuje na umiarkowaną zmienność wagi w tej grupie. Skośność (-0,16) wskazuje na lekko ujemny rozkład, co oznacza, że częściej występują wyższe wartości wagi, a kurtoza (-0,81) sugeruje spłaszczony rozkład.
+# Waga mężczyzn jest bardziej zróżnicowana i waha się od 45 do 129,9 kg. Mediana wynosi 85,3 kg, a średnia 85,53 kg, co oznacza, że większość wartości oscyluje wokół tego przedziału. Rozstęp międzykwartylowy (IQR) wynosi 31,85, a odchylenie standardowe 21,79, co wskazuje na większe zróżnicowanie wagi niż w przypadku kobiet. Skośność (0,15) sugeruje lekko dodatni rozkład, co oznacza, że częściej występują niższe wartości wagi, a kurtoza (-0,73) również wskazuje na spłaszczony rozkład.
+# Podsumowując, kobiety mają mniejsze zróżnicowanie wagi w porównaniu do mężczyzn, których wagi rozkładają się na szerszym przedziale. Mediana i średnia wagi są wyższe u mężczyzn. Rozkłady w obu grupach są lekko spłaszczone, ale różnią się kierunkiem skośności.
 
 #Czas trwania sesji a spalone kalorie 
 #Wykres ten przedstawia zależność między czasem trwania treningu i spalonymi kaloriami. Im dłuższy trening, tym więcej spalonych kalorii
@@ -744,23 +804,14 @@ tabela_Calories_Burned %>%
     position = "center"
   ) %>%
   add_header_above(c(" " = 1, "Spalone kalorie" = 3))
-
-#Średnie tętno a rodzaj treningu - w tym przypadku zrobiłem wykres pudełkowy
-
-ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Avg_BPM, fill = Workout_Type)) +
-  geom_boxplot(alpha = 0.7) +
-  xlab("Rodzaj treningu") +
-  ylab("Średnie tętno (BPM)") +
-  ggtitle("Średnie tętno a rodzaj treningu") +
-  theme_light(base_size = 14) +
-  theme(
-    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
-    axis.text = element_text(size = 12),
-    axis.title = element_text(size = 14)
-  )
+# Wyniki przedstawiają statystyki spalonych kalorii w zależności od długości trwania sesji treningowej (0,5–1 godz., 1–1,5 godz., 1,5–2 godz.).
+# 0,5–1 godz.: Liczba spalonych kalorii waha się od 303 do 832, z medianą 534,5 i średnią 540,77. Rozstęp międzykwartylowy (IQR) wynosi 186, co wskazuje na umiarkowaną zmienność w centralnej części rozkładu. Odchylenie standardowe wynosi 115,7, co oznacza niewielkie zróżnicowanie wartości. Rozkład jest lekko dodatnio skośny (0,18), co oznacza, że wartości wyższe od średniej pojawiają się rzadziej.
+# 1–1,5 godz.: Liczba spalonych kalorii wzrasta, waha się od 576 do 1385, z medianą 888 i średnią 902,47. Rozstęp międzykwartylowy (IQR) wynosi 212,5, co oznacza większą zmienność niż w poprzedniej kategorii. Odchylenie standardowe to 150,64, co wskazuje na większe zróżnicowanie wyników. Skośność (0,32) jest nieco wyższa, co wskazuje na większą asymetrię w kierunku wyższych wartości.
+# 1,5–2 godz.: Liczba spalonych kalorii jest najwyższa, od 837 do 1783, z medianą 1240 i średnią 1258,46. Rozstęp międzykwartylowy (IQR) wynosi 238,5, a odchylenie standardowe 187,41, co wskazuje na największą zmienność w tej grupie. Skośność (0,34) jest podobna do poprzedniej grupy, sugerując asymetrię w kierunku wyższych wartości.
+# Podsumowując, wraz ze wzrostem czasu trwania sesji rośnie liczba spalonych kalorii, zarówno pod względem wartości minimalnych, średnich, jak i maksymalnych. Jednocześnie wzrasta zmienność wyników (odchylenie standardowe i IQR), co sugeruje, że dłuższe sesje treningowe prowadzą do bardziej zróżnicowanych rezultatów w spalaniu kalorii. Rozkład w każdej kategorii jest lekko dodatnio skośny, z tendencją do większego spłaszczenia w miarę wydłużania sesji (kurtoza od -0,77 do -0,14).
 
 #Spalone kalorie a waga
-
+# Wykres przedstawia zależność między wagą a liczbą spalonych kalorii. Punkty danych pokazują dużą zmienność w liczbie spalonych kalorii wśród osób o podobnej wadze, jednak trend zaznaczony linią regresji sugeruje niewielką dodatnią korelację. Oznacza to, że osoby o wyższej wadze generalnie spalają więcej kalorii, choć zależność ta jest słaba. Rozrzut punktów wskazuje, że na liczbę spalonych kalorii mogą wpływać także inne czynniki, takie jak intensywność i rodzaj treningu.
 ggplot(Silownia_wykresy, aes(x = Weight_kg, y = Calories_Burned)) +
   geom_point(color = "purple", size = 3, alpha = 0.6) +
   geom_smooth(method = "lm", color = "black", se = FALSE) +
@@ -774,10 +825,91 @@ ggplot(Silownia_wykresy, aes(x = Weight_kg, y = Calories_Burned)) +
     axis.title = element_text(size = 14)
   )
 
+# Średnia liczba spalonych kalorii dla różnych typów treningu
+# Wykres pokazuje, że średnia liczba spalonych kalorii jest zbliżona dla wszystkich rodzajów treningów, przy czym HIIT i trening siłowy spalają nieco więcej kalorii niż joga i cardio.
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Calories_Burned, fill = Workout_Type)) +
+  stat_summary(fun = "mean", geom = "bar") +
+  labs(title = "Średnia liczba spalonych kalorii dla różnych typów treningu", x = "Typ treningu", y = "Średnie spalone kalorie") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+# Średnie spalone kalorie według płci i poziomu doświadczenia
+# Wykres przedstawia średnią liczbę spalonych kalorii w zależności od poziomu doświadczenia i płci. Wraz ze wzrostem poziomu doświadczenia (od 1 do 3) rośnie średnia liczba spalonych kalorii dla obu płci.
+# Mężczyźni spalają nieco więcej kalorii niż kobiety na każdym poziomie doświadczenia, przy czym różnica ta pozostaje niewielka. Na poziomie doświadczenia 3 różnica jest najbardziej widoczna, co może wskazywać na większą intensywność lub efektywność treningu u bardziej doświadczonych mężczyzn. Ogólnie trend pokazuje, że większe doświadczenie wiąże się z większą liczbą spalonych kalorii, niezależnie od płci.
+ggplot(Silownia_wykresy, aes(x = factor(Experience_Level), y = Calories_Burned, fill = Gender)) +
+  stat_summary(fun = "mean", geom = "bar", position = "dodge") +
+  labs(title = "Średnie spalone kalorie według płci i poziomu doświadczenia", x = "Poziom doświadczenia", y = "Średnie spalone kalorie") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+#Średnie tętno a rodzaj treningu - w tym przypadku zrobiłem wykres pudełkowy
+# Powyższy wykres przedstawia zależność między średnim tętnem a rodzajem treningu. Ukazuje on, jak różne rodzaje treningu wpływają na pracę serca, z wyraźnym wzrostem intensywności od jogi po HIIT i trening siłowy.
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Avg_BPM, fill = Workout_Type)) +
+  geom_boxplot(alpha = 0.7) +
+  xlab("Rodzaj treningu") +
+  ylab("Średnie tętno (BPM)") +
+  ggtitle("Średnie tętno a rodzaj treningu") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+opis_AvgBPM_WorkoutType <- list( "Średnie tętno" = 
+                    list(
+                      "Min"= ~ min(Avg_BPM),
+                      "Max"= ~ max(Avg_BPM),
+                      "Kwartyl dolny"= ~ quantile(Avg_BPM,0.25),
+                      "Mediana"= ~ round(median(Avg_BPM),2),
+                      "Kwartyl górny"= ~ quantile(Avg_BPM,0.75),
+                      "Średnia"= ~ round(mean(Avg_BPM),2),
+                      "Odch. std."= ~ round(sd(Avg_BPM),2),
+                      "IQR"= ~ round(IQR(Avg_BPM),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Avg_BPM)/2,2),
+                      "Odch. std. w %"=~round((sd(Avg_BPM)/mean(Avg_BPM)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Avg_BPM)/median(Avg_BPM)),2),
+                      "Skośność"=~round(skew(Avg_BPM),2),
+                      "Kurtoza"=~round(kurtosi(Avg_BPM),2)
+                    ))
+
+tabela_AvgBPM_WorkoutType <- summary_table(Silownia_wykresy, summaries = opis_AvgBPM_WorkoutType, by = c("Workout_Type"), markup = "plain")
+tabela_AvgBPM_WorkoutType <- gsub("~~", "", tabela_AvgBPM_WorkoutType)
+tabela_AvgBPM_WorkoutType <- as.data.frame(tabela_AvgBPM_WorkoutType)
+tabela_AvgBPM_WorkoutType <- tabela_AvgBPM_WorkoutType[-1, ]  
+print(tabela_AvgBPM_WorkoutType)
+
+library(kableExtra)
+tabela_AvgBPM_WorkoutType %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'Średnie tętno' w zależności od rodzaju treningu",
+    col.names = c("Statystyka", "Yoga", "Cardio", "HIIT", "Trening siłowy"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Rodzaj treningu" = 4))
+# Wyniki pokazują, że średnie tętno w różnych rodzajach treningów (joga, cardio, HIIT, trening siłowy) jest bardzo zbliżone. Średnie wartości oscylują wokół 144 uderzeń na minutę, z minimalną i maksymalną wartością wynoszącą 120 i 169. Mediana jest najwyższa w jodze i treningu siłowym (144), nieco niższa w HIIT (143) i cardio (142). Rozproszenie danych, mierzone odchyleniem standardowym, jest również podobne, wynosząc około 14, co wskazuje na umiarkowaną zmienność w każdej grupie.
+#Rozstęp międzykwartylowy (IQR) wynosi około 25 we wszystkich przypadkach, co potwierdza stabilność w centralnej części rozkładu. Rozkład danych jest niemal symetryczny (skośność bliska 0) i lekko spłaszczony (kurtoza od -1.21 do -1.27), co oznacza mniejszą liczbę wartości skrajnych w porównaniu do rozkładu normalnego. Ogólnie, wyniki wskazują na podobną intensywność treningową dla wszystkich analizowanych aktywności w kontekście tętna.
+
+
 #Zależność tętna spoczynkowego od wieku 
 #Wstawiłem linię trendu wygładzoną, co pozwoliło uchwycić nieliniowe zależności między zmiennymi.
 #Cień to przedział ufności, który wskazuje niepewność estymacji linii trendu. Szeroki cień oznacza większą niepewność w przewidywaniu.
-
+# Wykres przedstawia zależność tętna spoczynkowego od wieku. Punkty na wykresie pokazują dużą zmienność indywidualnych wartości, jednak trend zaznaczony linią regresji wskazuje, że tętno spoczynkowe lekko spada do około 40. roku życia, a następnie nieznacznie wzrasta. Ogólnie, tętno spoczynkowe utrzymuje się w stabilnym przedziale 60–70 BPM, niezależnie od wieku, co sugeruje brak istotnych zmian w zależności od wieku u większości osób.
 ggplot(Silownia_wykresy, aes(x = Age, y = Resting_BPM)) +
   geom_point(color = "orange", size = 3, alpha = 0.6) +
   geom_smooth(method = "loess", color = "blue", se = TRUE) +
@@ -790,6 +922,126 @@ ggplot(Silownia_wykresy, aes(x = Age, y = Resting_BPM)) +
     axis.text = element_text(size = 12),
     axis.title = element_text(size = 14)
   )
+opis_RestingBPM_Age <- list( "Tętno spoczynkowe" = 
+                                list(
+                                  "Min"= ~ min(Resting_BPM),
+                                  "Max"= ~ max(Resting_BPM),
+                                  "Kwartyl dolny"= ~ quantile(Resting_BPM,0.25),
+                                  "Mediana"= ~ round(median(Resting_BPM),2),
+                                  "Kwartyl górny"= ~ quantile(Resting_BPM,0.75),
+                                  "Średnia"= ~ round(mean(Resting_BPM),2),
+                                  "Odch. std."= ~ round(sd(Resting_BPM),2),
+                                  "IQR"= ~ round(IQR(Resting_BPM),2),
+                                  "Odchylenie ćwiartkowe"=~round(IQR(Resting_BPM)/2,2),
+                                  "Odch. std. w %"=~round((sd(Resting_BPM)/mean(Resting_BPM)),2),
+                                  "Odch. ćwiartkowe w %"=~round((IQR(Resting_BPM)/median(Resting_BPM)),2),
+                                  "Skośność"=~round(skew(Resting_BPM),2),
+                                  "Kurtoza"=~round(kurtosi(Resting_BPM),2)
+                                ))
+
+Silownia_wykresy$Age_Category <- cut(Silownia_wykresy$Age, 
+                                          breaks = c(0, 30, 50, 70), 
+                                          labels = c("<30 lat", "30-50 lat", ">50 lat"), 
+                                          right = FALSE)
+
+tabela_RestingBPM_Age <- summary_table(Silownia_wykresy, summaries = opis_RestingBPM_Age, by = c("Age_Category"), markup = "plain")
+tabela_RestingBPM_Age <- gsub("~~", "", tabela_RestingBPM_Age)
+tabela_RestingBPM_Age <- as.data.frame(tabela_RestingBPM_Age)
+tabela_RestingBPM_Age <- tabela_RestingBPM_Age[-1, ]  
+print(tabela_RestingBPM_Age)
+
+library(kableExtra)
+tabela_RestingBPM_Age %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'Tętno spoczynkowe' w zależności od wieku",
+    col.names = c("Statystyka", "<30 lat", "30-50 lat", ">50 lat"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Wiek" = 3))
+# Wyniki pokazują, że tętno spoczynkowe w zależności od grupy wiekowej (<30 lat, 30-50 lat, >50 lat) jest stabilne, z niewielkimi różnicami w średnich wartościach: 62,44 dla osób młodszych, 62,1 dla grupy średniej i 62,18 dla osób starszych. Wartości minimalne i maksymalne (50 i 74) są identyczne we wszystkich grupach, co wskazuje na spójność w zakresie danych.
+# Mediana wynosi 62 lub 63, co sugeruje, że tętno większości osób oscyluje w tym przedziale. Rozstęp międzykwartylowy (IQR) i odchylenie ćwiartkowe są zbliżone (odpowiednio 12–13 i 6–6,5), co świadczy o porównywalnej zmienności w każdej grupie wiekowej.
+# Rozkład danych jest lekko ujemnie skośny (-0,06 do -0,1), co oznacza, że wartości niższe od średniej są nieco częstsze, a kurtoza (od -1,2 do -1,23) sugeruje spłaszczony rozkład, co wskazuje na mniejszą liczbę wartości ekstremalnych. Ogólnie wyniki pokazują, że wiek ma niewielki wpływ na tętno spoczynkowe.
+
+
+# Czas trwania sesji w zależności od typu treningu
+# Wykres wiolinowy przedstawia rozkład czasu trwania sesji w zależności od rodzaju treningu (joga, cardio, HIIT, trening siłowy).
+# Największa zmienność czasu trwania widoczna jest w treningu siłowym i HIIT, gdzie czas trwania sesji jest bardziej zróżnicowany, a wartości rozkładają się szeroko w zakresie od około 0,5 do 2 godzin. Joga i cardio charakteryzują się bardziej skoncentrowanym czasem trwania sesji, ze szczytem w okolicach 1–1,5 godziny.
+# Średni czas trwania treningu dla wszystkich rodzajów treningów oscyluje wokół podobnych wartości, jednak rozkłady pokazują, że joga i cardio mają mniej skrajnych wartości w porównaniu do HIIT i treningu siłowego.
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Session_Duration_hours, fill = Workout_Type)) +
+  geom_violin() +
+  labs(title = "Czas trwania sesji w zależności od typu treningu", x = "Typ treningu", y = "Czas trwania (godziny)") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+opis_SessionDuration_WorkoutType <- list( "Czas trwania sesji" = 
+                               list(
+                                 "Min"= ~ min(Session_Duration_hours),
+                                 "Max"= ~ max(Session_Duration_hours),
+                                 "Kwartyl dolny"= ~ quantile(Session_Duration_hours,0.25),
+                                 "Mediana"= ~ round(median(Session_Duration_hours),2),
+                                 "Kwartyl górny"= ~ quantile(Session_Duration_hours,0.75),
+                                 "Średnia"= ~ round(mean(Session_Duration_hours),2),
+                                 "Odch. std."= ~ round(sd(Session_Duration_hours),2),
+                                 "IQR"= ~ round(IQR(Session_Duration_hours),2),
+                                 "Odchylenie ćwiartkowe"=~round(IQR(Session_Duration_hours)/2,2),
+                                 "Odch. std. w %"=~round((sd(Session_Duration_hours)/mean(Session_Duration_hours)),2),
+                                 "Odch. ćwiartkowe w %"=~round((IQR(Session_Duration_hours)/median(Session_Duration_hours)),2),
+                                 "Skośność"=~round(skew(Session_Duration_hours),2),
+                                 "Kurtoza"=~round(kurtosi(Session_Duration_hours),2)
+                               ))
+
+tabela_SessionDuration_WorkoutType <- summary_table(Silownia_wykresy, summaries = opis_SessionDuration_WorkoutType, by = c("Workout_Type"), markup = "plain")
+tabela_SessionDuration_WorkoutType <- gsub("~~", "", tabela_SessionDuration_WorkoutType)
+tabela_SessionDuration_WorkoutType <- as.data.frame(tabela_SessionDuration_WorkoutType)
+tabela_SessionDuration_WorkoutType <- tabela_SessionDuration_WorkoutType[-1, ]  
+print(tabela_SessionDuration_WorkoutType)
+
+tabela_SessionDuration_WorkoutType %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'Czas trwania sesji' w zależności od typu treningu",
+    col.names = c("Statystyka", "Yoga", "Cardio", "HIIT", "Trening siłowy"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Typ treningu" = 4))
+# Wyniki pokazują, że czas trwania sesji treningowych jest zbliżony dla wszystkich typów treningów (joga, cardio, HIIT, trening siłowy). Minimalny czas trwania wynosi około 0,5 godziny, a maksymalny blisko 2 godzin. Średni czas trwania oscyluje między 1,23 godziny (cardio) a 1,28 godziny (joga i HIIT), co jest zbliżone do median, które również wynoszą od 1,23 do 1,29 godziny.
+#Rozstęp międzykwartylowy (IQR) wynosi od 0,39 (cardio) do 0,42 (joga i HIIT), co wskazuje na podobny zakres w centralnej części rozkładu. Odchylenie standardowe jest również porównywalne (od 0,33 do 0,36), co świadczy o niewielkiej zmienności czasu trwania sesji w każdej grupie. Rozkład danych jest niemal symetryczny (skośność bliska 0), a kurtoza wskazuje na lekko spłaszczony rozkład (od -0,55 do -0,25). Ogólnie, wyniki sugerują, że wszystkie typy treningów mają podobny czas trwania sesji, z niewielkimi różnicami w zmienności i kształcie rozkładu.
+
+
+# Częstotliwość treningów a czas trwania sesji
+# Wykres przedstawia zależność między liczbą sesji treningowych w tygodniu a czasem trwania pojedynczej sesji, uwzględniając poziom doświadczenia uczestników.
+# Wraz ze wzrostem liczby sesji w tygodniu obserwuje się tendencję do wydłużania czasu trwania pojedynczej sesji, co wskazuje na większe zaangażowanie w trening przy częstszej aktywności. Linia regresji podkreśla dodatnią korelację między tymi zmiennymi.
+# Kolor punktów, odpowiadający poziomowi doświadczenia, wskazuje, że osoby bardziej doświadczone (jaśniejsze punkty) częściej wykonują dłuższe sesje i trenują więcej razy w tygodniu. Wynika z tego, że zarówno liczba sesji, jak i czas ich trwania rosną wraz z doświadczeniem.
+ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Session_Duration_hours, color = Experience_Level)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Częstotliwość treningów a czas trwania sesji", x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+
+
+
 
 #Procent tkanki tłuszczowej ciała a częśtotliwość treningów
 
@@ -856,34 +1108,5 @@ ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
   ggtitle("Histogram dla Resting_BPM") +
   xlab("Resting_BPM") +
   ylab("Liczba obserwacji")
-
-
-# Czas trwania sesji w zależności od typu treningu
-
-ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Session_Duration_hours, fill = Workout_Type)) +
-  geom_violin() +
-  labs(title = "Czas trwania sesji w zależności od typu treningu", x = "Typ treningu", y = "Czas trwania (godziny)")
-
-
-# Średnie spalone kalorie według płci i poziomu doświadczenia
-
-ggplot(Silownia_wykresy, aes(x = factor(Experience_Level), y = Calories_Burned, fill = Gender)) +
-  stat_summary(fun = "mean", geom = "bar", position = "dodge") +
-  labs(title = "Średnie spalone kalorie według płci i poziomu doświadczenia", x = "Poziom doświadczenia", y = "Średnie spalone kalorie")
-
-
-# Średnia liczba spalonych kalorii dla różnych typów treningu
-
-ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Calories_Burned, fill = Workout_Type)) +
-  stat_summary(fun = "mean", geom = "bar") +
-  labs(title = "Średnia liczba spalonych kalorii dla różnych typów treningu", x = "Typ treningu", y = "Średnie spalone kalorie")
-
-
-# Częstotliwość treningów a czas trwania sesji
-
-ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Session_Duration_hours, color = Experience_Level)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Częstotliwość treningów a czas trwania sesji", x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)")
 
 
