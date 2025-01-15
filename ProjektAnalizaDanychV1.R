@@ -803,7 +803,7 @@ tabela_Calories_Burned %>%
     full_width = FALSE,
     position = "center"
   ) %>%
-  add_header_above(c(" " = 1, "Spalone kalorie" = 3))
+  add_header_above(c(" " = 1, "Czas trwania sesji" = 3))
 # Wyniki przedstawiają statystyki spalonych kalorii w zależności od długości trwania sesji treningowej (0,5–1 godz., 1–1,5 godz., 1,5–2 godz.).
 # 0,5–1 godz.: Liczba spalonych kalorii waha się od 303 do 832, z medianą 534,5 i średnią 540,77. Rozstęp międzykwartylowy (IQR) wynosi 186, co wskazuje na umiarkowaną zmienność w centralnej części rozkładu. Odchylenie standardowe wynosi 115,7, co oznacza niewielkie zróżnicowanie wartości. Rozkład jest lekko dodatnio skośny (0,18), co oznacza, że wartości wyższe od średniej pojawiają się rzadziej.
 # 1–1,5 godz.: Liczba spalonych kalorii wzrasta, waha się od 576 do 1385, z medianą 888 i średnią 902,47. Rozstęp międzykwartylowy (IQR) wynosi 212,5, co oznacza większą zmienność niż w poprzedniej kategorii. Odchylenie standardowe to 150,64, co wskazuje na większe zróżnicowanie wyników. Skośność (0,32) jest nieco wyższa, co wskazuje na większą asymetrię w kierunku wyższych wartości.
@@ -1040,16 +1040,13 @@ ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Session_Duratio
   )
 
 
-
-
-
-#Procent tkanki tłuszczowej ciała a częśtotliwość treningów
-
-ggplot(Silownia_wykresy, aes(x = Fat_Percentage, y = Workout_Frequency_daysweek)) +
+#Procent tkanki tłuszczowej ciała a częstotliwość treningów
+#Powyższy wykres obrazuje zależności procentu tkanki tłuszczowej od częstotliwości treningów. Zależność jest odwrotnie proporcjonalna - im więcej treningów, tym mniejsza tkanka tłuszczowa działa.
+ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Fat_Percentage)) +
   geom_point(color = "pink", size = 3, alpha = 0.6) +
   geom_smooth(method = "lm", color = "darkorange", se = FALSE) +
-  xlab("Procent tkanki tłuszczowej ciała (%)") +
-  ylab("Częstotliwość treningów (dni/tydzień)") +
+  xlab("Częstotliwość treningów (dni/tydzień)") +
+  ylab("Procent tkanki tłuszczowej ciała (%)") +
   ggtitle("Zależność między procentem tłuszczu a częstotliwością treningów") +
   theme_minimal(base_size = 14) +
   theme(
@@ -1058,20 +1055,52 @@ ggplot(Silownia_wykresy, aes(x = Fat_Percentage, y = Workout_Frequency_daysweek)
     axis.title = element_text(size = 14)
   )
 
-#Spalone kaolorie a czas trwania sesji
+opis_Fat_Percentage <- list( "Fat_Percentage" = 
+                    list(
+                      "Min"= ~ min(Fat_Percentage),
+                      "Max"= ~ max(Fat_Percentage),
+                      "Kwartyl dolny"= ~ quantile(Fat_Percentage,0.25),
+                      "Mediana"= ~ round(median(Fat_Percentage),2),
+                      "Kwartyl górny"= ~ quantile(Fat_Percentage,0.75),
+                      "Średnia"= ~ round(mean(Fat_Percentage),2),
+                      "Odch. std."= ~ round(sd(Fat_Percentage),2),
+                      "IQR"= ~ round(IQR(Fat_Percentage),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Fat_Percentage)/2,2),
+                      "Odch. std. w %"=~round((sd(Age)/mean(Fat_Percentage)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Age)/median(Fat_Percentage)),2),
+                      "Skośność"=~round(skew(Fat_Percentage),2),
+                      "Kurtoza"=~round(kurtosi(Fat_Percentage),2)
+                    ))
 
-ggplot(Silownia_wykresy, aes(x = Calories_Burned, y = Session_Duration_hours)) +
-  geom_point(color = "steelblue", size = 4, alpha = 0.7) +
-  geom_smooth(method = "lm", color = "firebrick", se = FALSE) +
-  xlab("Spalone kalorie") +
-  ylab("Czas trwania sesji (godziny)") +
-  ggtitle("Zależność między spalonymi kaloriami a czasem trwania sesji") +
-  theme_minimal(base_size = 16) +
-  theme(
-    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
-    axis.text = element_text(size = 14),
-    axis.title = element_text(size = 16)
-  )
+library(qwraps2)
+
+tabela_Fat_Percentage <- summary_table(Silownia_wykresy, summaries = opis_Fat_Percentage, by = c("Workout_Frequency_daysweek"), markup = "plain")
+tabela_Fat_Percentage <- gsub("~~", "", tabela_Fat_Percentage)
+tabela_Fat_Percentage <- as.data.frame(tabela_Fat_Percentage)
+tabela_Fat_Percentage <- tabela_Fat_Percentage[-1, ] 
+print(tabela_Fat_Percentage)
+
+library(kableExtra)
+
+tabela_Fat_Percentage %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    caption = "Statystyki opisowe zmiennej 'Fat_Percentage' w zależności od częstotliwości treningu",
+    col.names = c("Statystyka", "2", "3", "4", "5"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Częstotliwość treningów" = 4))
+
+#Na podstawie uzyskanych wyników można stwierdzić, że wraz ze wzrostem częstotliwości treningów spada wartość minimalna i maksymalna procentu tkanki tłuszczowej.
+#Media oraz średnia wartość jest zdecydowanie najmniejsza dla częstotliwości treningów wynoszącej 5 dni w tygodniu.
+#Dla 5 dni najmniejsze są też: odchylenie standardowe oraz wartości kwartyli, co pokazuje, jak zostały pogrupowane wartości uzyskane dla tkanki tłuszczowej.
+#Wartości skośności są bliskie zeru, co wskazuje lekką asymetryczność. Występuje zarówno lewostronna (dla 3 i 4 dni w tygodniu), jak i prawostronna (2 i 5) asymetria.
 
 #Wykres interaktywny - Zależność BMI od wieku, legenda to rodzaj treningu
 
@@ -1092,21 +1121,56 @@ plotly::ggplotly(p1)
 #Histogramy dla trzech rodzajów BPM - przykładowo zrobiłem dla tej zmiennej
 
 ggplot(Silownia_wykresy, aes(x = Max_BPM)) +
-  geom_histogram(binwidth = 10) +
+  geom_histogram(binwidth = 10, 
+                 fill = "skyblue", 
+                 color = "black", 
+                 alpha = 0.7) +
   ggtitle("Histogram dla Max_BPM") +
-  xlab("Max_BPM") +
-  ylab("Liczba obserwacji")
+  xlab("Maksymalne BPM") +
+  ylab("Liczba obserwacji") +
+  theme_minimal() +  
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),  
+    axis.title = element_text(size = 14),  
+    axis.text = element_text(size = 12),  
+    panel.grid.major = element_line(color = "gray80", linetype = "dotted")  
+  ) +
+  scale_x_continuous(breaks = seq(min(Silownia_wykresy$Max_BPM), max(Silownia_wykresy$Max_BPM), by = 20)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
 
 ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
-  geom_histogram(binwidth = 10) +
+  geom_histogram(binwidth = 10, 
+                 fill = "lightgreen", 
+                 color = "black", 
+                 alpha = 0.7) +
   ggtitle("Histogram dla Avg_BPM") +
-  xlab("Avg_BPM") +
-  ylab("Liczba obserwacji")
+  xlab("Średnie BPM") +
+  ylab("Liczba obserwacji") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    panel.grid.major = element_line(color = "gray80", linetype = "dotted")
+  ) +
+  scale_x_continuous(breaks = seq(min(Silownia_wykresy$Avg_BPM), max(Silownia_wykresy$Avg_BPM), by = 20)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
 
 ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
-  geom_histogram(binwidth = 10) +
+  geom_histogram(binwidth = 10, 
+                 fill = "salmon", 
+                 color = "black", 
+                 alpha = 0.7) +
   ggtitle("Histogram dla Resting_BPM") +
-  xlab("Resting_BPM") +
-  ylab("Liczba obserwacji")
-
+  xlab("Spoczynkowe BPM") +
+  ylab("Liczba obserwacji") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    panel.grid.major = element_line(color = "gray80", linetype = "dotted")
+  ) +
+  scale_x_continuous(breaks = seq(min(Silownia_wykresy$Resting_BPM), max(Silownia_wykresy$Resting_BPM), by = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
 
