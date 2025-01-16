@@ -23,19 +23,19 @@ output:
 
 ## **2. Zmienne w zbiorze danych**
 
-• ***Wiek*** - wiek użytkownika siłowni.
+• **Age** - wiek użytkownika siłowni.
 
-• ***Płeć*** - płeć użytkownika siłowni.
+• ***Gender*** - płeć użytkownika siłowni.
 
-• ***Waga*** - waga użytkownika siłowni w kilogramach.
+• ***Weight (kg)***- waga użytkownika siłowni w kilogramach.
 
-• ***Wzrost*** - wzrost użytkownika siłowni w metrach
+• ***Height (m)*** - wzrost użytkownika siłowni w metrach.
 
 • ***Max_BPM*** - maksymalne tętno podczas sesji treningowych.
 
 • ***Avg_BPM*** - średnie tętno podczas sesji treningowych.
 
-• ***Resting_BPM*** - tętno w spoczynku przed treningiem.
+• ***Resting_BPM*** - spoczynkowe tętno przed treningiem.
 
 • ***Session_Duration*** - czas trwania każdej sesji treningowej w godzinach.
 
@@ -45,7 +45,7 @@ output:
 
 • ***Fat_Percentage*** -procent tkanki tłuszczowej.
 
-• ***Water_Intake*** - dzienne spożycie wody podczas treningu w litrach.
+• ***Water_Intake*** - spożycie wody podczas treningu w litrach.
 
 • ***Workout_Frequency*** - liczba sesji treningowych w tygodniu.
 
@@ -72,40 +72,37 @@ silownia <- read_csv("silownia_new.csv")
 skim(silownia)
 ```
 
-|                                                  |          |
-|--------------------------------------------------|----------|
-| **Nazwa zbioru danych**                          | silownia |
-| **Liczba wierszy**                               | 973      |
-| **Liczba kolumn**                                | 15       |
-| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_   |          |
-| **Częstość typów kolumn:**                       |          |
-| **Kolumny typu tekstowego**                      | 2        |
-| **Kolumny typu liczbowego**                      | 13       |
-| \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |          |
+|                             |          |
+|-----------------------------|----------|
+| **Nazwa zbioru danych**     | silownia |
+| **Liczba wierszy**          | 973      |
+| **Liczba kolumn**           | 15       |
+| **Kolumny typu tekstowego** | 2        |
+| **Kolumny typu liczbowego** | 13       |
 
 **Kolumny typu tekstowego**
 
 | **Kolumna** | **Brakujące wartości** | **Kompletność** | **Min** | **Max** | **Puste** | **Unikalne wartości** | **Whitespace** |
 |:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| Gender | 0 | 1.00 | 4 | 6 | 0 | 2 | 0 |
-| Workout_Type | 150 | 0.85 | 4 | 8 | 0 | 4 | 0 |
+| Płeć | 0 | 1.00 | 4 | 6 | 0 | 2 | 0 |
+| Typ treningu | 150 | 0.85 | 4 | 8 | 0 | 4 | 0 |
 
 **Kolumny typu liczbowego**
 
 | **Kolumna** | **Brakujące wartości** | **Kompletność** | **Średnia** | **Odchylenie standardowe** | **0 Percentyl** | **25 Percentyl** | **50 Percentyl** | **75 Percentyl** | **100 Percentyl** | **Histogram** |
 |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-| Age | 100 | 0.90 | 38.63 | 12.27 | 18.00 | 28.00 | 39.00 | 50.00 | 59.00 | ▇▆▆▇▇ |
-| Weight (kg) | 0 | 1.00 | 73.85 | 21.21 | 40.00 | 58.10 | 70.00 | 86.00 | 129.90 | ▅▇▅▂▂ |
-| Height (m) | 0 | 1.00 | 1.72 | 0.13 | 1.50 | 1.62 | 1.71 | 1.80 | 2.00 | ▅▇▇▃▃ |
-| Max_BPM | 0 | 1.00 | 179.88 | 11.53 | 160.00 | 170.00 | 180.00 | 190.00 | 199.00 | ▇▇▇▇▇ |
-| Avg_BPM | 0 | 1.00 | 143.77 | 14.35 | 120.00 | 131.00 | 143.00 | 156.00 | 169.00 | ▇▇▆▆▆ |
-| Resting_BPM | 0 | 1.00 | 62.22 | 7.33 | 50.00 | 56.00 | 62.00 | 68.00 | 74.00 | ▇▆▇▇▇ |
-| Session_Duration (hours) | 0 | 1.00 | 1.26 | 0.34 | 0.50 | 1.04 | 1.26 | 1.46 | 2.00 | ▂▅▇▃▂ |
-| Calories_Burned | 0 | 1.00 | 905.42 | 272.64 | 303.00 | 720.00 | 893.00 | 1076.00 | 1783.00 | ▃▇▇▂▁ |
-| Fat_Percentage | 0 | 1.00 | 24.98 | 6.26 | 10.00 | 21.30 | 26.20 | 29.30 | 35.00 | ▂▂▅▇▅ |
-| Water_Intake (liters) | 0 | 1.00 | 2.63 | 0.60 | 1.50 | 2.20 | 2.60 | 3.10 | 3.70 | ▃▆▇▃▆ |
-| Workout_Frequency (days/week) | 0 | 1.00 | 3.32 | 0.91 | 2.00 | 3.00 | 3.00 | 4.00 | 5.00 | ▅▇▁▆▂ |
-| Experience_Level | 0 | 1.00 | 1.81 | 0.74 | 1.00 | 1.00 | 2.00 | 2.00 | 3.00 | ▇▁▇▁▃ |
+| Wiek | 100 | 0.90 | 38.63 | 12.27 | 18.00 | 28.00 | 39.00 | 50.00 | 59.00 | ▇▆▆▇▇ |
+| Waga | 0 | 1.00 | 73.85 | 21.21 | 40.00 | 58.10 | 70.00 | 86.00 | 129.90 | ▅▇▅▂▂ |
+| Wzrost | 0 | 1.00 | 1.72 | 0.13 | 1.50 | 1.62 | 1.71 | 1.80 | 2.00 | ▅▇▇▃▃ |
+| Maksymalne tętno | 0 | 1.00 | 179.88 | 11.53 | 160.00 | 170.00 | 180.00 | 190.00 | 199.00 | ▇▇▇▇▇ |
+| Średnie tętno | 0 | 1.00 | 143.77 | 14.35 | 120.00 | 131.00 | 143.00 | 156.00 | 169.00 | ▇▇▆▆▆ |
+| Spoczynkowe tętno | 0 | 1.00 | 62.22 | 7.33 | 50.00 | 56.00 | 62.00 | 68.00 | 74.00 | ▇▆▇▇▇ |
+| Czas trwania sesji | 0 | 1.00 | 1.26 | 0.34 | 0.50 | 1.04 | 1.26 | 1.46 | 2.00 | ▂▅▇▃▂ |
+| Spalone kalorie | 0 | 1.00 | 905.42 | 272.64 | 303.00 | 720.00 | 893.00 | 1076.00 | 1783.00 | ▃▇▇▂▁ |
+| Procent tkanki tłuszczowej | 0 | 1.00 | 24.98 | 6.26 | 10.00 | 21.30 | 26.20 | 29.30 | 35.00 | ▂▂▅▇▅ |
+| Spożycie wody | 0 | 1.00 | 2.63 | 0.60 | 1.50 | 2.20 | 2.60 | 3.10 | 3.70 | ▃▆▇▃▆ |
+| Częstotliwość treningów | 0 | 1.00 | 3.32 | 0.91 | 2.00 | 3.00 | 3.00 | 4.00 | 5.00 | ▅▇▁▆▂ |
+| Poziom doświadczenia | 0 | 1.00 | 1.81 | 0.74 | 1.00 | 1.00 | 2.00 | 2.00 | 3.00 | ▇▁▇▁▃ |
 | BMI | 150 | 0.85 | 24.82 | 6.60 | 12.32 | 20.10 | 23.94 | 28.45 | 47.72 | ▃▇▅▁▁ |
 
 ## **4. Wstępne przygotowanie danych**
@@ -119,7 +116,7 @@ packages <- c(
   "dplyr", "readr", "naniar", "ggplot2", "rmdformats", "validate", "validatetools", 
   "dcmodify", "errorlocate", "deductive", "VIM", "simputation", "visdat", 
   "lumberjack", "ISLR", "dlookr", "xts", "quantmod", "ROCR", "mice", 
-  "Information", "scorecard", "tidyverse", "plotly", "rpart"
+  "Information", "scorecard", "tidyverse", "plotly", "rpart", "psych", "stats", "qwraps2", "kableExtra"
 )
 
 # Funkcja instalująca i ładująca pakiety
@@ -160,97 +157,109 @@ colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Wo
 
 # **Data Wrangling**
 
+Data Wrangling jest to proces polegający na przekształceniu nieuporządkowanego zbioru danych w użyteczny oraz uporządkowany. To złożone działanie, które zaczyna się od zrozumienia struktury danych i identyfikacji problemów, a kończy na stworzeniu uporządkowanego zbioru gotowego do dalszej analizy.
+
+Kluczowymi etapami tego procesu będzie:
+
+-   poznanie obserwacji odstających, czyli danych które w znaczący sposób różnią się od reszty zbioru
+
+-   przeanalizowanie braków danych, w którym poznamy ilość braków, ich rozmieszczenie, a także czy występuje współzależność między nimi
+
+-   imputacja braków danych, polegająca na zastąpieniu braków za pomocą metod imputacji
+
+-   walidacja danych, czyli sprawdzenie czy dane są wolne od błędów
+
 ## **1. Obserwacje odstające**
 
 Obserwacje odstające to dane, które znacząco różnią się od reszty zbioru, co może wynikać z błędów pomiaru, specyfiki badanego zjawiska lub innych nietypowych czynników. W celu poznania obserwacji odstających w naszym zbiorze danych zastowaliśmy wykres ramkowy (*box plot*), pozwalający na wizualne wykrycie wartości wykraczających poza typowy zakres danych.
 
-#### **Age**
+#### **Wiek**
 
 ```{r echo=FALSE}
 boxplot(silownia$Age)
 ```
 
-Zmienna Age nie posiada obserwacji odstających.
+Zmienna *Wiek* nie posiada obserwacji odstających.
 
-#### **Weight**
+#### **Waga**
 
 ```{r echo=FALSE}
 boxplot(silownia$Weight_kg)
 ```
 
-Zmienna Weight posiada odstające obserwacje (górne outliery), czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla.
+Zmienna *Waga* posiada odstające obserwacje (górne outliery), czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla.
 
-#### **Height**
+#### **Wzrost**
 
 ```{r echo=FALSE}
 boxplot(silownia$Height_m)
 ```
 
-Zmienna Height nie ma obserwacji odstających.
+Zmienna *Wzrost* nie ma obserwacji odstających.
 
-#### **MaxBPM**
+#### **Maksymalne tętno**
 
 ```{r echo=FALSE}
 boxplot(silownia$Max_BPM)
 ```
 
-Zmienna MaxBPM nie posiada obserwacji odstających.
+Zmienna *Maksymalne tętno* nie posiada obserwacji odstających.
 
-#### **AvgBPM**
+#### **Średnie tętno**
 
 ```{r echo=FALSE}
 boxplot(silownia$Avg_BPM) 
 ```
 
-Zmienna AvgBPM nie ma obserwacji odstających.
+Zmienna *Średnie tętno* nie ma obserwacji odstających.
 
-#### **RestingBPM**
+#### **Tętno spoczynkowe**
 
 ```{r echo=FALSE}
 boxplot(silownia$Resting_BPM)
 ```
 
-Zmienna RestingBPM nie ma obserwacji odstających.
+Zmienna *Tętno spoczynkowe* nie ma obserwacji odstających.
 
-#### **Session Duration**
+#### **Czas trwania sesji**
 
 ```{r echo=FALSE}
 boxplot(silownia$Session_Duration_hours)
 ```
 
-Zmienna Session Duration nie posiada obserwacji odstających.
+Zmienna *Czas trwania sesji* nie posiada obserwacji odstających.
 
-#### **Calories Burned**
+#### **Spalone kalorie**
 
 ```{r echo=FALSE}
 boxplot(silownia$Calories_Burned)
 ```
 
-Zmienna Calories Burned posiada górne outliery, czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla.
+Zmienna *Spalone kalorie* posiada górne outliery, czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla.
 
-#### **Fat Percentage**
+#### **Procent tkanki tłuszczowej**
 
 ```{r echo=FALSE}
 boxplot(silownia$Fat_Percentage)
 ```
 
-Zmienna Fat Percentage nie ma obserwacji odstających.
+Zmienna *Procent tkanki tłuszczowej* nie ma obserwacji odstających.
 
-#### **Water Intake**
+#### **Ilość wypitej wody**
 
 ```{r echo=FALSE}
 boxplot(silownia$Water_Intake_liters)
 ```
 
-Zmienna Water Intake nie posiada obserwacji odstających.
+Zmienna *Ilość wypitej wody* nie posiada obserwacji odstających.
 
-#### **Workout Frequency**
+#### **Częstotliwość treningów**
 
 ```{r echo=FALSE}
 boxplot(silownia$Workout_Frequency_daysweek)
 ```
 
-Zmienna Workout Frequency nie posiada obserwacji odstających.
+Zmienna *Częstotliwość treningów* nie posiada obserwacji odstających.
 
 #### **BMI**
 
@@ -258,11 +267,11 @@ Zmienna Workout Frequency nie posiada obserwacji odstających.
 boxplot(silownia$BMI)
 ```
 
-W przypadku zmiennej BMI występują górne outliery, czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla.
+W przypadku zmiennej *BMI* występują górne outliery, czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla.
 
 #### **Podsumowanie**
 
-Za pomocą wykresu ramkowego wykazano, że w przypadku zmiennych Weight, Calories_Burned oraz BMI występują górne outliery,czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla. Żadna zmienna natomiast nie posiada ekstremalnych obserwacji odstających.
+Za pomocą wykresu ramkowego wykazano, że w przypadku zmiennych ***Waga***, ***Spalone kalorie*** oraz ***BMI*** występują górne outliery,czyli obserwacje, które znajdują się o więcej niż 1,5 rozstępu ćwiartkowego powyżej trzeciego kwartyla. Żadna zmienna natomiast nie posiada ekstremalnych obserwacji odstających.
 
 ## **2. Analiza braków danych**
 
@@ -278,7 +287,7 @@ vis_miss(silownia)
 
 W całej bazie danych brakuje 2,7% danych.
 
-Braki danych występują w kolumnie Workout_Type, Age oraz BMI.
+Braki danych występują w kolumnie *Typ treningu, Wiek* oraz *BMI*.
 
 #### **Ile braków jest w poszczególnych kolumnach**
 
@@ -291,11 +300,11 @@ gg_miss_var(silownia)
 colSums(is.na(silownia))
 ```
 
-Kolumna Age ma 100 braków.
+Kolumna *Wiek* ma 100 braków.
 
-Kolumna Workout_Type ma 150 braków.
+Kolumna *Typ treningu* ma 150 braków.
 
-Kolumna BMI ma 150 braków.
+Kolumna *BMI* ma 150 braków.
 
 ```{r include=FALSE}
 vis_dat(silownia)
@@ -324,25 +333,25 @@ miss_case_table(silownia)
 
 287 wierszy ma 1 NA
 
--   115 w Workout_Type
+-   115 w *Typ treningu*
 
--   106 w BMI
+-   106 w *BMI*
 
--   66 w Age
+-   66 w *Wiek*
 
 52 wiersze ma 2 NA
 
--   21 wierszy w Workout_Type i BMI
+-   21 wierszy w *Typ treningu* i *BMI*
 
--   20 wierszy w Age i BMI
+-   20 wierszy w *Wiek* i *BMI*
 
--   11 w Age i Workout_Type
+-   11 w *Wiek* i *Typ treningu*
 
 3 wiersze mają 3 NA
 
 #### **Sprawdzanie korelacji między brakami danych**
 
-**1. Age i BMI**
+**1. Wiek i BMI**
 
 ```{r echo=FALSE, warning=FALSE}
 ggplot(data = silownia, aes(x = Age, y = BMI)) + 
@@ -352,11 +361,11 @@ ggplot(data = silownia, aes(x = Age, y = BMI)) +
   theme_minimal()
 ```
 
-Braki w kolumnie BMI są całkowicie niezależne od wartości w kolumnie Age.
+Braki w kolumnie *BMI* są całkowicie niezależne od wartości w kolumnie *Wiek*.
 
-Z kolei braki w kolumnie Age są raczej niezależne od wartości BMI, choć zauważono nieco większą liczbę braków w przypadku niższych wartości BMI.
+Z kolei braki w kolumnie *Wiek* są raczej niezależne od wartości *BMI*, choć zauważono nieco większą liczbę braków w przypadku niższych wartości *BMI*.
 
-**2. Workout_Type i BMI**
+**2. Typ treningu i BMI**
 
 ```{r echo=FALSE, warning=FALSE}
 ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = BMI)) + 
@@ -366,11 +375,11 @@ ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = BMI)) +
   theme_minimal()
 ```
 
-Braki w kolumnie BMI są całkowicie niezależne od wartości w kolumnie Workout_Type.
+Braki w kolumnie *BMI* są całkowicie niezależne od wartości w kolumnie *Typ treningu*.
 
-Z kolei braki w kolumnie Workout_Type są raczej niezależne od wartości BMI, choć zauważono nieco większą liczbę braków w przypadku niższych wartości BMI.
+Z kolei braki w kolumnie *Typ treningu* są raczej niezależne od wartości *BMI*, choć zauważono nieco większą liczbę braków w przypadku niższych wartości *BMI.*
 
-**3. Workout_Type i Age**
+**3. Typ treningu i Wiek**
 
 ```{r echo=FALSE, warning=FALSE}
 ggplot(data = kolumny_z_NA, aes(x = Workout_Type, y = Age)) + 
@@ -384,7 +393,7 @@ Braki w obu kolumnach są całkowicie niezależne od siebie.
 
 ## **3. Imputacja braków danych**
 
-W procesie analizy braków danych napotkaliśmy na brakujące wartości (NA) w kolumnach **Age**, **BMI** oraz **Workout_Type**. Aby zapewnić spójność i pełność danych, postanowiliśmy przeprowadzić imputację braków, czyli zastąpienie brakujących wartości odpowiednimi danymi.
+W procesie analizy braków danych napotkaliśmy na brakujące wartości (NA) w kolumnach ***Wiek**, **BMI*** oraz ***Typ treningu***. Aby zapewnić spójność i pełność danych, postanowiliśmy przeprowadzić imputację braków, czyli zastąpienie brakujących wartości odpowiednimi danymi.
 
 #### **Kolumna BMI**
 
@@ -403,9 +412,9 @@ silownia$BMI <- ifelse(
 
 Wybraliśmy wzór na BMI jako metodę uzupełniania braków, ponieważ opiera się on na dwóch kluczowych zmiennych: wadze i wzroście, które w naszym zbiorze danych są kompletne. Dzięki temu obliczenie BMI za pomocą wzrou jest najbardziej rzetelną metodą imputacji, gdyż wykorzystuje dostępne, pełne informacje do oszacowania brakujących wartości.
 
-#### **Kolumna Workout_Type i Age**
+#### **Kolumna Typ treningu i Wiek**
 
-W przypadku kolumnt Workout_Type i Age zdecydowaliśmy przeprowadzić imputację na kilka sposób, a następnie wybrać najlepszą możliwość.
+W przypadku kolumny *Typ treningu* i *Wiek* zdecydowaliśmy przeprowadzić imputację na kilka sposób, a następnie wybrać najlepszą możliwość.
 
 **1. Imputacja metodą k-Nearest Neighbors (kNN)**
 
@@ -490,15 +499,15 @@ silownia_rpart$Age[is.na(silownia_rpart$Age)] <- predict(drzewo_decyzyjne2, newd
 silownia_brudne_dane <- silownia_hotdeck
 ```
 
-Zdecydowaliśmy się zastąpić braki danych występujące w kolumnach Age i Workout_Type za pomocą **metody hot-deck,** ponieważ jest to podejście, które pozwala na imputację brakujących wartości w sposób uwzględniający podobieństwo do istniejących danych. Dzięki tej metodzie wartości brakujące są zastępowane rzeczywistymi danymi z innych obserwacji o podobnych cechach,
+Zdecydowaliśmy się zastąpić braki danych występujące w kolumnach *Wiek* i *Typ treningu* za pomocą **metody hot-deck,** ponieważ jest to podejście, które pozwala na imputację brakujących wartości w sposób uwzględniający podobieństwo do istniejących danych. Dzięki tej metodzie wartości brakujące są zastępowane rzeczywistymi danymi z innych obserwacji o podobnych cechach,
 
 ## **4. Walidacja danych**
 
 Po zakończeniu procesu uzupełniania braków w naszych danych, kolejnym krokiem w przygotowywaniu ich do dalszej analizy jest ich walidacja. Ten etap pozwala sprawdzić czy dane, są wolne od błędów, niespójności i nieścisłości, które mogłyby negatywnie wpłynąć na dalszą pracę z nimi. Walidacja danych obejmuje zarówno sprawdzenie poprawności logicznej, strukturalnej, jak i identyfikację potencjalnych anomalii czy niezgodności z przyjętymi założeniami.
 
-#### **Age**
+#### **Wiek**
 
-Wartości w kolumnie Age powinny być liczbami całkowitymi mieszczącymi się w przedziale od 0 do 110 włącznie.
+Wartości w kolumnie *Wiek* powinny być liczbami całkowitymi mieszczącymi się w przedziale od 0 do 110 włącznie.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Age <- validator(
@@ -514,9 +523,9 @@ barplot(cf1, main="")
 
 ```
 
-#### **Gender**
+#### **Płeć**
 
-Kolumna gender przyjmuje wartość Female albo Male.
+Kolumna *Płeć* przyjmuje wartość Female albo Male.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Gender <- validator(Gender %in% c("Female", "Male"))
@@ -525,9 +534,9 @@ cf2 <- confront(silownia_brudne_dane, rules_Gender, key="Gender")
 barplot(cf2, main="")
 ```
 
-#### **Weight**
+#### **Waga**
 
-Wartości w kolumnie Weight_kg powinny być liczbami mieszczącymi się w przedziale od 40 kg do 140 kg włącznie.
+Wartości w kolumnie *Waga* powinny być liczbami mieszczącymi się w przedziale od 40 kg do 140 kg włącznie.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Weight_kg <- validator(
@@ -540,9 +549,9 @@ cf3 <- confront(silownia_brudne_dane, rules_Weight_kg, key="Weight_kg")
 barplot(cf3, main="")
 ```
 
-#### **Height**
+#### **Wzrost**
 
-W kolumnie Height_m powinny znajdować się wartości liczbowe z zakresu od 1.30 m do 2.15 m włącznie.
+W kolumnie *Wzrost* powinny znajdować się wartości liczbowe z zakresu od 1.30 m do 2.15 m włącznie.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Height_m <- validator(
@@ -555,9 +564,9 @@ barplot(cf4, main="")
 
 ```
 
-#### **MaxBPM**
+#### **Maksymalne tętno**
 
-Kolumna MaxBPM musi posiadać wartości, które są liczbami z zakresu od 110 do 210 włącznie.
+Kolumna *Maksymalne tętno* musi posiadać wartości, które są liczbami z zakresu od 110 do 210 włącznie.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Max_BPM <- validator(
@@ -572,9 +581,9 @@ barplot(cf5, main="")
 
 ```
 
-#### **AvgBPM**
+#### **Średnie tętno**
 
-Wartości w kolumnie Avg_BPM powinny być liczbami mieszczącymi się w przedziale od 80 do 180 włącznie.
+Wartości w kolumnie *Średnie tętno* powinny być liczbami mieszczącymi się w przedziale od 80 do 180 włącznie.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Avg_BPM <- validator(
@@ -587,9 +596,9 @@ cf6 <- confront(silownia_brudne_dane, rules_Avg_BPM, key="Avg_BPM")
 barplot(cf6, main="")
 ```
 
-#### **RestingBPM**
+#### **Spoczynkowe tętno**
 
-W kolumnie Resting_BPM powinny znajdować się wartości liczbowe z zakresu od 45 do 130 włącznie.
+W kolumnie *Spoczynkowe tętno* powinny znajdować się wartości liczbowe z zakresu od 45 do 130 włącznie.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Resting_BPM <- validator(
@@ -602,9 +611,9 @@ cf7 <- confront(silownia_brudne_dane, rules_Resting_BPM, key="Resting_BPM")
 barplot(cf7, main="")
 ```
 
-#### **Session Duration**
+#### **Czas trwania sesji**
 
-Wartości w kolumnie Session Duration powinny być dodatnimi liczbami nieprzekraczającymi 2.
+Wartości w kolumnie *Czas trwania sesji* powinny być dodatnimi liczbami nieprzekraczającymi 2.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Session_Duration_hours <- validator(
@@ -618,7 +627,7 @@ barplot(cf8, main="")
 
 ```
 
-#### **Calories Burned**
+#### **Spalone kalorie**
 
 Wartości powinny być dodatnimi liczbami nieprzekraczającymi 2000.
 
@@ -634,9 +643,9 @@ barplot(cf9, main="")
 
 ```
 
-#### **Workout Type**
+#### **Typ treningu**
 
-Kolumna Workout_Type powinna zawierać tylko takie wartości jak: Yoga, Cardio, HIIT oraz Strength.
+Kolumna *Typ treningu* powinna zawierać tylko takie wartości jak: Yoga, Cardio, HIIT oraz Strength.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Workout_Type <- validator(Workout_Type %in% c("Yoga", "Cardio", "HIIT","Strength"))
@@ -647,9 +656,9 @@ barplot(cf10, main="")
 
 ```
 
-#### **Fat Percentage**
+#### Procent tkanki tłuszczowej
 
-Wartości w kolumnie Fat_Percentage powinny być liczbami dodatnimi nieprzekraczającymi 50.
+Wartości w kolumnie *Procent tkanki tłuszczowej* powinny być liczbami dodatnimi nieprzekraczającymi 50.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Fat_Percentage <- validator(
@@ -662,7 +671,7 @@ cf11 <- confront(silownia_brudne_dane, rules_Fat_Percentage, key="Fat_Percentage
 barplot(cf11, main="")
 ```
 
-#### **Water Intake**
+#### **Ilość wypitej wody**
 
 Wartości powinny być liczbami dodatnimi nieprzekraczającymi 4.
 
@@ -677,9 +686,9 @@ cf12 <- confront(silownia_brudne_dane, rules_Water_Intake_liters, key="Water_Int
 barplot(cf12, main="")
 ```
 
-#### **Workout Frequency**
+#### **Częstotliwość treningów**
 
-Kolumna Workout Frequency powinna zawierać tylko takie wartości jak: 0, 1, 2, 3, 4, 5, 6, 7.
+Kolumna *Czętotliwość treningów* powinna zawierać tylko takie wartości jak: 0, 1, 2, 3, 4, 5, 6, 7.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Workout_Frequency_daysweek <- validator(
@@ -693,9 +702,9 @@ barplot(cf13, main="")
 
 ```
 
-#### **Experience Level**
+#### **Poziom doświadczenia**
 
-Kolumna Experience Level powinna zawierać tylko takie wartości jak: 0, 1, 2, 3.
+Kolumna *Poziom doświadczenia* powinna zawierać tylko takie wartości jak: 0, 1, 2, 3.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Experience_Level <- validator(
@@ -710,7 +719,7 @@ barplot(cf14, main="")
 
 #### **BMI**
 
-Wartości w kolumnie BMI powinny być dodatnimi liczbami mieszczącymi się w przedziale od 10 do 60 włącznie, a ich różnica względem wartości obliczonej jako ***Weight_kg/Height_m\^2*** powinna być mniejsza niż 0.1.”
+Wartości w kolumnie *BMI* powinny być dodatnimi liczbami mieszczącymi się w przedziale od 10 do 60 włącznie, a ich różnica względem wartości obliczonej jako ***Weight_kg/Height_m\^2*** powinna być mniejsza niż 0.1.”
 
 ```{r echo=FALSE, warning=FALSE}
 rules_BMI <- validator(
@@ -728,9 +737,712 @@ barplot(cf15, main="")
 
 W naszym zbiorze danych nie wystąpiły żadne błędy, więc jest on **gotowy do przeprowadzenie wizualizacji oraz dalszej analizy**.
 
-# **Wizualizacja danych**
+# **Wizualizacja danych i analiza opisowa**
 
-# **Analiza opisowa**
+### **Rozkład płci**
+
+```{r echo=FALSE, warning=FALSE}
+Silownia_wykresy <- silownia_brudne_dane
+ggplot(Silownia_wykresy, aes(x = Gender, fill = Gender)) + 
+  geom_bar(stat = "count", width = 0.6, color = "black", size = 0.5) +  
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5, size = 5) +  # Dodanie wartości na słupkach
+  scale_fill_manual(values = c("Male" = "#3498db", "Female" = "#e74c3c")) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, max(table(Silownia_wykresy$Gender)) + 60)) +
+  labs(
+    title = "Rozkład płci w zbiorze danych", 
+    x = "Płeć", 
+    y = "Liczba osób"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title.position = "panel"
+  )
+
+```
+
+Wykres pokazuje równomierny rozkład płci w analizowanym zbiorze danych. Widoczna jest zbliżona liczba kobiet i mężczyzn, z niewielką przewagą mężczyzn, około 500 osób w każdej grupie.
+
+### **Rozkład wieku w zależności od płci**
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(Age, color = Gender, fill = Gender)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Rozkład wieku w zależności od płci", x = "Wiek", y = "") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title.position = "panel"
+  )
+```
+
+Wykres przedstawia rozkład wieku w zależności od podanej płci. Zauważyć można większy udział mężczyzn w grupie wiekowej 25-39 lat. Z kolei w grupie 40-55 lat przeważyła płeć żeńska.
+
+### **Statystyki opisowe zmiennej wiek w zależności od płci**
+
+```{r echo=FALSE, warning=FALSE}
+opis_Age <- list( "Wiek" = 
+                    list(
+                      "Min"= ~ min(Age),
+                      "Max"= ~ max(Age),
+                      "Kwartyl dolny"= ~ quantile(Age,0.25),
+                      "Mediana"= ~ round(median(Age),2),
+                      "Kwartyl górny"= ~ quantile(Age,0.75),
+                      "Średnia"= ~ round(mean(Age),2),
+                      "Odch. std."= ~ round(sd(Age),2),
+                      "IQR"= ~ round(IQR(Age),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Age)/2,2),
+                      "Odch. std. w %"=~round((sd(Age)/mean(Age)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Age)/median(Age)),2),
+                      "Skośność"=~round(skew(Age),2),
+                      "Kurtoza"=~round(kurtosi(Age),2)
+                    ))
+tabela_Age <- summary_table(Silownia_wykresy, summaries = opis_Age, by = c("Gender"), markup = "plain")
+tabela_Age <- gsub("~~", "", tabela_Age)
+tabela_Age <- as.data.frame(tabela_Age)
+tabela_Age <- tabela_Age[-1, ]  
+
+tabela_Age %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "Kobiety", "Mężczyźni"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Płeć" = 2))
+```
+
+### **Zależność BMI od wieku**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Age, y = BMI)) +
+  geom_point(color = "darkgreen", size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
+  xlab("Wiek") +
+  ylab("BMI") +
+  ggtitle("Zależność BMI od wieku") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+```
+
+Wykres pokazuje, jakie wartości wskaźnika BMI osiągano dla danego wieku. Dodano także linię trendu, która została oszacowana na poziomie BMI = 25.
+
+### **Statystyki opisowe zmiennej BMI w zależności od wieku**
+
+```{r echo=FALSE}
+opis_BMI <- list( "BMI" = 
+                    list(
+                      "Min"= ~ min(BMI),
+                      "Max"= ~ max(BMI),
+                      "Kwartyl dolny"= ~ quantile(BMI,0.25),
+                      "Mediana"= ~ round(median(BMI),2),
+                      "Kwartyl górny"= ~ quantile(BMI,0.75),
+                      "Średnia"= ~ round(mean(BMI),2),
+                      "Odch. std."= ~ round(sd(BMI),2),
+                      "IQR"= ~ round(IQR(BMI),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(BMI)/2,2),
+                      "Odch. std. w %"=~round((sd(Age)/mean(BMI)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Age)/median(BMI)),2),
+                      "Skośność"=~round(skew(BMI),2),
+                      "Kurtoza"=~round(kurtosi(BMI),2)
+                    ))
+
+Silownia_wykresy$Age_Category <- cut(Silownia_wykresy$Age,
+                                     breaks = c(18, 29, 39, 49, 59),
+                                     labels = c("18-29", "29-39", "39-49", "49-59"),
+                                     right = FALSE)
+
+tabela_BMI <- summary_table(Silownia_wykresy, summaries = opis_BMI, by = c("Age_Category"), markup = "plain")
+tabela_BMI <- gsub("~~", "", tabela_BMI)
+tabela_BMI <- as.data.frame(tabela_BMI)
+tabela_BMI <- tabela_BMI[-1, ] 
+tabela_BMI %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "18-29", "29-39", "39-49", "49-59"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Wiek" = 4))
+```
+
+Na podstawie powyższych wyników można stwierdzić, że najwyższą średnią wartość BMI osiągnięto dla grupy wiekowej 18-29 lat, dla której największa jest też mediana BMI równa 24,96. Minimalna wartość BMI to 12,32 dla osób w wieku 39-49 lat, a maksymalna wynosi niespełna 50 dla tej samej grupy wiekowej. W grupie wiekowej 49-59 nastąpiło największe rozproszenie danych. Wyniosło ono 7,1. Rozstęp międzykwartylowy (IQR) osiąga wartości od 7,08 do 9,08, co wskazuje na stabilność w centralnej części rozkładu. Rozkład BMI jest lekko dodatnio skośny. Wartości Bmi większe od średniej są nieco bardziej rozproszone. Wartości kurtozy wskazują na to, że dane są bardziej rozproszone, a wyniki nie wykazują silnej koncentracji wokół średniej ani wielu skrajnych wartości.
+
+### **Rozkład wagi w zależności od płci**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(Weight_kg, color = Gender, fill = Gender)) +
+  geom_density(alpha = 0.7) +
+  xlab("Waga (kg)") +
+  ylab("") +
+  ggtitle("Rozkład wagi w zależności od płci") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = c("Male" = "darkblue", "Female" = "pink")) +  # Zmiana kolorów linii
+  scale_fill_manual(values = c("Male" = "lightblue", "Female" = "lightpink"))  # Zmiana kolorów wypełnienia
+
+```
+
+Rozkład wagi u kobiet jest bardziej skoncentrowany w przedziale 50–70 kg, co wskazuje na mniejszą zmienność i większą jednolitość w populacji kobiet.
+
+Rozkład wagi u mężczyzn jest szerszy, co oznacza większą zmienność. Wagi mężczyzn najczęściej mieszczą się w przedziale 70–90 kg, ale rozkład ma dłuższy ogon w kierunku wyższych wartości, sięgając ponad 120 kg.
+
+Ogólnie, mężczyźni wykazują większe zróżnicowanie wag w porównaniu do kobiet, z tendencją do wyższych wartości wagi. Rozkłady są symetryczne, z wyraźnymi różnicami między średnimi i zakresami wag dla obu płci.
+
+### **Statystyki opisowe zmiennej wagi w zależności od płci**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+opis_Weight <- list( "Waga" = 
+                    list(
+                      "Min"= ~ min(Weight_kg),
+                      "Max"= ~ max(Weight_kg),
+                      "Kwartyl dolny"= ~ quantile(Weight_kg,0.25),
+                      "Mediana"= ~ round(median(Weight_kg),2),
+                      "Kwartyl górny"= ~ quantile(Weight_kg,0.75),
+                      "Średnia"= ~ round(mean(Weight_kg),2),
+                      "Odch. std."= ~ round(sd(Weight_kg),2),
+                      "IQR"= ~ round(IQR(Weight_kg),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Weight_kg)/2,2),
+                      "Odch. std. w %"=~round((sd(Weight_kg)/mean(Weight_kg)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Weight_kg)/median(Weight_kg)),2),
+                      "Skośność"=~round(skew(Weight_kg),2),
+                      "Kurtoza"=~round(kurtosi(Weight_kg),2)
+                    ))
+tabela_Weight <- summary_table(Silownia_wykresy, summaries = opis_Weight, by = c("Gender"), markup = "plain")
+tabela_Weight <- gsub("~~", "", tabela_Weight)
+tabela_Weight <- as.data.frame(tabela_Weight)
+tabela_Weight <- tabela_Weight[-1, ]  
+
+tabela_Weight %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "Kobiety", "Mężczyźni"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Płeć" = 2))
+```
+
+Waga kobiet waha się od 40 do 79,9 kg. Mediana wynosi 61,35 kg, a średnia 60,94 kg, co wskazuje na zbliżone wartości centralne. Rozstęp międzykwartylowy (IQR) wynosi 15,13, a odchylenie standardowe 10,24, co wskazuje na umiarkowaną zmienność wagi w tej grupie. Skośność (-0,16) wskazuje na lekko ujemny rozkład, co oznacza, że częściej występują wyższe wartości wagi, a kurtoza (-0,81) sugeruje spłaszczony rozkład.
+
+Waga mężczyzn jest bardziej zróżnicowana i waha się od 45 do 129,9 kg. Mediana wynosi 85,3 kg, a średnia 85,53 kg, co oznacza, że większość wartości oscyluje wokół tego przedziału. Rozstęp międzykwartylowy (IQR) wynosi 31,85, a odchylenie standardowe 21,79, co wskazuje na większe zróżnicowanie wagi niż w przypadku kobiet. Skośność (0,15) sugeruje lekko dodatni rozkład, co oznacza, że częściej występują niższe wartości wagi, a kurtoza (-0,73) również wskazuje na spłaszczony rozkład.
+
+Podsumowując, kobiety mają mniejsze zróżnicowanie wagi w porównaniu do mężczyzn, których wagi rozkładają się na szerszym przedziale. Mediana i średnia wagi są wyższe u mężczyzn. Rozkłady w obu grupach są lekko spłaszczone, ale różnią się kierunkiem skośności.
+
+### **Czas trwania sesji a spalone kalorie**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Session_Duration_hours, y = Calories_Burned)) +
+  geom_point(color = "blue", size = 3, alpha = 0.7) +
+  geom_smooth(method = "loess", color = "orange", se = TRUE) +
+  xlab("Czas trwania sesji (godziny)") +
+  ylab("Spalone kalorie") +
+  ggtitle("Czas trwania sesji a spalone kalorie") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+```
+
+### **Statystyki opisowe dla spalonych kalorii w zależności od długości trwania sesji treningowej**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+opis_Calories_Burned <- list( "Spalone kalorie" = 
+                    list(
+                      "Min"= ~ min(Calories_Burned),
+                      "Max"= ~ max(Calories_Burned),
+                      "Kwartyl dolny"= ~ quantile(Calories_Burned,0.25),
+                      "Mediana"= ~ round(median(Calories_Burned),2),
+                      "Kwartyl górny"= ~ quantile(Calories_Burned,0.75),
+                      "Średnia"= ~ round(mean(Calories_Burned),2),
+                      "Odch. std."= ~ round(sd(Calories_Burned),2),
+                      "IQR"= ~ round(IQR(Calories_Burned),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Calories_Burned)/2,2),
+                      "Odch. std. w %"=~round((sd(Calories_Burned)/mean(Calories_Burned)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Calories_Burned)/median(Calories_Burned)),2),
+                      "Skośność"=~round(skew(Calories_Burned),2),
+                      "Kurtoza"=~round(kurtosi(Calories_Burned),2)
+                    ))
+
+Silownia_wykresy$Duration_Category <- cut(Silownia_wykresy$Session_Duration_hours, 
+                                          breaks = c(0, 1, 1.5, 2), 
+                                          labels = c("0,5-1h", "1-1,5h", "1,5-2h"), 
+                                          right = FALSE)
+
+tabela_Calories_Burned <- summary_table(Silownia_wykresy, summaries = opis_Calories_Burned, by = c("Duration_Category"), markup = "plain")
+tabela_Calories_Burned <- gsub("~~", "", tabela_Calories_Burned)
+tabela_Calories_Burned <- as.data.frame(tabela_Calories_Burned)
+tabela_Calories_Burned <- tabela_Calories_Burned[-1, ]  
+
+tabela_Calories_Burned %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "0,5-1h", "1-1,5h", "1,5-2h"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Czas trwania sesji" = 3))
+```
+
+0,5–1 godz.: Liczba spalonych kalorii waha się od 303 do 832, z medianą 534,5 i średnią 540,77. Rozstęp międzykwartylowy (IQR) wynosi 186, co wskazuje na umiarkowaną zmienność w centralnej części rozkładu. Odchylenie standardowe wynosi 115,7, co oznacza niewielkie zróżnicowanie wartości. Rozkład jest lekko dodatnio skośny (0,18), co oznacza, że wartości wyższe od średniej pojawiają się rzadziej.
+
+1–1,5 godz.: Liczba spalonych kalorii wzrasta, waha się od 576 do 1385, z medianą 888 i średnią 902,47. Rozstęp międzykwartylowy (IQR) wynosi 212,5, co oznacza większą zmienność niż w poprzedniej kategorii. Odchylenie standardowe to 150,64, co wskazuje na większe zróżnicowanie wyników. Skośność (0,32) jest nieco wyższa, co wskazuje na większą asymetrię w kierunku wyższych wartości.
+
+1,5–2 godz.: Liczba spalonych kalorii jest najwyższa, od 837 do 1783, z medianą 1240 i średnią 1258,46. Rozstęp międzykwartylowy (IQR) wynosi 238,5, a odchylenie standardowe 187,41, co wskazuje na największą zmienność w tej grupie. Skośność (0,34) jest podobna do poprzedniej grupy, sugerując asymetrię w kierunku wyższych wartości.
+
+Podsumowując, wraz ze wzrostem czasu trwania sesji rośnie liczba spalonych kalorii, zarówno pod względem wartości minimalnych, średnich, jak i maksymalnych. Jednocześnie wzrasta zmienność wyników (odchylenie standardowe i IQR), co sugeruje, że dłuższe sesje treningowe prowadzą do bardziej zróżnicowanych rezultatów w spalaniu kalorii. Rozkład w każdej kategorii jest lekko dodatnio skośny, z tendencją do większego spłaszczenia w miarę wydłużania sesji (kurtoza od -0,77 do -0,14).
+
+### **Spalone kalorie a waga**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Weight_kg, y = Calories_Burned)) +
+  geom_point(color = "purple", size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
+  xlab("Waga (kg)") +
+  ylab("Spalone kalorie") +
+  ggtitle("Spalone kalorie a waga") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+```
+
+Wykres przedstawia zależność między wagą a liczbą spalonych kalorii. Punkty danych pokazują dużą zmienność w liczbie spalonych kalorii wśród osób o podobnej wadze, jednak trend zaznaczony linią regresji sugeruje niewielką dodatnią korelację. Oznacza to, że osoby o wyższej wadze generalnie spalają więcej kalorii, choć zależność ta jest słaba. Rozrzut punktów wskazuje, że na liczbę spalonych kalorii mogą wpływać także inne czynniki, takie jak intensywność i rodzaj treningu.
+
+### **Średnia liczba spalonych kalorii dla różnych typów treningu**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Calories_Burned, fill = Workout_Type)) +
+  stat_summary(fun = "mean", geom = "bar") +
+  labs(title = "Średnia liczba spalonych kalorii dla różnych typów treningu", x = "Typ treningu", y = "Średnie spalone kalorie") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+```
+
+Wykres pokazuje, że średnia liczba spalonych kalorii jest zbliżona dla wszystkich rodzajów treningów, przy czym HIIT i trening siłowy spalają nieco więcej kalorii niż joga i cardio.
+
+### **Średnie spalone kalorie według płci i poziomu doświadczenia**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = factor(Experience_Level), y = Calories_Burned, fill = Gender)) +
+  stat_summary(fun = "mean", geom = "bar", position = "dodge") +
+  labs(title = "Średnie spalone kalorie według płci i poziomu doświadczenia", x = "Poziom doświadczenia", y = "Średnie spalone kalorie") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+```
+
+Wykres przedstawia średnią liczbę spalonych kalorii w zależności od poziomu doświadczenia i płci. Wraz ze wzrostem poziomu doświadczenia (od 1 do 3) rośnie średnia liczba spalonych kalorii dla obu płci.
+
+Mężczyźni spalają nieco więcej kalorii niż kobiety na każdym poziomie doświadczenia, przy czym różnica ta pozostaje niewielka. Na poziomie doświadczenia 3 różnica jest najbardziej widoczna, co może wskazywać na większą intensywność lub efektywność treningu u bardziej doświadczonych mężczyzn. Ogólnie trend pokazuje, że większe doświadczenie wiąże się z większą liczbą spalonych kalorii, niezależnie od płci.
+
+### **Średnie tętno dla różnych typów treningu**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Avg_BPM, fill = Workout_Type)) +
+  geom_boxplot(alpha = 0.7) +
+  xlab("Rodzaj treningu") +
+  ylab("Średnie tętno (BPM)") +
+  ggtitle("Średnie tętno a rodzaj treningu") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+```
+
+### **Statystyki opisowe dla średniego tętna w zależności od typu treningu**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+opis_AvgBPM_WorkoutType <- list( "Średnie tętno" = 
+                    list(
+                      "Min"= ~ min(Avg_BPM),
+                      "Max"= ~ max(Avg_BPM),
+                      "Kwartyl dolny"= ~ quantile(Avg_BPM,0.25),
+                      "Mediana"= ~ round(median(Avg_BPM),2),
+                      "Kwartyl górny"= ~ quantile(Avg_BPM,0.75),
+                      "Średnia"= ~ round(mean(Avg_BPM),2),
+                      "Odch. std."= ~ round(sd(Avg_BPM),2),
+                      "IQR"= ~ round(IQR(Avg_BPM),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Avg_BPM)/2,2),
+                      "Odch. std. w %"=~round((sd(Avg_BPM)/mean(Avg_BPM)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Avg_BPM)/median(Avg_BPM)),2),
+                      "Skośność"=~round(skew(Avg_BPM),2),
+                      "Kurtoza"=~round(kurtosi(Avg_BPM),2)
+                    ))
+
+tabela_AvgBPM_WorkoutType <- summary_table(Silownia_wykresy, summaries = opis_AvgBPM_WorkoutType, by = c("Workout_Type"), markup = "plain")
+tabela_AvgBPM_WorkoutType <- gsub("~~", "", tabela_AvgBPM_WorkoutType)
+tabela_AvgBPM_WorkoutType <- as.data.frame(tabela_AvgBPM_WorkoutType)
+tabela_AvgBPM_WorkoutType <- tabela_AvgBPM_WorkoutType[-1, ]  
+
+tabela_AvgBPM_WorkoutType %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "Yoga", "Cardio", "HIIT", "Trening siłowy"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Rodzaj treningu" = 4))
+```
+
+Wyniki pokazują, że średnie tętno w różnych rodzajach treningów (joga, cardio, HIIT, trening siłowy) jest bardzo zbliżone. Średnie wartości oscylują wokół 144 uderzeń na minutę, z minimalną i maksymalną wartością wynoszącą 120 i 169. Mediana jest najwyższa w jodze i treningu siłowym (144), nieco niższa w HIIT (143) i cardio (142). Rozproszenie danych, mierzone odchyleniem standardowym, jest również podobne, wynosząc około 14, co wskazuje na umiarkowaną zmienność w każdej grupie.
+
+Rozstęp międzykwartylowy (IQR) wynosi około 25 we wszystkich przypadkach, co potwierdza stabilność w centralnej części rozkładu. Rozkład danych jest niemal symetryczny (skośność bliska 0) i lekko spłaszczony (kurtoza od -1.21 do -1.27), co oznacza mniejszą liczbę wartości skrajnych w porównaniu do rozkładu normalnego. Ogólnie, wyniki wskazują na podobną intensywność treningową dla wszystkich analizowanych aktywności w kontekście tętna.
+
+### **Zależność tętna spoczynkowego od wieku**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Age, y = Resting_BPM)) +
+  geom_point(color = "orange", size = 3, alpha = 0.6) +
+  geom_smooth(method = "loess", color = "blue", se = TRUE) +
+  xlab("Wiek") +
+  ylab("Tętno spoczynkowe (BPM)") +
+  ggtitle("Zależność tętna spoczynkowego od wieku") +
+  theme_light(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+```
+
+Do wykresu wstawiono linię trendu wygładzoną, co pozwoliło uchwycić nieliniowe zależności między zmiennymi. Cień to przedział ufności, który wskazuje niepewność estymacji linii trendu. Szeroki cień oznacza większą niepewność w przewidywaniu. Wykres przedstawia zależność tętna spoczynkowego od wieku. Punkty na wykresie pokazują dużą zmienność indywidualnych wartości, jednak trend zaznaczony linią regresji wskazuje, że tętno spoczynkowe lekko spada do około 40. roku życia, a następnie nieznacznie wzrasta. Ogólnie, tętno spoczynkowe utrzymuje się w stabilnym przedziale 60–70 BPM, niezależnie od wieku, co sugeruje brak istotnych zmian w zależności od wieku u większości osób.
+
+### **Statystyki opisowe dla tętna spoczynkowego w zależności od wieku**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+opis_RestingBPM_Age <- list( "Tętno spoczynkowe" = 
+                                list(
+                                  "Min"= ~ min(Resting_BPM),
+                                  "Max"= ~ max(Resting_BPM),
+                                  "Kwartyl dolny"= ~ quantile(Resting_BPM,0.25),
+                                  "Mediana"= ~ round(median(Resting_BPM),2),
+                                  "Kwartyl górny"= ~ quantile(Resting_BPM,0.75),
+                                  "Średnia"= ~ round(mean(Resting_BPM),2),
+                                  "Odch. std."= ~ round(sd(Resting_BPM),2),
+                                  "IQR"= ~ round(IQR(Resting_BPM),2),
+                                  "Odchylenie ćwiartkowe"=~round(IQR(Resting_BPM)/2,2),
+                                  "Odch. std. w %"=~round((sd(Resting_BPM)/mean(Resting_BPM)),2),
+                                  "Odch. ćwiartkowe w %"=~round((IQR(Resting_BPM)/median(Resting_BPM)),2),
+                                  "Skośność"=~round(skew(Resting_BPM),2),
+                                  "Kurtoza"=~round(kurtosi(Resting_BPM),2)
+                                ))
+
+Silownia_wykresy$Age_Category <- cut(Silownia_wykresy$Age, 
+                                          breaks = c(0, 30, 50, 70), 
+                                          labels = c("<30 lat", "30-50 lat", ">50 lat"), 
+                                          right = FALSE)
+
+tabela_RestingBPM_Age <- summary_table(Silownia_wykresy, summaries = opis_RestingBPM_Age, by = c("Age_Category"), markup = "plain")
+tabela_RestingBPM_Age <- gsub("~~", "", tabela_RestingBPM_Age)
+tabela_RestingBPM_Age <- as.data.frame(tabela_RestingBPM_Age)
+tabela_RestingBPM_Age <- tabela_RestingBPM_Age[-1, ]  
+tabela_RestingBPM_Age %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "<30 lat", "30-50 lat", ">50 lat"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Wiek" = 3))
+```
+
+Wyniki pokazują, że tętno spoczynkowe w zależności od grupy wiekowej (\<30 lat, 30-50 lat, \>50 lat) jest stabilne, z niewielkimi różnicami w średnich wartościach: 62,44 dla osób młodszych, 62,1 dla grupy średniej i 62,18 dla osób starszych. Wartości minimalne i maksymalne (50 i 74) są identyczne we wszystkich grupach, co wskazuje na spójność w zakresie danych.
+
+Mediana wynosi 62 lub 63, co sugeruje, że tętno większości osób oscyluje w tym przedziale. Rozstęp międzykwartylowy (IQR) i odchylenie ćwiartkowe są zbliżone (odpowiednio 12–13 i 6–6,5), co świadczy o porównywalnej zmienności w każdej grupie wiekowej.
+
+Rozkład danych jest lekko ujemnie skośny (-0,06 do -0,1), co oznacza, że wartości niższe od średniej są nieco częstsze, a kurtoza (od -1,2 do -1,23) sugeruje spłaszczony rozkład, co wskazuje na mniejszą liczbę wartości ekstremalnych. Ogólnie wyniki pokazują, że wiek ma niewielki wpływ na tętno spoczynkowe.
+
+### **Czas trwania sesji w zależności od typu treningu**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Session_Duration_hours, fill = Workout_Type)) +
+  geom_violin() +
+  labs(title = "Czas trwania sesji w zależności od typu treningu", x = "Typ treningu", y = "Czas trwania (godziny)") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+```
+
+Wykres wiolinowy przedstawia rozkład czasu trwania sesji w zależności od rodzaju treningu (joga, cardio, HIIT, trening siłowy).
+
+Największa zmienność czasu trwania widoczna jest w treningu siłowym i HIIT, gdzie czas trwania sesji jest bardziej zróżnicowany, a wartości rozkładają się szeroko w zakresie od około 0,5 do 2 godzin. Joga i cardio charakteryzują się bardziej skoncentrowanym czasem trwania sesji, ze szczytem w okolicach 1–1,5 godziny.
+
+Średni czas trwania treningu dla wszystkich rodzajów treningów oscyluje wokół podobnych wartości, jednak rozkłady pokazują, że joga i cardio mają mniej skrajnych wartości w porównaniu do HIIT i treningu siłowego.
+
+### **Statystyki opisowe dla trwania sesji w zależności od typu treningu**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+opis_SessionDuration_WorkoutType <- list( "Czas trwania sesji" = 
+                               list(
+                                 "Min"= ~ min(Session_Duration_hours),
+                                 "Max"= ~ max(Session_Duration_hours),
+                                 "Kwartyl dolny"= ~ quantile(Session_Duration_hours,0.25),
+                                 "Mediana"= ~ round(median(Session_Duration_hours),2),
+                                 "Kwartyl górny"= ~ quantile(Session_Duration_hours,0.75),
+                                 "Średnia"= ~ round(mean(Session_Duration_hours),2),
+                                 "Odch. std."= ~ round(sd(Session_Duration_hours),2),
+                                 "IQR"= ~ round(IQR(Session_Duration_hours),2),
+                                 "Odchylenie ćwiartkowe"=~round(IQR(Session_Duration_hours)/2,2),
+                                 "Odch. std. w %"=~round((sd(Session_Duration_hours)/mean(Session_Duration_hours)),2),
+                                 "Odch. ćwiartkowe w %"=~round((IQR(Session_Duration_hours)/median(Session_Duration_hours)),2),
+                                 "Skośność"=~round(skew(Session_Duration_hours),2),
+                                 "Kurtoza"=~round(kurtosi(Session_Duration_hours),2)
+                               ))
+
+tabela_SessionDuration_WorkoutType <- summary_table(Silownia_wykresy, summaries = opis_SessionDuration_WorkoutType, by = c("Workout_Type"), markup = "plain")
+tabela_SessionDuration_WorkoutType <- gsub("~~", "", tabela_SessionDuration_WorkoutType)
+tabela_SessionDuration_WorkoutType <- as.data.frame(tabela_SessionDuration_WorkoutType)
+tabela_SessionDuration_WorkoutType <- tabela_SessionDuration_WorkoutType[-1, ]  
+
+tabela_SessionDuration_WorkoutType %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "Yoga", "Cardio", "HIIT", "Trening siłowy"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Typ treningu" = 4))
+```
+
+Wyniki pokazują, że czas trwania sesji treningowych jest zbliżony dla wszystkich typów treningów (joga, cardio, HIIT, trening siłowy). Minimalny czas trwania wynosi około 0,5 godziny, a maksymalny blisko 2 godzin. Średni czas trwania oscyluje między 1,23 godziny (cardio) a 1,28 godziny (joga i HIIT), co jest zbliżone do median, które również wynoszą od 1,23 do 1,29 godziny.
+
+Rozstęp międzykwartylowy (IQR) wynosi od 0,39 (cardio) do 0,42 (joga i HIIT), co wskazuje na podobny zakres w centralnej części rozkładu. Odchylenie standardowe jest również porównywalne (od 0,33 do 0,36), co świadczy o niewielkiej zmienności czasu trwania sesji w każdej grupie. Rozkład danych jest niemal symetryczny (skośność bliska 0), a kurtoza wskazuje na lekko spłaszczony rozkład (od -0,55 do -0,25). Ogólnie, wyniki sugerują, że wszystkie typy treningów mają podobny czas trwania sesji, z niewielkimi różnicami w zmienności i kształcie rozkładu.
+
+### **Częstotliwość treningów a czas trwania sesji**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Session_Duration_hours, color = Experience_Level)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Częstotliwość treningów a czas trwania sesji", x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+```
+
+Wykres przedstawia zależność między liczbą sesji treningowych w tygodniu a czasem trwania pojedynczej sesji, uwzględniając poziom doświadczenia uczestników.
+
+Wraz ze wzrostem liczby sesji w tygodniu obserwuje się tendencję do wydłużania czasu trwania pojedynczej sesji, co wskazuje na większe zaangażowanie w trening przy częstszej aktywności. Linia regresji podkreśla dodatnią korelację między tymi zmiennymi.
+
+Kolor punktów, odpowiadający poziomowi doświadczenia, wskazuje, że osoby bardziej doświadczone (jaśniejsze punkty) częściej wykonują dłuższe sesje i trenują więcej razy w tygodniu. Wynika z tego, że zarówno liczba sesji, jak i czas ich trwania rosną wraz z doświadczeniem.
+
+### **Procent tkanki tłuszczowej ciała a częstotliwość treningów**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Fat_Percentage)) +
+  geom_point(color = "pink", size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "darkorange", se = FALSE) +
+  xlab("Częstotliwość treningów (dni/tydzień)") +
+  ylab("Procent tkanki tłuszczowej ciała (%)") +
+  ggtitle("Zależność między procentem tłuszczu a częstotliwością treningów") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+```
+
+Powyższy wykres obrazuje zależności procentu tkanki tłuszczowej od częstotliwości treningów. Zależność jest odwrotnie proporcjonalna - im więcej treningów, tym mniejsza tkanka tłuszczowa działa.
+
+### **Statystyki opisowe dla procentu tkanki tłusczowej w zależności od częstotliwość treningów**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+opis_Fat_Percentage <- list( "Fat_Percentage" = 
+                    list(
+                      "Min"= ~ min(Fat_Percentage),
+                      "Max"= ~ max(Fat_Percentage),
+                      "Kwartyl dolny"= ~ quantile(Fat_Percentage,0.25),
+                      "Mediana"= ~ round(median(Fat_Percentage),2),
+                      "Kwartyl górny"= ~ quantile(Fat_Percentage,0.75),
+                      "Średnia"= ~ round(mean(Fat_Percentage),2),
+                      "Odch. std."= ~ round(sd(Fat_Percentage),2),
+                      "IQR"= ~ round(IQR(Fat_Percentage),2),
+                      "Odchylenie ćwiartkowe"=~round(IQR(Fat_Percentage)/2,2),
+                      "Odch. std. w %"=~round((sd(Age)/mean(Fat_Percentage)),2),
+                      "Odch. ćwiartkowe w %"=~round((IQR(Age)/median(Fat_Percentage)),2),
+                      "Skośność"=~round(skew(Fat_Percentage),2),
+                      "Kurtoza"=~round(kurtosi(Fat_Percentage),2)
+                    ))
+
+tabela_Fat_Percentage <- summary_table(Silownia_wykresy, summaries = opis_Fat_Percentage, by = c("Workout_Frequency_daysweek"), markup = "plain")
+tabela_Fat_Percentage <- gsub("~~", "", tabela_Fat_Percentage)
+tabela_Fat_Percentage <- as.data.frame(tabela_Fat_Percentage)
+tabela_Fat_Percentage <- tabela_Fat_Percentage[-1, ] 
+
+
+tabela_Fat_Percentage %>%
+  knitr::kable(
+    digits = 2,
+    align = "lcc", 
+    col.names = c("Statystyka", "2", "3", "4", "5"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  add_header_above(c(" " = 1, "Częstotliwość treningów" = 4))
+
+```
+
+Na podstawie uzyskanych wyników można stwierdzić, że wraz ze wzrostem częstotliwości treningów spada wartość minimalna i maksymalna procentu tkanki tłuszczowej. Mediana oraz średnia wartość jest zdecydowanie najmniejsza dla częstotliwości treningów wynoszącej 5 dni w tygodniu. Dla 5 dni najmniejsze są też: odchylenie standardowe oraz wartości kwartyli, co pokazuje, jak zostały pogrupowane wartości uzyskane dla tkanki tłuszczowej. Wartości skośności są bliskie zeru, co wskazuje lekką asymetryczność. Występuje zarówno lewostronna (dla 3 i 4 dni w tygodniu), jak i prawostronna (2 i 5) asymetria.
+
+### **Zależnność BMI od wieku oraz typu treningu**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+p1 <- ggplot(Silownia_wykresy, aes(x = Age, y = BMI, color = Workout_Type)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  xlab("Wiek") +
+  ylab("BMI") +
+  scale_color_discrete(name = "Rodzaj treningu") +
+  ggtitle("Zależność BMI od wieku") +
+  theme_light()
+
+plotly::ggplotly(p1)
+```
+
+### **Histogramy**
+
+#### **Maksymalne tętno**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Max_BPM)) +
+  geom_histogram(binwidth = 10, 
+                 fill = "skyblue", 
+                 color = "black", 
+                 alpha = 0.7) +
+  ggtitle("Histogram dla Max_BPM") +
+  xlab("Maksymalne BPM") +
+  ylab("Liczba obserwacji") +
+  theme_minimal() +  
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),  
+    axis.title = element_text(size = 14),  
+    axis.text = element_text(size = 12),  
+    panel.grid.major = element_line(color = "gray80", linetype = "dotted")  
+  ) +
+  scale_x_continuous(breaks = seq(min(Silownia_wykresy$Max_BPM), max(Silownia_wykresy$Max_BPM), by = 20)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
+
+```
+
+#### **Średnie tętno**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
+  geom_histogram(binwidth = 10, 
+                 fill = "lightgreen", 
+                 color = "black", 
+                 alpha = 0.7) +
+  ggtitle("Histogram dla Avg_BPM") +
+  xlab("Średnie BPM") +
+  ylab("Liczba obserwacji") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    panel.grid.major = element_line(color = "gray80", linetype = "dotted")
+  ) +
+  scale_x_continuous(breaks = seq(min(Silownia_wykresy$Avg_BPM), max(Silownia_wykresy$Avg_BPM), by = 20)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
+
+```
+
+#### **Spoczynkowe tętno**
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
+  geom_histogram(binwidth = 10, 
+                 fill = "salmon", 
+                 color = "black", 
+                 alpha = 0.7) +
+  ggtitle("Histogram dla Resting_BPM") +
+  xlab("Spoczynkowe BPM") +
+  ylab("Liczba obserwacji") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    panel.grid.major = element_line(color = "gray80", linetype = "dotted")
+  ) +
+  scale_x_continuous(breaks = seq(min(Silownia_wykresy$Resting_BPM), max(Silownia_wykresy$Resting_BPM), by = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
+
+```
 
 # **Wnioskowanie**
 
