@@ -14,12 +14,21 @@ output:
     fig_caption: true  
     theme_color: "##ADD8E6"  
     highlight_color: "##ADD8E6"  
-    css: "material.css"  # Możliwość dodania własnych stylów CSS
 ---
 
 # **Wprowadzenie**
 
 ## **1. Wstęp**
+
+Celem projektu jest przeprowadzenie analizy danych na zbiorze Siłownia. Jest to zestaw danych zawierający szczegółowy przegląd rutynowych ćwiczeń wykonywanych przez członków siłowni, a także ich atrybutów fizycznych i wskaźników sprawności. Proces analizy danych będzie składał się z kilku etapów, które kolejno obejmują: przygotowanie danych (data wrangling), stworzenie wizualizacji oraz statystyk opisowych, wnioskowanie statystyczne, a na końcu podsumowanie całej pracy.
+
+Data Wrangling obejmie identyfikację obserwacji odstających, analizę brakujących danych, imputację braków oraz walidację danych.
+
+Następnie, w etapie wizualizacji i statystyk opisowych, zostanie zaprezentowany szeroki zakres analiz, mających na celu wydobycie jak najbardziej użytecznych informacji z dostępnych danych.
+
+Wnioskowanie statystyczne będzie polegało na przeprowadzaniu testów statystycznych oraz analizie zależności między zmiennymi, co pozwoli na wyciąganie uogólnionych wniosków dotyczących całej populacji na podstawie dostępnej próby danych.
+
+Ostatnią częścią projektu będzie podsumowanie, w którym zostaną przedstawione najważniejsze wnioski i informacje wynikające z przeprowadzonej analizy.
 
 ## **2. Zmienne w zbiorze danych**
 
@@ -83,14 +92,14 @@ skim(silownia)
 **Kolumny typu tekstowego**
 
 | **Kolumna** | **Brakujące wartości** | **Kompletność** | **Min** | **Max** | **Puste** | **Unikalne wartości** | **Whitespace** |
-|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Płeć | 0 | 1.00 | 4 | 6 | 0 | 2 | 0 |
 | Typ treningu | 150 | 0.85 | 4 | 8 | 0 | 4 | 0 |
 
 **Kolumny typu liczbowego**
 
 | **Kolumna** | **Brakujące wartości** | **Kompletność** | **Średnia** | **Odchylenie standardowe** | **0 Percentyl** | **25 Percentyl** | **50 Percentyl** | **75 Percentyl** | **100 Percentyl** | **Histogram** |
-|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Wiek | 100 | 0.90 | 38.63 | 12.27 | 18.00 | 28.00 | 39.00 | 50.00 | 59.00 | ▇▆▆▇▇ |
 | Waga | 0 | 1.00 | 73.85 | 21.21 | 40.00 | 58.10 | 70.00 | 86.00 | 129.90 | ▅▇▅▂▂ |
 | Wzrost | 0 | 1.00 | 1.72 | 0.13 | 1.50 | 1.62 | 1.71 | 1.80 | 2.00 | ▅▇▇▃▃ |
@@ -155,9 +164,9 @@ colnames(silownia)[colnames(silownia) == "Water_Intake (liters)"] <- "Water_Inta
 colnames(silownia)[colnames(silownia) == "Workout_Frequency (days/week)"] <- "Workout_Frequency_daysweek"
 ```
 
-# **Data Wrangling**
+# **Data wrangling**
 
-Data Wrangling jest to proces polegający na przekształceniu nieuporządkowanego zbioru danych w użyteczny oraz uporządkowany. To złożone działanie, które zaczyna się od zrozumienia struktury danych i identyfikacji problemów, a kończy na stworzeniu uporządkowanego zbioru gotowego do dalszej analizy.
+Data wrangling jest to proces polegający na przekształceniu nieuporządkowanego zbioru danych w użyteczny oraz uporządkowany. To złożone działanie, które zaczyna się od zrozumienia struktury danych i identyfikacji problemów, a kończy na stworzeniu uporządkowanego zbioru gotowego do dalszej analizy.
 
 Kluczowymi etapami tego procesu będzie:
 
@@ -739,6 +748,8 @@ W naszym zbiorze danych nie wystąpiły żadne błędy, więc jest on **gotowy d
 
 # **Wizualizacja danych i analiza opisowa**
 
+Po zakończeniu procesu data wranglingu, nasze dane są w pełni oczyszczone, uporządkowane i gotowe do dalszej analizy. Na etapie wizualizacji oraz statystyk opisowych skupimy się na przedstawieniu szerokiego wachlarza analiz, które pozwolą na wydobycie najbardziej wartościowych i interesujących informacji z dostępnych danych. Dzięki zastosowaniu różnorodnych technik wizualizacji, takich jak wykresy, diagramy, czy tabele zidentyfikujemy istotne wzorce, zależności oraz trendy.
+
 ### **Rozkład płci**
 
 ```{r echo=FALSE, warning=FALSE}
@@ -844,10 +855,10 @@ Wykres pokazuje, jakie wartości wskaźnika BMI osiągano dla danego wieku. Doda
 opis_BMI <- list( "BMI" = 
                     list(
                       "Min"= ~ min(BMI),
-                      "Max"= ~ max(BMI),
-                      "Kwartyl dolny"= ~ quantile(BMI,0.25),
+                      "Max"= ~ round(max(BMI),2),
+                      "Kwartyl dolny"= ~ round(quantile(BMI,0.25),2),
                       "Mediana"= ~ round(median(BMI),2),
-                      "Kwartyl górny"= ~ quantile(BMI,0.75),
+                      "Kwartyl górny"= ~ round(quantile(BMI,0.75),2),
                       "Średnia"= ~ round(mean(BMI),2),
                       "Odch. std."= ~ round(sd(BMI),2),
                       "IQR"= ~ round(IQR(BMI),2),
