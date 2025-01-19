@@ -92,14 +92,14 @@ skim(silownia)
 **Kolumny typu tekstowego**
 
 | **Kolumna** | **Brakujące wartości** | **Kompletność** | **Min** | **Max** | **Puste** | **Unikalne wartości** | **Whitespace** |
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
 | Płeć | 0 | 1.00 | 4 | 6 | 0 | 2 | 0 |
 | Typ treningu | 150 | 0.85 | 4 | 8 | 0 | 4 | 0 |
 
 **Kolumny typu liczbowego**
 
 | **Kolumna** | **Brakujące wartości** | **Kompletność** | **Średnia** | **Odchylenie standardowe** | **0 Percentyl** | **25 Percentyl** | **50 Percentyl** | **75 Percentyl** | **100 Percentyl** | **Histogram** |
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 | Wiek | 100 | 0.90 | 38.63 | 12.27 | 18.00 | 28.00 | 39.00 | 50.00 | 59.00 | ▇▆▆▇▇ |
 | Waga | 0 | 1.00 | 73.85 | 21.21 | 40.00 | 58.10 | 70.00 | 86.00 | 129.90 | ▅▇▅▂▂ |
 | Wzrost | 0 | 1.00 | 1.72 | 0.13 | 1.50 | 1.62 | 1.71 | 1.80 | 2.00 | ▅▇▇▃▃ |
@@ -1409,6 +1409,8 @@ ggplot(Silownia_wykresy, aes(x = Max_BPM)) +
 
 ```
 
+Histogram wskazuje, że większość maksymalnych wartości tętna w badanej próbie mieści się w przedziale 165-195 BPM, co oznacza skupienie wyników w umiarkowanym zakresie tętna maksymalnego. Rozkład sugeruje, że wartości spoza tego przedziału są znacznie rzadsze.
+
 #### **Średnie tętno**
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -1432,11 +1434,13 @@ ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
 
 ```
 
+Histogram pokazuje, że większość średnich wartości tętna w badanej próbie mieści się w przedziale 125-135 BPM, licząc niemalże 225 obserwacji. . Rozkład wskazuje na skupienie wyników w umiarkowanym zakresie tętna średniego z lekkim odchyleniem w lewą stronę.
+
 #### **Spoczynkowe tętno**
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
-  geom_histogram(binwidth = 10, 
+  geom_histogram(binwidth = 5, 
                  fill = "salmon", 
                  color = "black", 
                  alpha = 0.7) +
@@ -1454,6 +1458,8 @@ ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
 
 ```
+
+Histogram pokazuje, że spoczynkowe wartości tętna w badanej próbie najczęściej mieszczą się w przedziale 57,5-67,5 BPM. Wyniki te wskazują na dominację umiarkowanego zakresu tętna spoczynkowego w analizowanej grupie.
 
 # **Wnioskowanie**
 
