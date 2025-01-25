@@ -1174,3 +1174,59 @@ ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
   scale_x_continuous(breaks = seq(min(Silownia_wykresy$Resting_BPM), max(Silownia_wykresy$Resting_BPM), by = 10)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
 
+
+
+# WNIOSKOWANIE STATYSTYCZNE
+library(ggstatsplot)
+
+## Porównanie spalonych kalorii w zależności od poziomu doświadczenia
+
+# Sprawdzenie normalności danych - Test Shapiro-Wilka
+shapiro.test(Silownia_wykresy$Calories_Burned)
+# Z uwagi na wartość p mniejszą od 0.05 można uznać, że dane spełniają założenia normalności
+# i w związku z tym wykorzystać test ANOVA
+
+# Poniższy test (ANOVA) analizuje różnice w średnich liczbach spalonych kalorii pomiędzy grupami na różnych poziomach doświadczenia. 
+#Zakłada normalność rozkładu i jednorodność wariancji, a jeśli wynik jest istotny statystycznie, oznacza, że przynajmniej 
+#jedna grupa różni się od innych pod względem średniej. Wykorzystuje również korekcję Bonferroniego dla porównań parami, aby kontrolować ryzyko błędu I rodzaju.
+# Hipoteza zerowa zakłada, że nie ma istotnych staystycznie różnic między średnią liczbą spalonych kalorii w zalezności od poziomu doświadczenia.
+ggbetweenstats(
+  data = Silownia_wykresy,
+  x = Experience_Level,
+  y = Calories_Burned,
+  type = "parametric", # Test parametryczny (ANOVA)
+  pairwise.comparisons = TRUE, # Porównania parami
+  p.adjust.method = "bonferroni", # Korekcja wielokrotnych porównań
+  title = "Różnice w spalonych kaloriach w zależności od poziomu doświadczenia"
+)
+# Interpretacje:
+# Ogólny wynik testu ANOVA informuje, że wartość p jest ekstremalnie mała (znacznie poniżej typowego poziomu istotności 0,05), 
+#co oznacza, że różnice między średnimi spalonych kalorii na różnych poziomach doświadczenia są istotne statystycznie.
+# Również wszystkie różnice między grupami są istotne statystycznie, co oznacza, że każdy poziom doświadczenia różni się istotnie 
+#od pozostałych pod względem średniej liczby spalonych kalorii.
+# Wyniki średnich spalalnych kalorii dla każdego z poziomów doświdaczenia pokazują, że średnia liczba spalonych kalorii 
+#rośnie wraz z poziomem doświadczenia. Eksperci spalają znacznie więcej kalorii niż średniozaawansowani i początkujący.
+# Efekt poziomu doświadczenia na spalone kalorie jest bardzo silny - 66% wariancji w spalonych kaloriach można wyjaśnić poziomem doświadczenia, co oznacza bardzo silny efekt.
+
+
+## Rozkład typów treningów w zależności od płci
+
+# Poniższy test przeprowadza analizę proporcji danych kategorycznych, jakimi jest typ treningu w zależności 
+# od płci. Wykorzystuje test Chi-kwadrat, aby sprawdzić, czy rozkład kategorii różni się istotnie między grupami. 
+# Wizualizacja w formie wykresu kołowego przedstawia proporcje w każdej kategorii z wynikami testów statystycznych.
+ggpiestats(
+  data = Silownia_wykresy,
+  x = Workout_Type,
+  y = Gender,
+  title = "Rozkład typów treningów w zależności od płci"
+)
+# Hipoteza zerowa zakłada, że rozkład typów treningów jest taki sam dla kobiet i mężczyzn.
+#Wartość p jest większa od typowego poziomu istotności α = 0.05, co oznacza, że nie ma podstaw do odrzucenia hipotezy zerowej.
+# Wartość V Cramera równa 0.01 wskazuje na bardzo słaby efekt wielkości różnic między grupami.
+# Proporcje typów treningów (Yoga, Cardio, Strength, HIIT) są bardzo zbliżone między kobietami i mężczyznami:
+# Dla kobiet: Yoga (27%), Cardio (28%), Strength (22%), HIIT (23%).
+# Dla mężczyzn: Yoga (27%), Cardio (25%), Strength (25%), HIIT (23%).
+# Podsumowując, można zauważyć brak istotnych różnic w preferencjach typów treningów między kobietami a mężczyznami. 
+#Proporcje typów treningów są praktycznie takie same w obu grupach, co potwierdza zarówno wynik statystyczny, jak i wizualizacja.
+
+
