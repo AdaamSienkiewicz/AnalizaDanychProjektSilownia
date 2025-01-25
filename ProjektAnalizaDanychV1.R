@@ -1209,7 +1209,7 @@ ggbetweenstats(
 # Efekt poziomu doświadczenia na spalone kalorie jest bardzo silny - 66% wariancji w spalonych kaloriach można wyjaśnić poziomem doświadczenia, co oznacza bardzo silny efekt.
 
 
-## Rozkład typów treningów w zależności od płci
+## Różnice między płciami w preferencjach typów treningów 
 
 # Poniższy test przeprowadza analizę proporcji danych kategorycznych, jakimi jest typ treningu w zależności 
 # od płci. Wykorzystuje test Chi-kwadrat, aby sprawdzić, czy rozkład kategorii różni się istotnie między grupami. 
