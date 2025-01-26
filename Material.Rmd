@@ -125,7 +125,7 @@ packages <- c(
   "dplyr", "readr", "naniar", "ggplot2", "rmdformats", "validate", "validatetools", 
   "dcmodify", "errorlocate", "deductive", "VIM", "simputation", "visdat", 
   "lumberjack", "ISLR", "dlookr", "xts", "quantmod", "ROCR", "mice", 
-  "Information", "scorecard", "tidyverse", "plotly", "rpart", "psych", "stats", "qwraps2", "kableExtra"
+  "Information", "scorecard", "tidyverse", "plotly", "rpart", "psych", "stats", "qwraps2", "kableExtra", "ggstatsplot"
 )
 
 # Funkcja instalująca i ładująca pakiety
@@ -1463,4 +1463,114 @@ Histogram pokazuje, że spoczynkowe wartości tętna w badanej próbie najczęś
 
 # **Wnioskowanie**
 
+Kolejnym i ostatnim etapem naszej analizy będzie wnioskowanie statystyczne, które opierze się na przeprowadzaniu różnorodnych testów statystycznych oraz dogłębnej analizie zależności między zmiennymi. Proces ten umożliwi formułowanie uogólnionych wniosków na temat całej populacji, bazując na wynikach uzyskanych z dostępnej próby danych. Dzięki zastosowaniu odpowiednich metod statystycznych możliwe będzie nie tylko identyfikowanie istotnych różnic i korelacji, ale również weryfikacja hipotez badawczych, co przyczyni się do lepszego zrozumienia badanych zjawisk i ich kontekstu.
+
+### **Porównanie spalonych kalorii w zależności od poziomu doświadczenia**
+
+#### **Sprawdzenie normalności danych - Test Shapiro-Wilka**
+
+```{r echo=FALSE}
+shapiro.test(Silownia_wykresy$Calories_Burned)
+```
+
+Z uwagi na wartość p mniejszą od 0.05 można uznać, że dane spełniają założenia normalności i w związku z tym wykorzystać test ANOVA.
+
+Poniższy test (ANOVA) analizuje różnice w średnich liczbach spalonych kalorii pomiędzy grupami na różnych poziomach doświadczenia. Zakłada normalność rozkładu i jednorodność wariancji, a jeśli wynik jest istotny statystycznie, oznacza, że przynajmniej jedna grupa różni się od innych pod względem średniej. Wykorzystuje również korekcję Bonferroniego dla porównań parami, aby kontrolować ryzyko błędu I rodzaju. Hipoteza zerowa zakłada, że nie ma istotnych staystycznie różnic między średnią liczbą spalonych kalorii w zalezności od poziomu doświadczenia.
+
+```{r echo=FALSE}
+ggbetweenstats(
+  data = Silownia_wykresy,
+  x = Experience_Level,
+  y = Calories_Burned,
+  type = "parametric", # Test parametryczny (ANOVA)
+  pairwise.comparisons = TRUE, # Porównania parami
+  p.adjust.method = "bonferroni", # Korekcja wielokrotnych porównań
+  title = "Różnice w spalonych kaloriach w zależności od poziomu doświadczenia"
+)
+```
+
+Ogólny wynik testu ANOVA informuje, że wartość p jest ekstremalnie mała (znacznie poniżej typowego poziomu istotności 0,05), co oznacza, że różnice między średnimi spalonych kalorii na różnych poziomach doświadczenia są istotne statystycznie. Również wszystkie różnice między grupami są istotne statystycznie, co oznacza, że każdy poziom doświadczenia różni się istotnie od pozostałych pod względem średniej liczby spalonych kalorii.
+
+Wyniki średnich spalalnych kalorii dla każdego z poziomów doświdaczenia pokazują, że średnia liczba spalonych kalorii rośnie wraz z poziomem doświadczenia. Eksperci spalają znacznie więcej kalorii niż średniozaawansowani i początkujący. Efekt poziomu doświadczenia na spalone kalorie jest bardzo silny - 66% wariancji w spalonych kaloriach można wyjaśnić poziomem doświadczenia, co oznacza bardzo silny efekt.
+
+### **Różnice między płciami w preferencjach typów treningów**
+
+Poniższy test przeprowadza analizę proporcji danych kategorycznych, jakimi jest typ treningu w zależności od płci. Wykorzystuje test Chi-kwadrat, aby sprawdzić, czy rozkład kategorii różni się istotnie między grupami. Wizualizacja w formie wykresu kołowego przedstawia proporcje w każdej kategorii z wynikami testów statystycznych.
+
+```{r echo=FALSE}
+ggpiestats(
+  data = Silownia_wykresy,
+  x = Workout_Type,
+  y = Gender,
+  title = "Rozkład typów treningów w zależności od płci"
+)
+```
+
+Hipoteza zerowa zakłada, że rozkład typów treningów jest taki sam dla kobiet i mężczyzn. Wartość p jest większa od typowego poziomu istotności 0,05, co oznacza, że nie ma podstaw do odrzucenia hipotezy zerowej.
+
+Wartość V Cramera równa 0,01 wskazuje na bardzo słaby efekt wielkości różnic między grupami. Proporcje typów treningów (Yoga, Cardio, Strength, HIIT) są bardzo zbliżone między kobietami i mężczyznami: Dla kobiet: Yoga (27%), Cardio (28%), Strength (22%), HIIT (23%). Dla mężczyzn: Yoga (27%), Cardio (25%), Strength (25%), HIIT (23%).
+
+Podsumowując, można zauważyć brak istotnych różnic w preferencjach typów treningów między kobietami a mężczyznami. Proporcje typów treningów są praktycznie takie same w obu grupach, co potwierdza zarówno wynik statystyczny, jak i wizualizacja.
+
+### **Badanie zależności spalonych kalorii od czasu trwania sesji treningowej**
+
+Kolejny z opisywanych testów przeprowadza analizę zależności między dwoma zmiennymi ilościowymi, jakimi są: spalone kalorie i czas trwania sesji treningowej. Do analizy wykorzystano korelację Pearsona oraz przedstawioną na wykresie regresję liniową.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggscatterstats(
+  data = Silownia_wykresy,
+  x = Session_Duration_hours,
+  y = Calories_Burned,
+  title = "Badanie zależności spalonych kalorii od czasu trwania sesji treningowej"
+)
+```
+
+Współczynnik korelacji wyniósł 0,91, co wskazuje na bardzo silny dodatni związek między czasem trwania sesji a liczbą spalonych kalorii. Oznacza to, że dłuższe sesje treningowe prowadzą do większej liczby spalonych kalorii, co jest potwierdzeniem wniosków wyciągniętych na podstawie analizy statystyk opisowych. Wartość p = 0,00 sugeruje, iż zależność jest istotna statystycznie, a więc odrzucamy hipotezę zerową mówiącą o braku korelacji między zmiennymi. Statystyka testu t-studenta 67,59 (z liczbą swobody równą 973 i wartością p = 0,00) potwierdza, że współczynnik korelacji różni się istotnie od zera, co dodatkowo wskazuje na wyraźny związek między zmiennymi.
+
+Wartość statystyki Pearsona wynosząca 0,91 pokazuje, że ok. 91% zmienności w liczbie spalonych kalorii można wyjaśnić czasem trwania sesji. Punktowy wykres rozrzutu pokazuje pozytywną zależność między zmiennymi. Punkty układają się blisko linii regresji, a więc dopasowalność modelu liniowego można określić jako dobrą.
+
+Podsumowując, zależność między czasem trwania sesji treningowej a liczbą spalonych kalorii jest bardzo silna i istotna statystycznie. Dłuższe treningi prowadzą do spalenia większej liczby kalorii. Model liniowy dobrze opisuje tę zależność, co sugeruje, że czas trwania sesji jest jednym z kluczowych czynników wpływających na liczbę spalonych kalorii.
+
+### **Różnice między wiekiem w osiąganym tętnie spoczynkowym**
+
+Test ten bada, czy istnieją istotne różnice w proporcjach BPM (BPM_Category) w zależności od grup wiekowych (Age_Category). Zarówno wartości tętna spoczynkowego jak i lata zostały zaprezentowane w przedziałach, aby lepiej zobrazować analizowane zjawisko.
+
+To kolejny test, który wykorzystuje test Chi-kwadrat w celu weryfikacji, czy rozkład kategorii różni się istotnie między grupami. Wizualizacja w formie wykresu słupkowego przedstawia proporcje w każdej kategorii z wynikami testów statystycznych.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Silownia_wykresy$Age_Category <- cut(Silownia_wykresy$Age,
+                                     breaks = c(18, 29, 39, 49, 59),
+                                     labels = c("18-29", "29-39", "39-49", "49-59"),
+                                     right = FALSE)
+Silownia_wykresy$BPM_Category <- cut(
+  Silownia_wykresy$Resting_BPM,                   
+  breaks = c(50, 56, 62, 68, 74),                  
+  labels = c("50-56", "56-62", "62-68", "68-74"), 
+  right = FALSE                                   
+)
+ggbarstats(
+  data = Silownia_wykresy,
+  x = BPM_Category, 
+  y = Age_Category,
+  caption = "xxx",
+  package = "ggsci",
+  palette = "default_igv"
+)
+
+```
+
+Wartość p większa od 0.05 (równa 0,61) oznacza, że nie ma istotnych statystycznie różnic w rozkładzie grup wartości spoczynkowego tętna między kategoriami wiekowymi. Współczynnik Cramera na poziomie 0,00 wskazuje na brak efektu wielkości różnic między grupami (relacja między zmiennymi jest bardzo słaba lub znikoma).
+
+Dla każdej kategorii p także osiąga wartości wyższe niż 0,05, co sugeruje brak różnic w proporcjach grup wartości tętna spoczynkowego we wszystkich kategoriach wiekowych. Proporcje poszczególnych grup wartości tętna spoczynkowego w każdej kategorii wiekowej są bardzo podobne, co widać na wykresie słupkowym. Nie ma istotnych statystycznie różnic.
+
+Zarówno globalnie, jak i lokalnie wyniki wskazują na równomierny rozkład. Zakładając hipotezę zerową, że rozkład wartości tętna spoczynkowego jest taki sam dla każdej kategorii wiekowej, nie ma podstaw do odrzucenia tejże hipotezy zerowej.
+
 # **Podsumowanie**
+
+Celem naszego projektu była analiza danych pochodzących ze zbioru *Siłownia*. Proces ten został podzielony na kilka kluczowych etapów, obejmujących: przygotowanie danych (data wrangling), wizualizację danych, opracowanie statystyk opisowych oraz przeprowadzenie wnioskowania statystycznego.
+
+W pierwszej fazie projektu skoncentrowaliśmy się na oczyszczeniu i przygotowaniu danych. Zbiór nie zawierał ekstremalnych odchyleń. Początkowo zidentyfikowano jednak braki danych w kolumnach: wiek, typ treningu oraz BMI. Braki w kolumnie BMI zostały uzupełnione za pomocą odpowiedniego wzoru, natomiast brakujące wartości w kolumnach wiek i typ treningu uzupełniono metodą imputacji hot deck. Po przeprowadzeniu tych operacji dokonano walidacji danych, która potwierdziła ich poprawność i brak błędów.
+
+W kolejnych etapach zaprezentowano szereg wizualizacji, które dostarczyły wielu przydatnych i ciekawych informacji o analizowanych danych. Dodatkowo, przedstawiono statystyki opisowe, które pomogły w zrozumieniu kluczowych cech zbioru danych.
+
+W ramach wnioskowania statystycznego przeprowadzono testy, które pozwoliły zbadać zależności między zmiennymi i wyciągnąć uogólnione wnioski dotyczące całej populacji. Wyniki analizy wykazały, że średnia liczba spalonych kalorii wzrasta wraz z poziomem doświadczenia – eksperci spalają znacznie więcej kalorii niż średniozaawansowani i początkujący. Nie zaobserwowano istotnych różnic w preferencjach typów treningów między kobietami a mężczyznami, a proporcje są zbliżone w obu grupach. Stwierdzono silną, istotną statystycznie zależność między czasem trwania treningu a liczbą spalonych kalorii – dłuższe sesje skutkują większym spalaniem. Analiza wykazała również, że proporcje grup tętna spoczynkowego w różnych kategoriach wiekowych są bardzo podobne i nie różnią się istotnie statystycznie.
