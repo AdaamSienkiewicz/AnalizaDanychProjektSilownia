@@ -1189,7 +1189,7 @@ shapiro.test(Silownia_wykresy$Calories_Burned)
 # Poniższy test (ANOVA) analizuje różnice w średnich liczbach spalonych kalorii pomiędzy grupami na różnych poziomach doświadczenia. 
 #Zakłada normalność rozkładu i jednorodność wariancji, a jeśli wynik jest istotny statystycznie, oznacza, że przynajmniej 
 #jedna grupa różni się od innych pod względem średniej. Wykorzystuje również korekcję Bonferroniego dla porównań parami, aby kontrolować ryzyko błędu I rodzaju.
-# Hipoteza zerowa zakłada, że nie ma istotnych staystycznie różnic między średnią liczbą spalonych kalorii w zalezności od poziomu doświadczenia.
+# Hipoteza zerowa zakłada, że nie ma istotnych statystycznie różnic między średnią liczbą spalonych kalorii w zalezności od poziomu doświadczenia.
 ggbetweenstats(
   data = Silownia_wykresy,
   x = Experience_Level,
@@ -1207,7 +1207,6 @@ ggbetweenstats(
 # Wyniki średnich spalalnych kalorii dla każdego z poziomów doświdaczenia pokazują, że średnia liczba spalonych kalorii 
 #rośnie wraz z poziomem doświadczenia. Eksperci spalają znacznie więcej kalorii niż średniozaawansowani i początkujący.
 # Efekt poziomu doświadczenia na spalone kalorie jest bardzo silny - 66% wariancji w spalonych kaloriach można wyjaśnić poziomem doświadczenia, co oznacza bardzo silny efekt.
-
 
 ## Różnice między płciami w preferencjach typów treningów 
 
@@ -1251,3 +1250,37 @@ ggscatterstats(
 #Podsumowując, zależność między czasem trwania sesji treningowej a liczbą spalonych kalorii jest bardzo silna i istotna statystycznie.
 #Dłuższe treningi prowadzą do spalenia większej liczby kalorii.
 #Model liniowy dobrze opisuje tę zależność, co sugeruje, że czas trwania sesji jest jednym z kluczowych czynników wpływających na liczbę spalonych kalorii.
+
+#### Różnice między wiekiem w osiąganym tętnie spoczynkowym
+
+#Test ten bada, czy istnieją istotne różnice w proporcjach BPM (BPM_Category) w zależności od grup wiekowych (Age_Category).
+#Zarówno wartości tętna spoczynkowego jak i lata zostały zaprezentowane w przedziałach, aby lepiej zobrazować analizowane zjawisko.
+#To kolejny test, który wykorzystuje test Chi-kwadrat w celu weryfikacji, czy rozkład kategorii różni się istotnie między grupami. 
+# Wizualizacja w formie wykresu słupkowego przedstawia proporcje w każdej kategorii z wynikami testów statystycznych.
+
+Silownia_wykresy$Age_Category <- cut(Silownia_wykresy$Age,
+                                     breaks = c(18, 29, 39, 49, 59),
+                                     labels = c("18-29", "29-39", "39-49", "49-59"),
+                                     right = FALSE)
+Silownia_wykresy$BPM_Category <- cut(
+  Silownia_wykresy$Resting_BPM,                   
+  breaks = c(50, 56, 62, 68, 74),                  
+  labels = c("50-56", "56-62", "62-68", "68-74"), 
+  right = FALSE                                   
+)
+
+ggbarstats(
+  data = Silownia_wykresy,
+  x = BPM_Category, 
+  y = Age_Category,
+  caption = "xxx",
+  package = "ggsci",
+  palette = "default_igv"
+)
+
+#Wartość p większa od 0.05 (równa 0,61) oznacza, że nie ma istotnych statystycznie różnic w rozkładzie grup wartości spoczynkowego tętna między kategoriami wiekowymi.
+#Współczynnik Cramera na poziomie 0,00 wskazuje na brak efektu wielkości różnic między grupami (relacja między zmiennymi jest bardzo słaba lub znikoma).
+#Dla każdej kategorii p także osiąga wartości wyższe niż 0,05, co sugeruje brak różnic w proporcjach grup wartości tętna spoczynkowego we wszystkich kategoriach wiekowych.
+#Proporcje poszczególnych grup wartości tętna spoczynkowego w każdej kategorii wiekowej są bardzo podobne, co widać na wykresie słupkowym. Nie ma istotnych statystycznie różnic.
+#Zarówno globalnie, jak i lokalnie wyniki wskazują na równomierny rozkład.
+#Zakładając hipotezę zerową, że rozkład wartości tętna spoczynkowego jest taki sam dla każdej kategorii wiekowej, nie ma podstaw do odrzucenia tejże hipotezy zerowej.
