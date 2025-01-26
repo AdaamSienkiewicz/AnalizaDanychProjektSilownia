@@ -744,7 +744,7 @@ barplot(cf15, main="")
 
 #### **Podsumowanie**
 
-W naszym zbiorze danych nie wystąpiły żadne błędy, więc jest on **gotowy do przeprowadzenie wizualizacji oraz dalszej analizy**.
+W naszym zbiorze danych nie wystąpiły żadne błędy, więc jest on **gotowy do przeprowadzenia wizualizacji oraz dalszej analizy**.
 
 # **Wizualizacja danych i analiza opisowa**
 
@@ -893,7 +893,9 @@ tabela_BMI %>%
   add_header_above(c(" " = 1, "Wiek" = 4))
 ```
 
-Na podstawie powyższych wyników można stwierdzić, że najwyższą średnią wartość BMI osiągnięto dla grupy wiekowej 18-29 lat, dla której największa jest też mediana BMI równa 24,96. Minimalna wartość BMI to 12,32 dla osób w wieku 39-49 lat, a maksymalna wynosi niespełna 50 dla tej samej grupy wiekowej. W grupie wiekowej 49-59 nastąpiło największe rozproszenie danych. Wyniosło ono 7,1. Rozstęp międzykwartylowy (IQR) osiąga wartości od 7,08 do 9,08, co wskazuje na stabilność w centralnej części rozkładu. Rozkład BMI jest lekko dodatnio skośny. Wartości Bmi większe od średniej są nieco bardziej rozproszone. Wartości kurtozy wskazują na to, że dane są bardziej rozproszone, a wyniki nie wykazują silnej koncentracji wokół średniej ani wielu skrajnych wartości.
+Na podstawie powyższych wyników można stwierdzić, że najwyższą średnią wartość BMI osiągnięto dla grupy wiekowej 18-29 lat, dla której największa jest też mediana BMI równa 24,96. Minimalna wartość BMI to 12,32 dla osób w wieku 39-49 lat, a maksymalna wynosi niespełna 50 dla tej samej grupy wiekowej.
+
+W grupie wiekowej 49-59 nastąpiło największe rozproszenie danych. Wyniosło ono 7,1. Rozstęp międzykwartylowy (IQR) osiąga wartości od 7,08 do 9,08, co wskazuje na stabilność w centralnej części rozkładu. Rozkład BMI jest lekko dodatnio skośny. Wartości Bmi większe od średniej są nieco bardziej rozproszone. Wartości kurtozy wskazują na to, że dane są bardziej rozproszone, a wyniki nie wykazują silnej koncentracji wokół średniej ani wielu skrajnych wartości.
 
 ### **Rozkład wagi w zależności od płci**
 
@@ -1463,7 +1465,7 @@ Histogram pokazuje, że spoczynkowe wartości tętna w badanej próbie najczęś
 
 # **Wnioskowanie**
 
-Kolejnym i ostatnim etapem naszej analizy będzie wnioskowanie statystyczne, które opierze się na przeprowadzaniu różnorodnych testów statystycznych oraz dogłębnej analizie zależności między zmiennymi. Proces ten umożliwi formułowanie uogólnionych wniosków na temat całej populacji, bazując na wynikach uzyskanych z dostępnej próby danych. Dzięki zastosowaniu odpowiednich metod statystycznych możliwe będzie nie tylko identyfikowanie istotnych różnic i korelacji, ale również weryfikacja hipotez badawczych, co przyczyni się do lepszego zrozumienia badanych zjawisk i ich kontekstu.
+Kolejnym, a zarazem ostatnim etapem naszej analizy będzie wnioskowanie statystyczne, oparte na przeprowadzaniu różnorodnych testów statystycznych oraz dogłębnej analizie zależności między zmiennymi. Proces ten umożliwi formułowanie uogólnionych wniosków na temat całej populacji, bazując na wynikach uzyskanych z dostępnej próby danych. Dzięki zastosowaniu odpowiednich metod statystycznych możliwe będzie nie tylko identyfikowanie istotnych różnic i korelacji, ale również weryfikacja hipotez badawczych, co przyczyni się do lepszego zrozumienia badanych zjawisk i ich kontekstu.
 
 ### **Porównanie spalonych kalorii w zależności od poziomu doświadczenia**
 
@@ -1491,7 +1493,7 @@ ggbetweenstats(
 
 Ogólny wynik testu ANOVA informuje, że wartość p jest ekstremalnie mała (znacznie poniżej typowego poziomu istotności 0,05), co oznacza, że różnice między średnimi spalonych kalorii na różnych poziomach doświadczenia są istotne statystycznie. Również wszystkie różnice między grupami są istotne statystycznie, co oznacza, że każdy poziom doświadczenia różni się istotnie od pozostałych pod względem średniej liczby spalonych kalorii.
 
-Wyniki średnich spalalnych kalorii dla każdego z poziomów doświdaczenia pokazują, że średnia liczba spalonych kalorii rośnie wraz z poziomem doświadczenia. Eksperci spalają znacznie więcej kalorii niż średniozaawansowani i początkujący. Efekt poziomu doświadczenia na spalone kalorie jest bardzo silny - 66% wariancji w spalonych kaloriach można wyjaśnić poziomem doświadczenia, co oznacza bardzo silny efekt.
+Wyniki średnich spalanych kalorii dla każdego z poziomów doświdaczenia pokazują, że średnia liczba spalonych kalorii rośnie wraz z poziomem doświadczenia. Eksperci spalają znacznie więcej kalorii niż średniozaawansowani i początkujący. Efekt poziomu doświadczenia na spalone kalorie jest bardzo silny - 66% wariancji w spalonych kaloriach można wyjaśnić poziomem doświadczenia, co oznacza bardzo silny efekt.
 
 ### **Różnice między płciami w preferencjach typów treningów**
 
@@ -1569,7 +1571,7 @@ Zarówno globalnie, jak i lokalnie wyniki wskazują na równomierny rozkład. Za
 
 Celem naszego projektu była analiza danych pochodzących ze zbioru *Siłownia*. Proces ten został podzielony na kilka kluczowych etapów, obejmujących: przygotowanie danych (data wrangling), wizualizację danych, opracowanie statystyk opisowych oraz przeprowadzenie wnioskowania statystycznego.
 
-W pierwszej fazie projektu skoncentrowaliśmy się na oczyszczeniu i przygotowaniu danych. Zbiór nie zawierał ekstremalnych odchyleń. Początkowo zidentyfikowano jednak braki danych w kolumnach: wiek, typ treningu oraz BMI. Braki w kolumnie BMI zostały uzupełnione za pomocą odpowiedniego wzoru, natomiast brakujące wartości w kolumnach wiek i typ treningu uzupełniono metodą imputacji hot deck. Po przeprowadzeniu tych operacji dokonano walidacji danych, która potwierdziła ich poprawność i brak błędów.
+W pierwszej fazie projektu skoncentrowaliśmy się na oczyszczeniu i przygotowaniu danych. Analiza wykazała, że zbiór danych nie zawierał istotnych odchyleń ekstremalnych, jednak zidentyfikowano braki w kolumnach: wiek, typ treningu oraz BMI. Braki w kolumnie BMI zostały uzupełnione za pomocą odpowiedniego wzoru, natomiast brakujące wartości w kolumnach wiek i typ treningu uzupełniono metodą imputacji hot deck. Po przeprowadzeniu tych operacji dokonano walidacji danych, która potwierdziła ich poprawność i brak błędów.
 
 W kolejnych etapach zaprezentowano szereg wizualizacji, które dostarczyły wielu przydatnych i ciekawych informacji o analizowanych danych. Dodatkowo, przedstawiono statystyki opisowe, które pomogły w zrozumieniu kluczowych cech zbioru danych.
 
