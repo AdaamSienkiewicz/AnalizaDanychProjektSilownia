@@ -1229,4 +1229,25 @@ ggpiestats(
 # Podsumowując, można zauważyć brak istotnych różnic w preferencjach typów treningów między kobietami a mężczyznami. 
 #Proporcje typów treningów są praktycznie takie same w obu grupach, co potwierdza zarówno wynik statystyczny, jak i wizualizacja.
 
+#Badanie zależności spalonych kalorii od czasu trwania sesji treningowej
 
+#Kolejny z opisywanych testów przeprowadza analizę zależności między dwoma zmiennymi ilościowymi, 
+#jakimi są: spalone kalorie i czas trwania sesji treningowej 
+#Do analizy wykorzystano korelację Pearsona oraz przedstawioną na wykresie regresję liniową. 
+
+ggscatterstats(
+  data = Silownia_wykresy,
+  x = Session_Duration_hours,
+  y = Calories_Burned,
+  title = "Badanie zależności spalonych kalorii od czasu trwania sesji treningowej"
+)
+
+#Współczynnik korelacji wyniósł 0,91, co wskazuje na bardzo silny dodatni związek między czasem trwania sesji a liczbą spalonych kalorii.
+#Oznacza to, że dłuższe sesje treningowe prowadzą do większej liczby spalonych kalorii, co jest potwierdzeniem wniosków wyciągniętych na podstawie analizy statystyk opisowych.
+#Wartość p = 0,00 sugeruje, iż zależność jest istotna statystycznie, a więc odrzucamy hipotezę zerową mówiącą o braku korelacji między zmiennymi.
+#Statystyka testu t-studenta 67,59 (z liczbą swobody równą 973 i wartością p = 0,00) potwierdza, że współczynnik korelacji różni się istotnie od zera, co dodatkowo wskazuje na wyraźny związek między zmiennymi.
+#Wartość statystyki Pearsona wynosząca 0,91 pokazuje, że ok. 91% zmienności w liczbie spalonych kalorii można wyjaśnić czasem trwania sesji.
+#Punktowy wykres rozrzutu pokazuje pozytywną zależność między zmiennymi. Punkty układają się blisko linii regresji, a więc dopasowalność modelu liniowego można określić jako dobrą/
+#Podsumowując, zależność między czasem trwania sesji treningowej a liczbą spalonych kalorii jest bardzo silna i istotna statystycznie.
+#Dłuższe treningi prowadzą do spalenia większej liczby kalorii.
+#Model liniowy dobrze opisuje tę zależność, co sugeruje, że czas trwania sesji jest jednym z kluczowych czynników wpływających na liczbę spalonych kalorii.
