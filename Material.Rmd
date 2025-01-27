@@ -665,7 +665,7 @@ barplot(cf10, main="")
 
 ```
 
-#### Procent tkanki tłuszczowej
+#### **Procent tkanki tłuszczowej**
 
 Wartości w kolumnie *Procent tkanki tłuszczowej* powinny być liczbami dodatnimi nieprzekraczającymi 50.
 
@@ -697,7 +697,7 @@ barplot(cf12, main="")
 
 #### **Częstotliwość treningów**
 
-Kolumna *Czętotliwość treningów* powinna zawierać tylko takie wartości jak: 0, 1, 2, 3, 4, 5, 6, 7.
+Kolumna *Częstotliwość treningów* powinna zawierać tylko takie wartości jak: 0, 1, 2, 3, 4, 5, 6, 7.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_Workout_Frequency_daysweek <- validator(
@@ -728,7 +728,7 @@ barplot(cf14, main="")
 
 #### **BMI**
 
-Wartości w kolumnie *BMI* powinny być dodatnimi liczbami mieszczącymi się w przedziale od 10 do 60 włącznie, a ich różnica względem wartości obliczonej jako ***Weight_kg/Height_m\^2*** powinna być mniejsza niż 0.1.”
+Wartości w kolumnie *BMI* powinny być dodatnimi liczbami mieszczącymi się w przedziale od 10 do 60 włącznie, a ich różnica względem wartości obliczonej jako ***Weight_kg/Height_m\^2*** powinna być mniejsza niż 0.1.
 
 ```{r echo=FALSE, warning=FALSE}
 rules_BMI <- validator(
@@ -760,7 +760,6 @@ ggplot(Silownia_wykresy, aes(x = Gender, fill = Gender)) +
   scale_fill_manual(values = c("Male" = "#3498db", "Female" = "#e74c3c")) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, max(table(Silownia_wykresy$Gender)) + 60)) +
   labs(
-    title = "Rozkład płci w zbiorze danych", 
     x = "Płeć", 
     y = "Liczba osób"
   ) +
@@ -780,7 +779,7 @@ Wykres pokazuje równomierny rozkład płci w analizowanym zbiorze danych. Widoc
 ```{r echo=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(Age, color = Gender, fill = Gender)) +
   geom_density(alpha = 0.5) +
-  labs(title = "Rozkład wieku w zależności od płci", x = "Wiek", y = "") +
+  labs(x = "Wiek", y = "") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -838,7 +837,6 @@ ggplot(Silownia_wykresy, aes(x = Age, y = BMI)) +
   geom_smooth(method = "lm", color = "red", se = FALSE) +
   xlab("Wiek") +
   ylab("BMI") +
-  ggtitle("Zależność BMI od wieku") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -904,7 +902,6 @@ ggplot(Silownia_wykresy, aes(Weight_kg, color = Gender, fill = Gender)) +
   geom_density(alpha = 0.7) +
   xlab("Waga (kg)") +
   ylab("") +
-  ggtitle("Rozkład wagi w zależności od płci") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -975,7 +972,6 @@ ggplot(Silownia_wykresy, aes(x = Session_Duration_hours, y = Calories_Burned)) +
   geom_smooth(method = "loess", color = "orange", se = TRUE) +
   xlab("Czas trwania sesji (godziny)") +
   ylab("Spalone kalorie") +
-  ggtitle("Czas trwania sesji a spalone kalorie") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1046,7 +1042,6 @@ ggplot(Silownia_wykresy, aes(x = Weight_kg, y = Calories_Burned)) +
   geom_smooth(method = "lm", color = "black", se = FALSE) +
   xlab("Waga (kg)") +
   ylab("Spalone kalorie") +
-  ggtitle("Spalone kalorie a waga") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1062,7 +1057,7 @@ Wykres przedstawia zależność między wagą a liczbą spalonych kalorii. Punkt
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Calories_Burned, fill = Workout_Type)) +
   stat_summary(fun = "mean", geom = "bar") +
-  labs(title = "Średnia liczba spalonych kalorii dla różnych typów treningu", x = "Typ treningu", y = "Średnie spalone kalorie") +
+  labs( x = "Typ treningu", y = "Średnie spalone kalorie") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
@@ -1078,7 +1073,7 @@ Wykres pokazuje, że średnia liczba spalonych kalorii jest zbliżona dla wszyst
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(x = factor(Experience_Level), y = Calories_Burned, fill = Gender)) +
   stat_summary(fun = "mean", geom = "bar", position = "dodge") +
-  labs(title = "Średnie spalone kalorie według płci i poziomu doświadczenia", x = "Poziom doświadczenia", y = "Średnie spalone kalorie") +
+  labs( x = "Poziom doświadczenia", y = "Średnie spalone kalorie") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
@@ -1098,7 +1093,6 @@ ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Avg_BPM, fill = Workout_Type)
   geom_boxplot(alpha = 0.7) +
   xlab("Rodzaj treningu") +
   ylab("Średnie tętno (BPM)") +
-  ggtitle("Średnie tętno a rodzaj treningu") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1160,7 +1154,6 @@ ggplot(Silownia_wykresy, aes(x = Age, y = Resting_BPM)) +
   geom_smooth(method = "loess", color = "blue", se = TRUE) +
   xlab("Wiek") +
   ylab("Tętno spoczynkowe (BPM)") +
-  ggtitle("Zależność tętna spoczynkowego od wieku") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1226,7 +1219,7 @@ Rozkład danych jest lekko ujemnie skośny (-0,06 do -0,1), co oznacza, że wart
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Session_Duration_hours, fill = Workout_Type)) +
   geom_violin() +
-  labs(title = "Czas trwania sesji w zależności od typu treningu", x = "Typ treningu", y = "Czas trwania (godziny)") +
+  labs(x = "Typ treningu", y = "Czas trwania (godziny)") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -1291,7 +1284,7 @@ Rozstęp międzykwartylowy (IQR) wynosi od 0,39 (cardio) do 0,42 (joga i HIIT), 
 ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Session_Duration_hours, color = Experience_Level)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Częstotliwość treningów a czas trwania sesji", x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)") +
+  labs(x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -1315,7 +1308,6 @@ ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Fat_Percentage)
   geom_smooth(method = "lm", color = "darkorange", se = FALSE) +
   xlab("Częstotliwość treningów (dni/tydzień)") +
   ylab("Procent tkanki tłuszczowej ciała (%)") +
-  ggtitle("Zależność między procentem tłuszczu a częstotliwością treningów") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -1380,7 +1372,6 @@ p1 <- ggplot(Silownia_wykresy, aes(x = Age, y = BMI, color = Workout_Type)) +
   xlab("Wiek") +
   ylab("BMI") +
   scale_color_discrete(name = "Rodzaj treningu") +
-  ggtitle("Zależność BMI od wieku") +
   theme_light()
 
 plotly::ggplotly(p1)
@@ -1396,7 +1387,6 @@ ggplot(Silownia_wykresy, aes(x = Max_BPM)) +
                  fill = "skyblue", 
                  color = "black", 
                  alpha = 0.7) +
-  ggtitle("Histogram dla Max_BPM") +
   xlab("Maksymalne BPM") +
   ylab("Liczba obserwacji") +
   theme_minimal() +  
@@ -1421,7 +1411,6 @@ ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
                  fill = "lightgreen", 
                  color = "black", 
                  alpha = 0.7) +
-  ggtitle("Histogram dla Avg_BPM") +
   xlab("Średnie BPM") +
   ylab("Liczba obserwacji") +
   theme_minimal() +
@@ -1436,7 +1425,7 @@ ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
 
 ```
 
-Histogram pokazuje, że większość średnich wartości tętna w badanej próbie mieści się w przedziale 125-135 BPM, licząc niemalże 225 obserwacji. . Rozkład wskazuje na skupienie wyników w umiarkowanym zakresie tętna średniego z lekkim odchyleniem w lewą stronę.
+Histogram pokazuje, że większość średnich wartości tętna w badanej próbie mieści się w przedziale 125-135 BPM, licząc niemalże 225 obserwacji. Rozkład wskazuje na skupienie wyników w umiarkowanym zakresie tętna średniego z lekkim odchyleniem w lewą stronę.
 
 #### **Spoczynkowe tętno**
 
@@ -1446,7 +1435,6 @@ ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
                  fill = "salmon", 
                  color = "black", 
                  alpha = 0.7) +
-  ggtitle("Histogram dla Resting_BPM") +
   xlab("Spoczynkowe BPM") +
   ylab("Liczba obserwacji") +
   theme_minimal() +
@@ -1487,7 +1475,7 @@ ggbetweenstats(
   type = "parametric", # Test parametryczny (ANOVA)
   pairwise.comparisons = TRUE, # Porównania parami
   p.adjust.method = "bonferroni", # Korekcja wielokrotnych porównań
-  title = "Różnice w spalonych kaloriach w zależności od poziomu doświadczenia"
+  
 )
 ```
 
@@ -1503,8 +1491,8 @@ Poniższy test przeprowadza analizę proporcji danych kategorycznych, jakimi jes
 ggpiestats(
   data = Silownia_wykresy,
   x = Workout_Type,
-  y = Gender,
-  title = "Rozkład typów treningów w zależności od płci"
+  y = Gender
+
 )
 ```
 
@@ -1522,8 +1510,8 @@ Kolejny z opisywanych testów przeprowadza analizę zależności między dwoma z
 ggscatterstats(
   data = Silownia_wykresy,
   x = Session_Duration_hours,
-  y = Calories_Burned,
-  title = "Badanie zależności spalonych kalorii od czasu trwania sesji treningowej"
+  y = Calories_Burned
+  
 )
 ```
 
