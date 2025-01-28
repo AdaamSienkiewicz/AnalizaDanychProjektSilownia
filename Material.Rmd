@@ -760,6 +760,7 @@ ggplot(Silownia_wykresy, aes(x = Gender, fill = Gender)) +
   scale_fill_manual(values = c("Male" = "#3498db", "Female" = "#e74c3c")) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, max(table(Silownia_wykresy$Gender)) + 60)) +
   labs(
+    title = "Rozkład płci w zbiorze danych", 
     x = "Płeć", 
     y = "Liczba osób"
   ) +
@@ -779,7 +780,7 @@ Wykres pokazuje równomierny rozkład płci w analizowanym zbiorze danych. Widoc
 ```{r echo=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(Age, color = Gender, fill = Gender)) +
   geom_density(alpha = 0.5) +
-  labs(x = "Wiek", y = "") +
+  labs(title = "Rozkład wieku w zależności od płci", x = "Wiek", y = "") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -837,6 +838,7 @@ ggplot(Silownia_wykresy, aes(x = Age, y = BMI)) +
   geom_smooth(method = "lm", color = "red", se = FALSE) +
   xlab("Wiek") +
   ylab("BMI") +
+  ggtitle("Zależność BMI od wieku") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -902,6 +904,7 @@ ggplot(Silownia_wykresy, aes(Weight_kg, color = Gender, fill = Gender)) +
   geom_density(alpha = 0.7) +
   xlab("Waga (kg)") +
   ylab("") +
+  ggtitle("Rozkład wagi w zależności od płci") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -972,6 +975,7 @@ ggplot(Silownia_wykresy, aes(x = Session_Duration_hours, y = Calories_Burned)) +
   geom_smooth(method = "loess", color = "orange", se = TRUE) +
   xlab("Czas trwania sesji (godziny)") +
   ylab("Spalone kalorie") +
+  ggtitle("Czas trwania sesji a spalone kalorie") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1042,6 +1046,7 @@ ggplot(Silownia_wykresy, aes(x = Weight_kg, y = Calories_Burned)) +
   geom_smooth(method = "lm", color = "black", se = FALSE) +
   xlab("Waga (kg)") +
   ylab("Spalone kalorie") +
+  ggtitle("Spalone kalorie a waga") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1057,7 +1062,7 @@ Wykres przedstawia zależność między wagą a liczbą spalonych kalorii. Punkt
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Calories_Burned, fill = Workout_Type)) +
   stat_summary(fun = "mean", geom = "bar") +
-  labs( x = "Typ treningu", y = "Średnie spalone kalorie") +
+  labs(title = "Średnia liczba spalonych kalorii dla różnych typów treningu", x = "Typ treningu", y = "Średnie spalone kalorie") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
@@ -1073,7 +1078,7 @@ Wykres pokazuje, że średnia liczba spalonych kalorii jest zbliżona dla wszyst
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(x = factor(Experience_Level), y = Calories_Burned, fill = Gender)) +
   stat_summary(fun = "mean", geom = "bar", position = "dodge") +
-  labs( x = "Poziom doświadczenia", y = "Średnie spalone kalorie") +
+  labs(title = "Średnie spalone kalorie według płci i poziomu doświadczenia", x = "Poziom doświadczenia", y = "Średnie spalone kalorie") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
@@ -1093,6 +1098,7 @@ ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Avg_BPM, fill = Workout_Type)
   geom_boxplot(alpha = 0.7) +
   xlab("Rodzaj treningu") +
   ylab("Średnie tętno (BPM)") +
+  ggtitle("Średnie tętno a rodzaj treningu") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1154,6 +1160,7 @@ ggplot(Silownia_wykresy, aes(x = Age, y = Resting_BPM)) +
   geom_smooth(method = "loess", color = "blue", se = TRUE) +
   xlab("Wiek") +
   ylab("Tętno spoczynkowe (BPM)") +
+  ggtitle("Zależność tętna spoczynkowego od wieku") +
   theme_light(base_size = 14) +
   theme(
     plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
@@ -1219,7 +1226,7 @@ Rozkład danych jest lekko ujemnie skośny (-0,06 do -0,1), co oznacza, że wart
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(Silownia_wykresy, aes(x = Workout_Type, y = Session_Duration_hours, fill = Workout_Type)) +
   geom_violin() +
-  labs(x = "Typ treningu", y = "Czas trwania (godziny)") +
+  labs(title = "Czas trwania sesji w zależności od typu treningu", x = "Typ treningu", y = "Czas trwania (godziny)") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -1284,7 +1291,7 @@ Rozstęp międzykwartylowy (IQR) wynosi od 0,39 (cardio) do 0,42 (joga i HIIT), 
 ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Session_Duration_hours, color = Experience_Level)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)") +
+  labs(title = "Częstotliwość treningów a czas trwania sesji", x = "Liczba sesji w tygodniu", y = "Czas trwania sesji (godziny)") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -1308,6 +1315,7 @@ ggplot(Silownia_wykresy, aes(x = Workout_Frequency_daysweek, y = Fat_Percentage)
   geom_smooth(method = "lm", color = "darkorange", se = FALSE) +
   xlab("Częstotliwość treningów (dni/tydzień)") +
   ylab("Procent tkanki tłuszczowej ciała (%)") +
+  ggtitle("Zależność między procentem tłuszczu a częstotliwością treningów") +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
@@ -1372,6 +1380,7 @@ p1 <- ggplot(Silownia_wykresy, aes(x = Age, y = BMI, color = Workout_Type)) +
   xlab("Wiek") +
   ylab("BMI") +
   scale_color_discrete(name = "Rodzaj treningu") +
+  ggtitle("Zależność BMI od wieku") +
   theme_light()
 
 plotly::ggplotly(p1)
@@ -1387,6 +1396,7 @@ ggplot(Silownia_wykresy, aes(x = Max_BPM)) +
                  fill = "skyblue", 
                  color = "black", 
                  alpha = 0.7) +
+  ggtitle("Histogram dla Max_BPM") +
   xlab("Maksymalne BPM") +
   ylab("Liczba obserwacji") +
   theme_minimal() +  
@@ -1411,6 +1421,7 @@ ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
                  fill = "lightgreen", 
                  color = "black", 
                  alpha = 0.7) +
+  ggtitle("Histogram dla Avg_BPM") +
   xlab("Średnie BPM") +
   ylab("Liczba obserwacji") +
   theme_minimal() +
@@ -1425,7 +1436,7 @@ ggplot(Silownia_wykresy, aes(x = Avg_BPM)) +
 
 ```
 
-Histogram pokazuje, że większość średnich wartości tętna w badanej próbie mieści się w przedziale 125-135 BPM, licząc niemalże 225 obserwacji. Rozkład wskazuje na skupienie wyników w umiarkowanym zakresie tętna średniego z lekkim odchyleniem w lewą stronę.
+Histogram pokazuje, że większość średnich wartości tętna w badanej próbie mieści się w przedziale 125-135 BPM, licząc niemalże 225 obserwacji. . Rozkład wskazuje na skupienie wyników w umiarkowanym zakresie tętna średniego z lekkim odchyleniem w lewą stronę.
 
 #### **Spoczynkowe tętno**
 
@@ -1435,6 +1446,7 @@ ggplot(Silownia_wykresy, aes(x = Resting_BPM)) +
                  fill = "salmon", 
                  color = "black", 
                  alpha = 0.7) +
+  ggtitle("Histogram dla Resting_BPM") +
   xlab("Spoczynkowe BPM") +
   ylab("Liczba obserwacji") +
   theme_minimal() +
@@ -1475,7 +1487,7 @@ ggbetweenstats(
   type = "parametric", # Test parametryczny (ANOVA)
   pairwise.comparisons = TRUE, # Porównania parami
   p.adjust.method = "bonferroni", # Korekcja wielokrotnych porównań
-  
+  title = "Różnice w spalonych kaloriach w zależności od poziomu doświadczenia"
 )
 ```
 
@@ -1491,8 +1503,8 @@ Poniższy test przeprowadza analizę proporcji danych kategorycznych, jakimi jes
 ggpiestats(
   data = Silownia_wykresy,
   x = Workout_Type,
-  y = Gender
-
+  y = Gender,
+  title = "Rozkład typów treningów w zależności od płci"
 )
 ```
 
@@ -1510,8 +1522,8 @@ Kolejny z opisywanych testów przeprowadza analizę zależności między dwoma z
 ggscatterstats(
   data = Silownia_wykresy,
   x = Session_Duration_hours,
-  y = Calories_Burned
-  
+  y = Calories_Burned,
+  title = "Badanie zależności spalonych kalorii od czasu trwania sesji treningowej"
 )
 ```
 
@@ -1561,6 +1573,14 @@ Celem naszego projektu była analiza danych pochodzących ze zbioru *Siłownia*
 
 W pierwszej fazie projektu skoncentrowaliśmy się na oczyszczeniu i przygotowaniu danych. Analiza wykazała, że zbiór danych nie zawierał istotnych odchyleń ekstremalnych, jednak zidentyfikowano braki w kolumnach: wiek, typ treningu oraz BMI. Braki w kolumnie BMI zostały uzupełnione za pomocą odpowiedniego wzoru, natomiast brakujące wartości w kolumnach wiek i typ treningu uzupełniono metodą imputacji hot deck. Po przeprowadzeniu tych operacji dokonano walidacji danych, która potwierdziła ich poprawność i brak błędów.
 
-W kolejnych etapach zaprezentowano szereg wizualizacji, które dostarczyły wielu przydatnych i ciekawych informacji o analizowanych danych. Dodatkowo, przedstawiono statystyki opisowe, które pomogły w zrozumieniu kluczowych cech zbioru danych.
+W rozdziale dotyczącym wizualizacji oraz analizy opisowej, czyli w kolejnym ważnym etapie pracy, zostały przedstawione wybrane zależności pomiędzy zmiennymi, które znalazły się w bazie danych. Na wstępie zaprezentowano rozkład płci. Na jego podstawie stwierdzono, że liczba kobiet i mężczyzn jest zbliżona, z niewielką przewagą mężczyzn. Pokazano także rozkład wieku w zależności od płci, z którego wyniknęło, iż w grupie wiekowej 25-39 lat udział mężczyzn był większy. W grupie 40-55 lat z kolei przeważyła płeć żeńska.
+
+Dalszą część wizualizacji rozbudowano o szerszą analizę opisową, którą oparto o takie miary jak: wartość minimalna, wartość maksymalna, kwartyle, mediana, średnia, odchylenie standardowe, odchylenie ćwiartkowe, skośność i kurtoza. Na podstawie wykresu oraz wyników analizy wagi w zależności od płaci stwierdzono, że kobiety miały mniejsze zróżnicowanie wagi w porównaniu do mężczyzn, których wagi rozłożyły się na szerszym przedziale. Mediana i średnia wagi były wyższe u mężczyzn. Rozkłady w obu grupach okazały się lekko spłaszczone, ale różniły się kierunkiem skośności.
+
+Wyniki analizy spalonych kalorii w zależności od długości trwania sesji treningowej wskazały z kolei na to, iż wraz ze wzrostem czasu trwania sesji rośnie liczba spalonych kalorii, zarówno pod względem wartości minimalnych, średnich, jak i maksymalnych. Jednocześnie wzrastała zmienność wyników, co sugerowało, że dłuższe sesje treningowe prowadzą do bardziej zróżnicowanych rezultatów w spalaniu kalorii. Zbadano także zmienne wpływające na poziom spalanych kalorii. Wskazano pierwszy wniosek, że osoby o wyższej wadze generalnie spalają więcej kalorii, choć zależność ta jest słaba. Co więcej, w przypadku spalonych kalorii, średnia ich liczba okazała się zbliżona dla wszystkich rodzajów treningów, przy czym HIIT i trening siłowy prowadziły do spalania nieco więcej kalorii niż joga i cardio. W przypadku wpływu poziomu doświadczenia na spalone kalorie, stwierdzono, że większe doświadczenie wiąże się z większą liczbą spalonych kalorii, niezależnie od płci.
+
+W dalszej analizie zbadano, jak rodzaj treningu wpływa na poziom średniego tętna. Wyniki wskazały na podobną intensywność treningową dla wszystkich analizowanych aktywności w kontekście tętna. Analiza zależności tętna wypoczynkowego od wieku również pokazała brak dużej zmienności - tętno spoczynkowe utrzymywało się w stabilnym przedziale 60–70 BPM, niemalże całkowicie niezależnie od wieku. W kolejnym kroku stwierdzono z kolei, że średni czas trwania treningu dla wszystkich jego rodzajów oscylował wokół podobnych wartości, jednak rozkłady pokazały, że joga i cardio mają mniej skrajnych wartości w porównaniu do HIIT i treningu siłowego. Zweryfikowano także, jak liczba sesji treningowych w tygodniu wpływa czas trwania sesji. Uznano, iż wraz ze wzrostem liczby sesji w tygodniu obserwuje się tendencję do wydłużania czasu trwania pojedynczej sesji. Stwierdzono też, że im więcej treningów, tym niższą przeciętną wartość osiąga tkanka tłuszczowa człowieka. Wraz ze wzrostem częstotliwości treningów spadła wartość minimalna i maksymalna procentu tkanki tłuszczowej.
+
+Na koniec tej części pracy zaprezentowano wizualizacje histogramów dla wartości tętna. Histogram maksymalnego tętna pokazał, że większość maksymalnych wartości tętna w badanej próbie mieści się w przedziale 165-195 BPM, co oznaczało skupienie wyników w umiarkowanym zakresie tętna maksymalnego. Histogram średniego tętna pokazał z kolei, że większość średnich wartości tętna w badanej próbie mieści się w przedziale 125-135 BPM. Rozkład wskazał na skupienie wyników w umiarkowanym zakresie tętna średniego z lekkim odchyleniem w lewą stronę. W przypadku spoczynkowego tętna natomiast stwierdzono, że jego wartości w badanej próbie najczęściej mieszczą się w przedziale 57,5-67,5 BPM. Wyniki te przedstawiły dominację umiarkowanego zakresu tętna spoczynkowego w analizowanej grupie.
 
 W ramach wnioskowania statystycznego przeprowadzono testy, które pozwoliły zbadać zależności między zmiennymi i wyciągnąć uogólnione wnioski dotyczące całej populacji. Wyniki analizy wykazały, że średnia liczba spalonych kalorii wzrasta wraz z poziomem doświadczenia – eksperci spalają znacznie więcej kalorii niż średniozaawansowani i początkujący. Nie zaobserwowano istotnych różnic w preferencjach typów treningów między kobietami a mężczyznami, a proporcje są zbliżone w obu grupach. Stwierdzono silną, istotną statystycznie zależność między czasem trwania treningu a liczbą spalonych kalorii – dłuższe sesje skutkują większym spalaniem. Analiza wykazała również, że proporcje grup tętna spoczynkowego w różnych kategoriach wiekowych są bardzo podobne i nie różnią się istotnie statystycznie.
